@@ -1,0 +1,4 @@
+| FAILURE: This complex test is supposed to fail |
+| FAILURE: This test is supposed to fail |
+| PASS: A complex test case can pass |
+| PASS: A test case can pass |
