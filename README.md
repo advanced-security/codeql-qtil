@@ -182,6 +182,35 @@ _Note: this class is effectively the same as `Qtil::InfInstance<string>::Type`, 
 
 ### Performance
 
+**ForwardReverse**: A module that implements a performant CodeQL graph search pattern called
+"forward reverse pruning," a pattern widely used in the CodeQL dataflow libraries.
+
+```ql
+module Config implement Qtil::ForwardReverseSig<Person> {
+  predicate start(Person p) { p.checkSomething() }
+  predicate end(Person p) { p.checkSomethingElse() }
+  predicate edge(Person a, Person b) { a.getParent() = b }
+}
+
+from Person a, Person b
+where Qtil::ForwardReverse<Person, Config>::hasPath(a, b)
+select a, b
+```
+
+This pattern takes a set of starting points, ending points, and edges in a graph. From the starting
+nodes it scans forward along edges to find all reachable nodes. This is fast because it is a unary,
+rather than binary, operation. These are called "forward nodes." Then, the from the set of ending
+points that are also forward nodes (reachable from the starting points), we reverse the process to
+find all forward nodes that reach end nodes. This is also fast because it is another unary
+operation. These are called "reverse nodes." As a last step, this smaller set of reverse nodes is
+far more efficient to search for paths connecting starting points to ending points.
+
+The performance of this module depends heavily on its configuration predicates.
+
+This module may not fit your use case exactly as is. In this case, this module can be an example
+performance optimization to draw inspiration from as you create a solution that fits your specific
+needs.
+
 ### Testing
 
 ### Parameterization
