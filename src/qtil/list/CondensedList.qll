@@ -1,107 +1,97 @@
+private import qtil.parameterization.SignatureTypes
+private import qtil.parameterization.SignaturePredicates
+private import qtil.inheritance.Instance
+private import codeql.util.Unit
 private import codeql.util.DenseRank
 
 /**
- * Describes how to construct a condensed list from sparse but orderable data, and how that data
- * should be connected, with one such list per specified division.
+ * A module to take orderable data (which may not be continuous) and condense it into one or more
+ * dense lists, with one such list per specified division.
+ *
+ * To instantiate this module, you need to provide at least one predicate that specifies the sparse
+ * index of a given item. Items can be segmented into separate lists via another predicate which
+ * specifies the division of each item.
+ *
+ * The sparse index (which may have gaps) is used to determine the ordering of the items in the
+ * condensed list. Once the condensed list is created, the items in the list will automatically be
+ * assigned a dense index (which has no gaps).
+ *
+ * For instance, to create a condensed list of variables defined in every file, create predicates
+ * that specify the line number of the variable as the sparse index, and the file of the variable
+ * as the division:
+ *
+ * ```ql
+ *   int getLineNumber(File file) { result = file.getLocation().getStartLine() }
+ *   File getFile(Variable var) { result = var.getLocation().getFile() }
+ *
+ *   class Entry = Condense<Variable, getLineNumber/1>::GroupBy<File, getFile/1>::ListEntry;
+ *
+ *   from Entry entry
+ *   select entry, entry.getDivision(), entry.getItem(), entry.getDenseIndex(), entry.getNext(),
+ *       entry.getPrev()
+ * ```
+ *
+ * To get a list of all items without a division, use the class
+ * `CondenseList<...>::Global::ListEntry`.
+ *
+ * This module will produce incorrect results if the sparse index contains duplicates for the
+ * selected division.
  */
-signature module CondensedListSig {
+module CondenseList<FiniteStringableType Item, Unary<Item>::Ret<int>::pred/1 getSparseIndex> {
+  module Global {
+    private Unit toUnit(Item i) { any() }
+
+    class ListEntry extends Instance<GroupBy<Unit, toUnit/1>::ListEntry>::Type {
+      Item getItem() { result = inst().getItem() }
+
+      int getDenseIndex() { result = inst().getDenseIndex() }
+
+      ListEntry getNext() { result = inst().getNext() }
+
+      ListEntry getPrev() { result = inst().getPrev() }
+    }
+  }
+
   /**
    * The division specifies which items are connected into lists, with one list per division.
    *
    * For instance, if connecting variables defined in a file, the division will be the file.
    */
-  class Division;
+  module GroupBy<InfiniteType Division, Unary<Item>::Ret<Division>::pred/1 getDivision> {
+    private newtype TList =
+      THead(Item l, Division t) { denseRank(t, l) = 1 } or
+      TCons(ListEntry prev, Item l) { prev.getDenseIndex() = denseRank(prev.getDivision(), l) - 1 }
 
-  /**
-   * The class of the items to be condensed into lists.
-   *
-   * For instance, when connecting variables defined in a file, the items are the variables.
-   */
-  class Item {
-    string toString();
-  }
+    private module DenseRankConfig implements DenseRankInputSig2 {
+      class Ranked = Item;
 
-  /**
-   * The index specifies the order of the items in the condensed list, and may be sparse (have
-   * gaps).
-   *
-   * For instance, if connecting variables defined in a file, the index will be the line number of
-   * the variable in the file.
-   * 
-   * The sparse index (which may have gaps) is used to determine the ordering of the items in the
-   * condensed list. Once the condensed list is created, the items in the list will automatically be
-   * assigned a dense index (which has no gaps).
-   * 
-   * There must be no duplicate indices for the same division for correctness.
-   */
-  int getSparseIndex(Division d, Item l);
-}
+      class C = Division;
 
-/**
- * A module to take orderable data (which may not be continuous) and condense it into one or more
- * dense lists, with one such list per specified division.
- * 
- * To instantiate this module, you need to provide a `CondensedListSig` module that
- * specifies the spare index and division of the items to be connected.
- *
- * For instance, to create a condensed list of variables defined in every file, you can
- * create a `CondensedListSig` module that specifies the file as the division and
- * the line number as the sparse index.
- *
- * ```ql
- *   module ConfigFileListConfig {
- *     class Division = File;
- *     class Item = Variable;
- *     int getSparseIndex(File file, Variable var) {
- *       file = var.getLocation().getFile() and
- *       var.getLocation().getStartLine()
- *     }
- *   }
- *
- *   import Condense<ConfigFileListConfig>
- *
- *   from Condense::Item l
- *   select l, l.getItem(), l.getDenseIndex(), l.getNext(), l.getPrev(),
- * ```
- */
-module Condense<CondensedListSig Config> {
-  private newtype TList =
-    THead(Config::Item l, Config::Division t) { denseRank(t, l) = 1 } or
-    TCons(ListItem prev, Config::Item l) { prev.getDenseIndex() = denseRank(prev.getDivision(), l) - 1 }
-
-  private module DenseRankConfig implements DenseRankInputSig2 {
-    class Ranked = Config::Item;
-
-    class C = Config::Division;
-
-    predicate getRank = Config::getSparseIndex/2;
-  }
-
-  private import DenseRank2<DenseRankConfig>
-
-  class ListItem extends TList {
-    Config::Division getDivision() {
-      this = THead(_, result)
-      or
-      exists(ListItem prev | this = TCons(prev, _) and result = prev.getDivision())
+      int getRank(Division d, Item i) { result = getSparseIndex(i) and d = getDivision(i) }
     }
 
-    string toString() {
-      result = getItem().toString() + " [index " + getDenseIndex() + "]"
+    private import DenseRank2<DenseRankConfig>
+
+    class ListEntry extends TList {
+      Division getDivision() {
+        this = THead(_, result)
+        or
+        exists(ListEntry prev | this = TCons(prev, _) and result = prev.getDivision())
+      }
+
+      string toString() { result = getItem().toString() + " [index " + getDenseIndex() + "]" }
+
+      Item getItem() {
+        this = THead(result, _)
+        or
+        this = TCons(_, result)
+      }
+
+      int getDenseIndex() { result = denseRank(getDivision(), getItem()) }
+
+      ListEntry getPrev() { this = TCons(result, _) }
+
+      ListEntry getNext() { result.getPrev() = this }
     }
-
-    Config::Item getItem() {
-      this = THead(result, _)
-      or
-      this = TCons(_, result)
-    }
-
-    int getDenseIndex() {
-      result = denseRank(getDivision(), getItem())
-    }
-
-    ListItem getPrev() { this = TCons(result, _) }
-
-    ListItem getNext() { result.getPrev() = this }
   }
 }

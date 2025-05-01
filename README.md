@@ -5,7 +5,7 @@
 - What would the `underscore.js` of CodeQL look like?
 - No helper utility is too small to belong in `qtil`.
 
-For examples of the former, `qtil` has conveniences such as string escaping. For examples of the latter, `qtil` has a class which removes the need to write the declaration `final FinalType = Type` during parameterized module development.
+For examples of the former, `qtil` has conveniences such as string escaping. For examples of the latter, `qtil` has a class does nothing more than remove the need to write the declaration `final FinalType = Type` during parameterized module development.
 
 Let's dive in!
 
@@ -72,24 +72,54 @@ select product.getFirst(), product.getSecond()
 
 ### Lists
 
-**CondensedList**: Takes orderable data, and turns it into a linked list of values for ease of traversal.
+**Ordered**: Takes orderable data, and automatically adds `getPrevious()`, `getNext()` predicate members for ease of traversal.
+
+_Note: the `getOrder()` predicate should not have duplicates._
 
 ```ql
-VariableListConfig implements Qtil::CondenseListConfigSig {
-  class Division = File;
-  class Item = Variable;
-
-  int getSparseIndex(File file, Variable variable) {
-    variable.getFile() = file and result = variable.getLine()
-  }
+class AgeOrderedPerson extends Qtil::Ordered<Person>::Type {
+  override int getOrder() { result = getAge() }
 }
 
-import Condense<VariableListConfig>::ListItem
+// Selects people, along with the next youngest and next oldest.
+from AgeOrderedPerson p
+select p.getName(), p.getPrevious().getName(), p.getNext().getName()
+```
 
-// For each file, selects all variables, the variable before it and the variable after it.
-from ListItem entry
-select entry.getDivision(), entry.getItem(),
-    entry.getPrev().getItem(), entry.getNext().getItem()
+This module is also possible to use with groupings, in order to segment the data into different lists.
+
+_Note: the `getOrder()` predicate should not have duplicates for items in the same group._
+
+```ql
+class AgeOrderedCityPerson extends Qtil::Ordered<Person>::GroupBy<City>::Type {
+  override int getOrder() { result = getAge() }
+  override int getGroup() { result = getCity() }
+}
+
+// Selects people, along with the next youngest and next oldest in the same city.
+from AgeOrderedCityPerson p
+select p.getName(), p.getCity(), p.getPrevious.getName(), p.getNext.getName()
+```
+
+**CondensedList**: Like the `Ordered` class, but creates a separate `ListEntry` type rather than
+requiring you to extend the underlying type.
+
+```ql
+int getAge(Person p) { result = p.getAge() }
+class GlobalListEntry = Qtil::CondenseList<Person, getAge/1>::Global::ListEntry
+
+// Selects people, and the next oldest person
+from GlobalListEntry listEntry
+select listEntry.getItem().getName(), listEntry.getNext().getItem().getName()
+
+// Optional grouping to create separate lists per city:
+City getCity(Person p) { result = p.getCity() }
+class CityListEntry = Qtil::CondenseList<Person, getAge/1>::GroupBy<City, getCity/1>::ListEntry
+
+// Selects people, and the next oldest person, for a given city
+from CityListEntry listEntry
+select listEntry.getItem().getName(), listEntry.getDivision().getName(),
+listEntry.getNext().getItem().getName()
 ```
 
 ### Strings
