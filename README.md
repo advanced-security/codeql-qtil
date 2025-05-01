@@ -135,3 +135,60 @@ listEntry.getNext().getItem().getName()
 ### Testing
 
 ### Parameterization
+
+**SignaturePredicates.qll** defines modules for creating signature predicates without separate
+signature predicate declarations.
+
+Rather than writing:
+
+```ql
+signature predicate binary(int a, int b);
+
+module MyModule<binary/2 binop> { ... }
+```
+
+This module allows you to write:
+
+```
+module MyModule<Qtil::Binary<int, int>::pred/2 binop> { ... }
+```
+
+This is particularly useful when you otherwise would have to declare a parameterized module to
+declare your signature to your own parameterized module:
+
+```ql
+// Simply write:
+module MyModule<Foo A, Bar B, Qtil::Binary<A, B>::pred/2 binop> { ... }
+
+// Instead of:
+module SignatureModule<Foo A, Foo B> {
+  signature predicate binary(A, B);
+}
+module MyModule<Foo A, Foo B, SignatureModule<A, B>::binary/2 binary> { ... }
+```
+
+The declared predicate signatures look as follows:
+ - `Qtil::Nullary::pred/0`: A predicate with no parameters and no result.
+ - `Qtil::Nullary::Ret<int>::pred/0`: A predicate with no parameters and an `int` result.
+ - `Qtil::Unary<int>::pred/1`: A predicate with one int parameter and no result.
+ - `Qtil::Unary<int>::Ret<string>::pred/1`: A predicate with one int parameter and a string result.
+ - `Qtil::Binary<int, string>::pred/2`: A predicate with two parameters, an int and a string, and no
+      result.
+ - `Binary<int, string>::Ret<int>::pred/2`: A predicate with two parameters, an int and a string,
+      and an int result.
+ - etc., for `Ternary`, `Quaternary`, and up to `Quinary` predicates.
+
+**SignatureTypes.qll** contains various baseline signature types to aid in writing correct
+parameterized modules:
+
+```ql
+module MyModule<Qtil::FiniteType A, Qtil::FiniteType B> { ... }
+```
+
+ - `Qtil::FiniteType`: Any finite type. Supports `newtype`s. No support for primitive types.
+ - `Qtil::FiniteStringableType`: Any finite class (has a `toString()` member). No support for
+      `newtype`s or primitive types.
+ - `Qtil::InfiniteType`: Any finite or infinite type, with `bindingset[this]`. Supports
+      `newtype`s and primitives.
+ - `Qtil::InfiniteStringableType`: Any finite or infinite class, with `bindingset[this]`,
+      Supports primitives. Does not support `newtype`.
