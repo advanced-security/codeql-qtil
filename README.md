@@ -128,6 +128,56 @@ listEntry.getNext().getItem().getName()
 
 ### Inheritance
 
+**Instance**: A module to make `instanceof` inheritance easier in CodeQL, by writing
+`class Foo extends Qtil::Instanceof<Bar>::Type`, which automatically adds `toString()` and a
+member `Bar inst()` to access the member predicates on the `Bar` parent class.
+
+In CodeQL, instance inheritance is available as `class Foo instanceof Bar`. In this style of
+inheritance, a `Foo` matches all `Bar`s, but inherits none of the members. This is a useful
+concept, but in practice often requires a boilerplate `toString()` member and casts:
+
+```ql
+class Foo extends Qtil::Instance<Bar>::Type {
+  predicate qux() { inst().check() }
+}
+
+// is (roughly) equivalent to:
+class Foo instanceof Bar {
+  predicate qux() { this.(Bar).check() }
+  string toString() { result = this.(Bar).toString() }
+}
+```
+
+There is also a module `InfInstance` which handles infinite types. Ordinarily, `Instance<T>`
+requires a finite type (standard CodeQL class type). However, infinite types (such as
+primitives) require special care, which `InfInstance` handles correctly, allowing
+`bindingset[this] class OpaqueIntType extends Qtil::InfInstance<int>::Type {}`. See also `UnderlyingString`.
+
+**Final**: A module to avoid creating final type alias declarations, which are required in
+some contexts, such as parameterized modules. Simply extend `Qtil::Final<T>::Type` instead of
+declaring a final alias type.
+
+```
+// Use CodeQL "final" extension:
+class MyFoo1 extends Qtil::Final<Foo>::Type { ... }
+
+// So that you don't need to create a final alias declaration:
+final class FinalFoo = Foo;
+class MyFoo2 extends FinalFoo { ... }
+```
+
+**UnderlyingString**: A class to support inheriting from string in order to create custom
+infinite types with a hidden string representation.
+
+```ql
+class Person extends Qtil::UnderlyingString {
+  string getFirstName() { result = str().split(" ", 0) }
+  string getLastName() { result = str().split(" ", 1) }
+}
+```
+
+_Note: this class is effectively the same as `Qtil::InfInstance<string>::Type`, but uses the member `str()` to get the underlying string instead of the member `inst()`._
+
 ### Locations
 
 ### Performance
