@@ -1,6 +1,9 @@
 private import qtil.parameterization.Finalize
 private import qtil.parameterization.SignaturePredicates
+private import qtil.parameterization.SignatureTypes
 private import qtil.inheritance.UnderlyingString
+private import qtil.inheritance.Instance
+private import qtil.list.ListBuilder
 
 /**
  * A tuple that contains only string values, such as a csv row.
@@ -20,89 +23,31 @@ module StringTuple<Nullary::Ret<string>::pred/0 separator> {
     int size() { result = count(int idx | idx = str().indexOf(separator(), idx, 0)) }
   }
 
-  bindingset[v1]
-  Tuple of1(string v1) { result = v1 }
+  // Import constructors `Tuple of2(...)` to `Tuple of8(...)` from SeparatedList module.
+  import TypedListBuilder<separator/0, Tuple>
 
-  bindingset[v1, v2]
-  Tuple of2(string v1, string v2) { result = v1 + separator() + v2 }
-
-  bindingset[v1, v2, v3]
-  Tuple of3(string v1, string v2, string v3) { result = v1 + separator() + v2 + separator() + v3 }
-
-  bindingset[v1, v2, v3, v4]
-  Tuple of4(string v1, string v2, string v3, string v4) {
-    result = v1 + separator() + v2 + separator() + v3 + separator() + v4
-  }
-
-  bindingset[v1, v2, v3, v4, v5]
-  Tuple of5(string v1, string v2, string v3, string v4, string v5) {
-    result = v1 + separator() + v2 + separator() + v3 + separator() + v4 + separator() + v5
-  }
-
-  bindingset[v1, v2, v3, v4, v5, v6]
-  Tuple of6(string v1, string v2, string v3, string v4, string v5, string v6) {
-    result =
-      v1 + separator() + v2 + separator() + v3 + separator() + v4 + separator() + v5 + separator() +
-        v6
-  }
-
-  bindingset[v1, v2, v3, v4, v5, v6, v7]
-  Tuple of7(string v1, string v2, string v3, string v4, string v5, string v6, string v7) {
-    result =
-      v1 + separator() + v2 + separator() + v3 + separator() + v4 + separator() + v5 + separator() +
-        v6 + separator() + v7
-  }
-
-  bindingset[v1, v2, v3, v4, v5, v6, v7, v8]
-  Tuple of8(string v1, string v2, string v3, string v4, string v5, string v6, string v7, string v8) {
-    result =
-      v1 + separator() + v2 + separator() + v3 + separator() + v4 + separator() + v5 + separator() +
-        v6 + separator() + v7 + separator() + v8
-  }
+  // Include the `Typed` submodule, usable as `StringTuple<sep>::Typed<T, fromString>::List`.
+  import TypedStringTuple<separator/0>
 }
 
-module Separator {
-  string comma() { result = "," }
+private module TypedStringTuple<Nullary::Ret<string>::pred/0 separator> {
+  module Typed<InfiniteType T, Unary<string>::Ret<T>::bindInputOutput/1 fromString> {
+    bindingset[result] bindingset[item]
+    private string toString(T item) { item = fromString(result) }
 
-  string dollar() { result = "$" }
+    bindingset[this]
+    class Tuple extends InfInstance<StringTuple<separator/0>::Tuple>::Type {
+      bindingset[this, item]
+      Tuple append(T item) { result = inst() + separator() + toString(item) }
 
-  string colon() { result = ":" }
+      bindingset[this]
+      int size() { result = inst().size() }
 
-  string at() { result = "@" }
+      bindingset[this, idx]
+      T get(int idx) { result = fromString(inst().get(idx)) }
+    }
 
-  string hash() { result = "#" }
-
-  string excl() { result = "!" }
-
-  string caret() { result = "^" }
-
-  string amp() { result = "&" }
-
-  string pipe() { result = "|" }
-
-  string semicolon() { result = ";" }
-
-  string plus() { result = "+" }
-
-  string minus() { result = "-" }
-
-  string slash() { result = "/" }
-
-  string backslash() { result = "\\" }
-
-  string dot() { result = "." }
-
-  string question() { result = "?" }
-
-  string percent() { result = "%" }
-
-  string tilde() { result = "~" }
-
-  string space() { result = " " }
-
-  string tab() { result = "\t" }
-
-  string newline() { result = "\n" }
-
-  string backtick() { result = "`" }
+    // Import constructors `Tuple of2(...)` to `Tuple of8(...)` from ListBuilder module.
+    import TypedListBuilderOf<separator/0, Tuple, T, toString/1>
+  }
 }

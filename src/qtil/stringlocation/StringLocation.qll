@@ -1,5 +1,6 @@
 private import qtil.tuple.StringTuple
 private import qtil.inheritance.Instance
+private import qtil.list.ListBuilder
 private import StringTuple<Separator::colon/0> as StrTup
 private import codeql.util.Location
 

@@ -61,3 +61,13 @@ signature class InfiniteStringableType {
   bindingset[this]
   string toString();
 }
+
+/**
+ * A common signature type that can be used to represent any string type, including `string` and
+ * classes that are instances of `string` via `instanceof` inheritance.
+ * 
+ * This type is useful for creating modules that assemble strings and cast them to a string-like
+ * type, such as those that extend `UnderlyingString`.
+ */
+bindingset[this]
+signature class StringlikeType instanceof string;
