@@ -1,41 +1,58 @@
 import qtil.strings.Escape
 import qtil.testing.Qnit
+import qtil.list.ListBuilder
+
+predicate colonEscapeMap(string s, string t) {
+  s = ":" and t = ":"
+}
+
+predicate colonToAtEscapeMap(string s, string t) {
+  s = ":" and t = "@"
+}
 
 class TestEscapeNothingToDo extends Test, Case {
   override predicate run(Qnit test) {
-    if escape("foo", "$", "%") = "foo"
+    if Escape<emptyEscapeMap/2>::escape("foo", "%") = "foo"
     then test.pass("Basic escape nothing to do works")
     else test.fail("Basic escape nothing to do doesn't work")
   }
 }
 
-class TestEscapeBasic extends Test, Case {
+class TestEscapeEscapesItself extends Test, Case {
   override predicate run(Qnit test) {
-    if escape("foo$bar", "$", "%") = "foo%$bar"
-    then test.pass("Basic escape works")
-    else test.fail("Basic escape doesn't work")
+    if Escape<emptyEscapeMap/2>::escape("foo%bar", "%") = "foo%%bar"
+    then test.pass("Basic escape itself works")
+    else test.fail("Basic escape itself doesn't work")
   }
 }
 
-class TestEscapeWillEscapeTheEscaper extends Test, Case {
+class TestEscapeWithEscapeMapUnchanged extends Test, Case {
   override predicate run(Qnit test) {
-    if escape("foo$bar$baz", "$", "%") = "foo%$bar%$baz"
-    then test.pass("Escape will escape the escaper")
-    else test.fail("Escape not properly escaping the escaper")
+    if Escape<colonEscapeMap/2>::escape("foo:bar", "%") = "foo%:bar"
+    then test.pass("Basic escape map works")
+    else test.fail("Basic escape map doesn't work")
   }
 }
 
-class TestEscapeWithBackslashDefault extends Test, Case {
+class TestEscapeWithEscapeMapChanged extends Test, Case {
   override predicate run(Qnit test) {
-    if escape("foo$bar", "$") = "foo\\$bar"
-    then test.pass("Escape with backslash default works")
-    else test.fail("Escape with backslash default doesn't work")
+    if Escape<colonToAtEscapeMap/2>::escape("foo:bar", "%") = "foo%@bar"
+    then test.pass("Basic escape map changed works")
+    else test.fail("Basic escape map changed doesn't work")
+  }
+}
+
+class TestEscapeWithBackslashDefaultNothingToDo extends Test, Case {
+  override predicate run(Qnit test) {
+    if Escape<emptyEscapeMap/2>::escape("foobar") = "foobar"
+    then test.pass("Escape with backslash nothing to do works")
+    else test.fail("Escape with backslash nothing to do doesn't work")
   }
 }
 
 class TestEscapeWithBackslashWillEscapeTheEscaper extends Test, Case {
   override predicate run(Qnit test) {
-    if escape("foo$bar\\baz", "$") = "foo\\$bar\\\\baz"
+    if Escape<emptyEscapeMap/2>::escape("foo\\bar") = "foo\\\\bar"
     then test.pass("Escape with backslash will escape the escaper")
     else test.fail("Escape with backslash not properly escaping the escaper")
   }
@@ -43,7 +60,7 @@ class TestEscapeWithBackslashWillEscapeTheEscaper extends Test, Case {
 
 class TestWrapEscapingNothingToDo extends Test, Case {
   override predicate run(Qnit test) {
-    if wrapEscaping("foo", "$", "%") = "$foo$"
+    if WrapEscape<Separator::dollar/0, emptyEscapeMap/2>::wrapEscaping("foo", "%") = "$foo$"
     then test.pass("Basic wrap escaping nothing to do works")
     else test.fail("Basic wrap escaping nothing to do doesn't work")
   }
@@ -51,7 +68,7 @@ class TestWrapEscapingNothingToDo extends Test, Case {
 
 class TestWrapEscapingBasic extends Test, Case {
   override predicate run(Qnit test) {
-    if wrapEscaping("foo$bar", "$", "%") = "$foo%$bar$"
+    if WrapEscape<Separator::dollar/0, emptyEscapeMap/2>::wrapEscaping("foo$bar", ".") = "$foo.$bar$"
     then test.pass("Basic wrap escaping works")
     else test.fail("Basic wrap escaping doesn't work")
   }
@@ -59,7 +76,7 @@ class TestWrapEscapingBasic extends Test, Case {
 
 class TestWrapEscapingWillEscapeTheEscaper extends Test, Case {
   override predicate run(Qnit test) {
-    if wrapEscaping("foo$bar$baz", "$", "%") = "$foo%$bar%$baz$"
+    if WrapEscape<Separator::dollar/0, emptyEscapeMap/2>::wrapEscaping("foo.bar", ".") = "$foo..bar$"
     then test.pass("Wrap escaping will escape the escaper")
     else test.fail("Wrap escaping not properly escaping the escaper")
   }
@@ -67,7 +84,7 @@ class TestWrapEscapingWillEscapeTheEscaper extends Test, Case {
 
 class TestWrapEscapingWithBackslashDefault extends Test, Case {
   override predicate run(Qnit test) {
-    if wrapEscaping("foo$bar", "$") = "$foo\\$bar$"
+    if WrapEscape<Separator::dollar/0, emptyEscapeMap/2>::wrapEscaping("foo$bar", "\\") = "$foo\\$bar$"
     then test.pass("Wrap escaping with backslash default works")
     else test.fail("Wrap escaping with backslash default doesn't work")
   }
@@ -107,7 +124,7 @@ class TestSingleQuoteEscapingNothingToDo extends Test, Case {
 
 class TestUnescapeNothingToDo extends Test, Case {
   override predicate run(Qnit test) {
-    if unescape("foo", "$") = "foo"
+    if Escape<emptyEscapeMap/2>::unescape("foo", "$") = "foo"
     then test.pass("Basic unescape nothing to do works")
     else test.fail("Basic unescape nothing to do doesn't work")
   }
@@ -115,15 +132,23 @@ class TestUnescapeNothingToDo extends Test, Case {
 
 class TestUnescapeBasic extends Test, Case {
   override predicate run(Qnit test) {
-    if unescape("foo$bar", "$") = "foobar"
+    if Escape<colonEscapeMap/2>::unescape("foo$:bar", "$") = "foo:bar"
     then test.pass("Basic unescape works")
     else test.fail("Basic unescape doesn't work")
   }
 }
 
+class TestUnescapeReverseChange extends Test, Case {
+  override predicate run(Qnit test) {
+    if Escape<colonToAtEscapeMap/2>::unescape("foo$@bar", "$") = "foo:bar"
+    then test.pass("Basic unescape change works")
+    else test.fail("Basic unescape change doesn't work" + Escape<colonToAtEscapeMap/2>::unescape("foo$@bar", "$"))
+  }
+}
+
 class TestUnescapeWillUnescapeTheEscaper extends Test, Case {
   override predicate run(Qnit test) {
-    if unescape("foo$$bar", "$") = "foo$bar"
+    if Escape<emptyEscapeMap/2>::unescape("foo$$bar", "$") = "foo$bar"
     then test.pass("Unescape will unescape the escaper")
     else test.fail("Unescape not properly unescaping the escaper")
   }
@@ -131,8 +156,56 @@ class TestUnescapeWillUnescapeTheEscaper extends Test, Case {
 
 class TestUnescapeWithManyEscapeCharacters extends Test, Case {
   override predicate run(Qnit test) {
-    if unescape("$$$$$five $$$$four $$$three $$two $one", "$") = "$$five $$four $three $two one"
+    if Escape<colonEscapeMap/2>::unescape("$$$$$:five $$$$:four $$$:three $$:two $:one", "$") = "$$:five $$:four $:three $:two :one"
     then test.pass("Unescape with many escape characters works")
     else test.fail("Unescape with many escape characters doesn't work")
+  }
+}
+
+class TestEscapeWithDefaultMap extends Test, Case {
+  override predicate run(Qnit test) {
+    if Escape<defaultEscapeMap/2>::escape("foo\nbar\tbaz") = "foo\\nbar\\tbaz"
+    then test.pass("Basic escape with default map works")
+    else test.fail("Basic escape with default map doesn't work")
+  }
+}
+
+class TestUnescapeWithDefaultMap extends Test, Case {
+  override predicate run(Qnit test) {
+    if Escape<defaultEscapeMap/2>::unescape("foo\\nbar\\tbaz") = "foo\nbar\tbaz"
+    then test.pass("Basic unescape with default map works")
+    else test.fail("Basic unescape with default map doesn't work")
+  }
+}
+
+class TestDoubleQuoteEscapeWithDefaultMap extends Test, Case {
+  override predicate run(Qnit test) {
+    if doubleQuoteEscaping("foo\nbar\tbaz") = "\"foo\\nbar\\tbaz\""
+    then test.pass("Basic double quote escape with default map works")
+    else test.fail("Basic double quote escape with default map doesn't work")
+  }
+}
+
+class TestSingleQuoteEscapeWithDefaultMap extends Test, Case {
+  override predicate run(Qnit test) {
+    if singleQuoteEscaping("foo\nbar\tbaz") = "'foo\\nbar\\tbaz'"
+    then test.pass("Basic single quote escape with default map works")
+    else test.fail("Basic single quote escape with default map doesn't work")
+  }
+}
+
+class TestDoubleQuoteUnescapeWithDefaultMap extends Test, Case {
+  override predicate run(Qnit test) {
+    if unescapeDoubleQuote("\"foo\\nbar\\tbaz\"") = "foo\nbar\tbaz"
+    then test.pass("Basic double quote unescape with default map works")
+    else test.fail("Basic double quote unescape with default map doesn't work" + unescapeDoubleQuote("\"foobarbaz\""))
+  }
+}
+
+class TestSingleQuoteUnescapeWithDefaultMap extends Test, Case {
+  override predicate run(Qnit test) {
+    if unescapeSingleQuote("'foo\\nbar\\tbaz'") = "foo\nbar\tbaz"
+    then test.pass("Basic single quote unescape with default map works")
+    else test.fail("Basic single quote unescape with default map doesn't work")
   }
 }

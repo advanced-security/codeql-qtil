@@ -133,6 +133,22 @@ This is not intended to replace the CodeQL `concat` aggregation, but rather, to 
 select join(",", "a", "b", "c")
 ```
 
+**Escape**: Provides a set of modules for escaping and unescaping strings.
+
+_CAUTION: Be careful in applying this escaping, which has not yet been thoroughly tested or validated, to a sensitive security context._
+
+```ql
+// Result is "foo\\\\bar\\nbaz", "foo\\bar\nbaz"
+select Escape<defaultEscapeMap/2>::escape("foo\\bar\nbaz"),
+    Escape<defaultEscapeMap/2>::unescape("foo\\\\bar\\nbaz")
+
+// Result is "\"foo\\\"bar\\\\baz\"", "foo\"bar\\baz"
+select doubleQuoteWrap("foo\"bar\\baz"), unescapeDoubleQuote("\"foo\\\"bar\\\\baz\"")
+```
+
+Escaping characters will carefully escape and unescape themselves. See documentation on escape maps
+to handle cases like turning newlines into `\n`, etc.
+
 ### Query Formatting
 
 ### Inheritance
