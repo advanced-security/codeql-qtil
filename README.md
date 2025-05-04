@@ -124,6 +124,15 @@ listEntry.getNext().getItem().getName()
 
 ### Strings
 
+**join(sep, ...)**: The first argument is used as a separator to join the remaining two to eight arguments.
+
+This is not intended to replace the CodeQL `concat` aggregation, but rather, to be used in cases where aggregation is not desired.
+
+```ql
+// Result is "a,b,c"
+select join(",", "a", "b", "c")
+```
+
 ### Query Formatting
 
 ### Inheritance
