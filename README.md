@@ -149,6 +149,19 @@ select doubleQuoteWrap("foo\"bar\\baz"), unescapeDoubleQuote("\"foo\\\"bar\\\\ba
 Escaping characters will carefully escape and unescape themselves. See documentation on escape maps
 to handle cases like turning newlines into `\n`, etc.
 
+**Char**: A subtype of `int` that holds a character code, with members such as `toUppercase()`,
+`isLowercase()`, `isDigit()`, and `repeat(n)`.
+
+```ql
+// Selects "A", "B", "0"
+from Char c
+where c.isStr("a") or c = charOf("b") or c = "0".codePointAt(0)
+select b.toUppercase().toString()
+```
+
+See also the module `Chars` which defines standard nullary predicates that return symbols, for
+instance, `Chars::dollar()` holds for the result `"$"`.
+
 ### Query Formatting
 
 ### Inheritance

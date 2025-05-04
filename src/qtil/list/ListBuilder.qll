@@ -18,11 +18,12 @@
  * - `TypedListBuilderOf<separator, S, T, toString>`: Predicates to build a string from a list of
  *     arguments of a custom type `T`, converted to strings via the `toString` predicate, using a
  *     custom separator, where the result is a custom type `S` that extends string.
- *  - `Separator`: A module that declares predicates for defining common separators to the various
- *     `ListBuilder` modules defined in this file, such as `Separator::comma/0`,
- *     `Separator::colon/0`, `Separator::at/0`, etc.
+ * 
+ * A recommended use of this module is by using the predicates defined in the `qtil.strings.Chars`
+ * module, which defines predicates such as `Char::comma/0`, `Char::colon/0`, `Char::at/0`, etc.
  */
 
+import qtil.strings.Char
 import qtil.strings.Join
 import qtil.parameterization.SignatureTypes
 import qtil.parameterization.SignaturePredicates
@@ -41,7 +42,7 @@ import qtil.parameterization.SignaturePredicates
  * ListBuilder<Separator::comma/0>::of2("foo", "bar") // returns "foo,bar"
  * ```
  */
-module ListBuilder<Nullary::Ret<string>::pred/0 separator> {
+module ListBuilder<Nullary::Ret<Char>::pred/0 separator> {
   // We do not need to redefine the predicates `of2(...)` to `of8(...)` here, we can use the module
   // `TypedListBuilder<separator, T>` to do that, where `T` is a string.
   import TypedListBuilder<separator/0, string>
@@ -77,7 +78,7 @@ module ListBuilder<Nullary::Ret<string>::pred/0 separator> {
  * ```
  */
 module ListBuilderOf<
-  Nullary::Ret<string>::pred/0 separator, InfiniteType T,
+  Nullary::Ret<Char>::pred/0 separator, InfiniteType T,
   Unary<T>::Ret<string>::bindInputOutput/1 toString>
 {
   // We do not need to redefine the predicates `of2(...)` to `of8(...)` here, we can use the module
@@ -112,7 +113,7 @@ module ListBuilderOf<
  *     ::of2("foo", "bar")
  *     .reverse()
  */
-module TypedListBuilder<Nullary::Ret<string>::pred/0 separator, StringlikeType S> {
+module TypedListBuilder<Nullary::Ret<Char>::pred/0 separator, StringlikeType S> {
   /**
    * A toString function from string to string with two way binding (merely the identity function).
    *
@@ -170,9 +171,14 @@ module TypedListBuilder<Nullary::Ret<string>::pred/0 separator, StringlikeType S
  * ```
  */
 module TypedListBuilderOf<
-  Nullary::Ret<string>::pred/0 separator, StringlikeType S, InfiniteType T,
+  Nullary::Ret<Char>::pred/0 separator, StringlikeType S, InfiniteType T,
   Unary<T>::Ret<string>::bindInputOutput/1 toString>
 {
+  /* The separator is a character, so we need to convert it to a string. */
+  private string sepStr() {
+    result = separator().toString()
+  }
+
   /**
    * Produces a CSV-like list of 1 item, cast to type `S` which extends string, using the custom
    * separator.
@@ -191,7 +197,7 @@ module TypedListBuilderOf<
    * before being joined together.
    */
   bindingset[v1, v2]
-  S of2(T v1, T v2) { result = join(separator(), toString(v1), toString(v2)) }
+  S of2(T v1, T v2) { result = join(sepStr(), toString(v1), toString(v2)) }
 
   /**
    * Produces a CSV-like list of 3 items, cast to type `S` which extends string, using the custom
@@ -201,7 +207,7 @@ module TypedListBuilderOf<
    * before being joined together.
    */
   bindingset[v1, v2, v3]
-  S of3(T v1, T v2, T v3) { result = join(separator(), toString(v1), toString(v2), toString(v3)) }
+  S of3(T v1, T v2, T v3) { result = join(sepStr(), toString(v1), toString(v2), toString(v3)) }
 
   /**
    * Produces a CSV-like list of 4 items, cast to type `S` which extends string, using the custom
@@ -212,7 +218,7 @@ module TypedListBuilderOf<
    */
   bindingset[v1, v2, v3, v4]
   S of4(T v1, T v2, T v3, T v4) {
-    result = join(separator(), toString(v1), toString(v2), toString(v3), toString(v4))
+    result = join(sepStr(), toString(v1), toString(v2), toString(v3), toString(v4))
   }
 
   /**
@@ -224,7 +230,7 @@ module TypedListBuilderOf<
    */
   bindingset[v1, v2, v3, v4, v5]
   S of5(T v1, T v2, T v3, T v4, T v5) {
-    result = join(separator(), toString(v1), toString(v2), toString(v3), toString(v4), toString(v5))
+    result = join(sepStr(), toString(v1), toString(v2), toString(v3), toString(v4), toString(v5))
   }
 
   /**
@@ -237,7 +243,7 @@ module TypedListBuilderOf<
   bindingset[v1, v2, v3, v4, v5, v6]
   S of6(T v1, T v2, T v3, T v4, T v5, T v6) {
     result =
-      join(separator(), toString(v1), toString(v2), toString(v3), toString(v4), toString(v5),
+      join(sepStr(), toString(v1), toString(v2), toString(v3), toString(v4), toString(v5),
         toString(v6))
   }
 
@@ -251,7 +257,7 @@ module TypedListBuilderOf<
   bindingset[v1, v2, v3, v4, v5, v6, v7]
   S of7(T v1, T v2, T v3, T v4, T v5, T v6, T v7) {
     result =
-      join(separator(), toString(v1), toString(v2), toString(v3), toString(v4), toString(v5),
+      join(sepStr(), toString(v1), toString(v2), toString(v3), toString(v4), toString(v5),
         toString(v6), toString(v7))
   }
 
@@ -265,57 +271,7 @@ module TypedListBuilderOf<
   bindingset[v1, v2, v3, v4, v5, v6, v7, v8]
   S of8(T v1, T v2, T v3, T v4, T v5, T v6, T v7, T v8) {
     result =
-      join(separator(), toString(v1), toString(v2), toString(v3), toString(v4), toString(v5),
+      join(sepStr(), toString(v1), toString(v2), toString(v3), toString(v4), toString(v5),
         toString(v6), toString(v7), toString(v8))
   }
-}
-
-/**
- * A module that declares predicates for defining common separators to the various `ListBuilder`
- * modules defined in this file.
- */
-module Separator {
-  string comma() { result = "," }
-
-  string dollar() { result = "$" }
-
-  string colon() { result = ":" }
-
-  string at() { result = "@" }
-
-  string hash() { result = "#" }
-
-  string excl() { result = "!" }
-
-  string caret() { result = "^" }
-
-  string amp() { result = "&" }
-
-  string pipe() { result = "|" }
-
-  string semicolon() { result = ";" }
-
-  string plus() { result = "+" }
-
-  string minus() { result = "-" }
-
-  string slash() { result = "/" }
-
-  string backslash() { result = "\\" }
-
-  string dot() { result = "." }
-
-  string question() { result = "?" }
-
-  string percent() { result = "%" }
-
-  string tilde() { result = "~" }
-
-  string space() { result = " " }
-
-  string tab() { result = "\t" }
-
-  string newline() { result = "\n" }
-
-  string backtick() { result = "`" }
 }

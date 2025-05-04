@@ -1,27 +1,28 @@
 import qtil.list.ListBuilder
 import qtil.inheritance.UnderlyingString
 import qtil.testing.Qnit
+import qtil.strings.Chars
 
 class TestBasicListBuilder extends Test, Case {
   override predicate run(Qnit test) {
     if
-      ListBuilder<Separator::comma/0>::of1("a") = "a" and
-      ListBuilder<Separator::colon/0>::of1("a") = "a" and
-      ListBuilder<Separator::comma/0>::of2("a", "b") = "a,b" and
-      ListBuilder<Separator::colon/0>::of2("a", "b") = "a:b" and
-      ListBuilder<Separator::comma/0>::of3("a", "b", "c") = "a,b,c" and
-      ListBuilder<Separator::colon/0>::of3("a", "b", "c") = "a:b:c" and
-      ListBuilder<Separator::comma/0>::of4("a", "b", "c", "d") = "a,b,c,d" and
-      ListBuilder<Separator::colon/0>::of4("a", "b", "c", "d") = "a:b:c:d" and
-      ListBuilder<Separator::comma/0>::of5("a", "b", "c", "d", "e") = "a,b,c,d,e" and
-      ListBuilder<Separator::colon/0>::of5("a", "b", "c", "d", "e") = "a:b:c:d:e" and
-      ListBuilder<Separator::comma/0>::of6("a", "b", "c", "d", "e", "f") = "a,b,c,d,e,f" and
-      ListBuilder<Separator::colon/0>::of6("a", "b", "c", "d", "e", "f") = "a:b:c:d:e:f" and
-      ListBuilder<Separator::comma/0>::of7("a", "b", "c", "d", "e", "f", "g") = "a,b,c,d,e,f,g" and
-      ListBuilder<Separator::colon/0>::of7("a", "b", "c", "d", "e", "f", "g") = "a:b:c:d:e:f:g" and
-      ListBuilder<Separator::comma/0>::of8("a", "b", "c", "d", "e", "f", "g", "h") =
+      ListBuilder<Chars::comma/0>::of1("a") = "a" and
+      ListBuilder<Chars::colon/0>::of1("a") = "a" and
+      ListBuilder<Chars::comma/0>::of2("a", "b") = "a,b" and
+      ListBuilder<Chars::colon/0>::of2("a", "b") = "a:b" and
+      ListBuilder<Chars::comma/0>::of3("a", "b", "c") = "a,b,c" and
+      ListBuilder<Chars::colon/0>::of3("a", "b", "c") = "a:b:c" and
+      ListBuilder<Chars::comma/0>::of4("a", "b", "c", "d") = "a,b,c,d" and
+      ListBuilder<Chars::colon/0>::of4("a", "b", "c", "d") = "a:b:c:d" and
+      ListBuilder<Chars::comma/0>::of5("a", "b", "c", "d", "e") = "a,b,c,d,e" and
+      ListBuilder<Chars::colon/0>::of5("a", "b", "c", "d", "e") = "a:b:c:d:e" and
+      ListBuilder<Chars::comma/0>::of6("a", "b", "c", "d", "e", "f") = "a,b,c,d,e,f" and
+      ListBuilder<Chars::colon/0>::of6("a", "b", "c", "d", "e", "f") = "a:b:c:d:e:f" and
+      ListBuilder<Chars::comma/0>::of7("a", "b", "c", "d", "e", "f", "g") = "a,b,c,d,e,f,g" and
+      ListBuilder<Chars::colon/0>::of7("a", "b", "c", "d", "e", "f", "g") = "a:b:c:d:e:f:g" and
+      ListBuilder<Chars::comma/0>::of8("a", "b", "c", "d", "e", "f", "g", "h") =
         "a,b,c,d,e,f,g,h" and
-      ListBuilder<Separator::colon/0>::of8("a", "b", "c", "d", "e", "f", "g", "h") =
+      ListBuilder<Chars::colon/0>::of8("a", "b", "c", "d", "e", "f", "g", "h") =
         "a:b:c:d:e:f:g:h"
     then test.pass("Basic list builder works")
     else test.fail("Basic list builder does not work")
@@ -37,31 +38,31 @@ class TestExtendsString extends string {
 class TestTypedListBuilder extends Test, Case {
   override predicate run(Qnit test) {
     if
-      TypedListBuilder<Separator::comma/0, TestExtendsString>::of1("a").isEqualTo("a") and
-      TypedListBuilder<Separator::colon/0, TestExtendsString>::of1("a").isEqualTo("a") and
-      TypedListBuilder<Separator::comma/0, TestExtendsString>::of2("a", "b").isEqualTo("a,b") and
-      TypedListBuilder<Separator::colon/0, TestExtendsString>::of2("a", "b").isEqualTo("a:b") and
-      TypedListBuilder<Separator::comma/0, TestExtendsString>::of3("a", "b", "c").isEqualTo("a,b,c") and
-      TypedListBuilder<Separator::colon/0, TestExtendsString>::of3("a", "b", "c").isEqualTo("a:b:c") and
-      TypedListBuilder<Separator::comma/0, TestExtendsString>::of4("a", "b", "c", "d")
+      TypedListBuilder<Chars::comma/0, TestExtendsString>::of1("a").isEqualTo("a") and
+      TypedListBuilder<Chars::colon/0, TestExtendsString>::of1("a").isEqualTo("a") and
+      TypedListBuilder<Chars::comma/0, TestExtendsString>::of2("a", "b").isEqualTo("a,b") and
+      TypedListBuilder<Chars::colon/0, TestExtendsString>::of2("a", "b").isEqualTo("a:b") and
+      TypedListBuilder<Chars::comma/0, TestExtendsString>::of3("a", "b", "c").isEqualTo("a,b,c") and
+      TypedListBuilder<Chars::colon/0, TestExtendsString>::of3("a", "b", "c").isEqualTo("a:b:c") and
+      TypedListBuilder<Chars::comma/0, TestExtendsString>::of4("a", "b", "c", "d")
           .isEqualTo("a,b,c,d") and
-      TypedListBuilder<Separator::colon/0, TestExtendsString>::of4("a", "b", "c", "d")
+      TypedListBuilder<Chars::colon/0, TestExtendsString>::of4("a", "b", "c", "d")
           .isEqualTo("a:b:c:d") and
-      TypedListBuilder<Separator::comma/0, TestExtendsString>::of5("a", "b", "c", "d", "e")
+      TypedListBuilder<Chars::comma/0, TestExtendsString>::of5("a", "b", "c", "d", "e")
           .isEqualTo("a,b,c,d,e") and
-      TypedListBuilder<Separator::colon/0, TestExtendsString>::of5("a", "b", "c", "d", "e")
+      TypedListBuilder<Chars::colon/0, TestExtendsString>::of5("a", "b", "c", "d", "e")
           .isEqualTo("a:b:c:d:e") and
-      TypedListBuilder<Separator::comma/0, TestExtendsString>::of6("a", "b", "c", "d", "e", "f")
+      TypedListBuilder<Chars::comma/0, TestExtendsString>::of6("a", "b", "c", "d", "e", "f")
           .isEqualTo("a,b,c,d,e,f") and
-      TypedListBuilder<Separator::colon/0, TestExtendsString>::of6("a", "b", "c", "d", "e", "f")
+      TypedListBuilder<Chars::colon/0, TestExtendsString>::of6("a", "b", "c", "d", "e", "f")
           .isEqualTo("a:b:c:d:e:f") and
-      TypedListBuilder<Separator::comma/0, TestExtendsString>::of7("a", "b", "c", "d", "e", "f", "g")
+      TypedListBuilder<Chars::comma/0, TestExtendsString>::of7("a", "b", "c", "d", "e", "f", "g")
           .isEqualTo("a,b,c,d,e,f,g") and
-      TypedListBuilder<Separator::colon/0, TestExtendsString>::of7("a", "b", "c", "d", "e", "f", "g")
+      TypedListBuilder<Chars::colon/0, TestExtendsString>::of7("a", "b", "c", "d", "e", "f", "g")
           .isEqualTo("a:b:c:d:e:f:g") and
-      TypedListBuilder<Separator::comma/0, TestExtendsString>::of8("a", "b", "c", "d", "e", "f",
+      TypedListBuilder<Chars::comma/0, TestExtendsString>::of8("a", "b", "c", "d", "e", "f",
         "g", "h").isEqualTo("a,b,c,d,e,f,g,h") and
-      TypedListBuilder<Separator::colon/0, TestExtendsString>::of8("a", "b", "c", "d", "e", "f",
+      TypedListBuilder<Chars::colon/0, TestExtendsString>::of8("a", "b", "c", "d", "e", "f",
         "g", "h").isEqualTo("a:b:c:d:e:f:g:h")
     then test.pass("Typed list builder works")
     else test.fail("Typed list builder does not work")
@@ -78,25 +79,25 @@ string intToString(int i) {
 class TestListBuilderOf extends Test, Case {
   override predicate run(Qnit test) {
     if
-      ListBuilderOf<Separator::comma/0, int, intToString/1>::of1(1) = "1" and
-      ListBuilderOf<Separator::colon/0, int, intToString/1>::of1(1) = "1" and
-      ListBuilderOf<Separator::comma/0, int, intToString/1>::of2(1, 2) = "1,2" and
-      ListBuilderOf<Separator::colon/0, int, intToString/1>::of2(1, 2) = "1:2" and
-      ListBuilderOf<Separator::comma/0, int, intToString/1>::of3(1, 2, 3) = "1,2,3" and
-      ListBuilderOf<Separator::colon/0, int, intToString/1>::of3(1, 2, 3) = "1:2:3" and
-      ListBuilderOf<Separator::comma/0, int, intToString/1>::of4(1, 2, 3, 4) = "1,2,3,4" and
-      ListBuilderOf<Separator::colon/0, int, intToString/1>::of4(1, 2, 3, 4) = "1:2:3:4" and
-      ListBuilderOf<Separator::comma/0, int, intToString/1>::of5(1, 2, 3, 4, 5) = "1,2,3,4,5" and
-      ListBuilderOf<Separator::colon/0, int, intToString/1>::of5(1, 2, 3, 4, 5) = "1:2:3:4:5" and
-      ListBuilderOf<Separator::comma/0, int, intToString/1>::of6(1, 2, 3, 4, 5, 6) = "1,2,3,4,5,6" and
-      ListBuilderOf<Separator::colon/0, int, intToString/1>::of6(1, 2, 3, 4, 5, 6) = "1:2:3:4:5:6" and
-      ListBuilderOf<Separator::comma/0, int, intToString/1>::of7(1, 2, 3, 4, 5, 6, 7) =
+      ListBuilderOf<Chars::comma/0, int, intToString/1>::of1(1) = "1" and
+      ListBuilderOf<Chars::colon/0, int, intToString/1>::of1(1) = "1" and
+      ListBuilderOf<Chars::comma/0, int, intToString/1>::of2(1, 2) = "1,2" and
+      ListBuilderOf<Chars::colon/0, int, intToString/1>::of2(1, 2) = "1:2" and
+      ListBuilderOf<Chars::comma/0, int, intToString/1>::of3(1, 2, 3) = "1,2,3" and
+      ListBuilderOf<Chars::colon/0, int, intToString/1>::of3(1, 2, 3) = "1:2:3" and
+      ListBuilderOf<Chars::comma/0, int, intToString/1>::of4(1, 2, 3, 4) = "1,2,3,4" and
+      ListBuilderOf<Chars::colon/0, int, intToString/1>::of4(1, 2, 3, 4) = "1:2:3:4" and
+      ListBuilderOf<Chars::comma/0, int, intToString/1>::of5(1, 2, 3, 4, 5) = "1,2,3,4,5" and
+      ListBuilderOf<Chars::colon/0, int, intToString/1>::of5(1, 2, 3, 4, 5) = "1:2:3:4:5" and
+      ListBuilderOf<Chars::comma/0, int, intToString/1>::of6(1, 2, 3, 4, 5, 6) = "1,2,3,4,5,6" and
+      ListBuilderOf<Chars::colon/0, int, intToString/1>::of6(1, 2, 3, 4, 5, 6) = "1:2:3:4:5:6" and
+      ListBuilderOf<Chars::comma/0, int, intToString/1>::of7(1, 2, 3, 4, 5, 6, 7) =
         "1,2,3,4,5,6,7" and
-      ListBuilderOf<Separator::colon/0, int, intToString/1>::of7(1, 2, 3, 4, 5, 6, 7) =
+      ListBuilderOf<Chars::colon/0, int, intToString/1>::of7(1, 2, 3, 4, 5, 6, 7) =
         "1:2:3:4:5:6:7" and
-      ListBuilderOf<Separator::comma/0, int, intToString/1>::of8(1, 2, 3, 4, 5, 6, 7, 8) =
+      ListBuilderOf<Chars::comma/0, int, intToString/1>::of8(1, 2, 3, 4, 5, 6, 7, 8) =
         "1,2,3,4,5,6,7,8" and
-      ListBuilderOf<Separator::colon/0, int, intToString/1>::of8(1, 2, 3, 4, 5, 6, 7, 8) =
+      ListBuilderOf<Chars::colon/0, int, intToString/1>::of8(1, 2, 3, 4, 5, 6, 7, 8) =
         "1:2:3:4:5:6:7:8"
     then test.pass("ListBuilderOf works")
     else test.fail("ListBuilderOf does not work")
@@ -104,10 +105,10 @@ class TestListBuilderOf extends Test, Case {
 }
 
 module TypedListBuilderOfComma =
-  TypedListBuilderOf<Separator::comma/0, TestExtendsString, int, intToString/1>;
+  TypedListBuilderOf<Chars::comma/0, TestExtendsString, int, intToString/1>;
 
 module TypedListBuilderOfColon =
-  TypedListBuilderOf<Separator::colon/0, TestExtendsString, int, intToString/1>;
+  TypedListBuilderOf<Chars::colon/0, TestExtendsString, int, intToString/1>;
 
 class TestTypedListBuilderOf extends Test, Case {
   override predicate run(Qnit test) {

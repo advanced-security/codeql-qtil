@@ -1,3 +1,4 @@
+private import qtil.strings.Char
 private import qtil.parameterization.Finalize
 private import qtil.parameterization.SignaturePredicates
 private import qtil.parameterization.SignatureTypes
@@ -10,17 +11,17 @@ private import qtil.list.ListBuilder
  *
  * This module can be useful to create infinite types with some basic structure.
  */
-module StringTuple<Nullary::Ret<string>::pred/0 separator> {
+module StringTuple<Nullary::Ret<Char>::pred/0 separator> {
   bindingset[this]
   class Tuple extends Final<UnderlyingString>::Type {
     bindingset[this, idx]
-    string get(int idx) { result = str().splitAt(separator(), idx) }
+    string get(int idx) { result = separator().split(str(), idx) }
 
     bindingset[this, item]
     Tuple append(string item) { result = str() + separator() + item }
 
     bindingset[this]
-    int size() { result = count(int idx | idx = str().indexOf(separator(), idx, 0)) }
+    int size() { result = count(int idx | idx = separator().indexIn(str(), idx, 0)) }
   }
 
   // Import constructors `Tuple of2(...)` to `Tuple of8(...)` from SeparatedList module.
@@ -30,7 +31,7 @@ module StringTuple<Nullary::Ret<string>::pred/0 separator> {
   import TypedStringTuple<separator/0>
 }
 
-private module TypedStringTuple<Nullary::Ret<string>::pred/0 separator> {
+private module TypedStringTuple<Nullary::Ret<Char>::pred/0 separator> {
   module Typed<InfiniteType T, Unary<string>::Ret<T>::bindInputOutput/1 fromString> {
     bindingset[result] bindingset[item]
     private string toString(T item) { item = fromString(result) }
