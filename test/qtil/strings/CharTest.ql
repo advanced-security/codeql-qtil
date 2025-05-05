@@ -1,6 +1,6 @@
 /**
  * WARNING: This test is incredibly slow to compile.
- * 
+ *
  * CodeQL gets into some pathological cases and it may take over a minute to compile, even though
  * it runs in about a hundred milliseconds.
  */
@@ -356,5 +356,83 @@ class TestCharWrap extends Test, Case {
       charOf("\"").wrap("baz") = "\"baz\""
     then test.pass("Char wrap works")
     else test.fail("Char wrap doesn't work")
+  }
+}
+
+class TestAdditionWithString extends Test, Case {
+  override predicate run(Qnit test) {
+    if
+      charOf("a") + "foo" = "afoo" and
+      charOf("b") + "bar" = "bbar" and
+      charOf("c") + "baz" = "cbaz"
+    then test.pass("Char addition with string works")
+    else test.fail("Char addition with string doesn't work")
+  }
+}
+
+class TestAdditionWithChar extends Test, Case {
+  override predicate run(Qnit test) {
+    if
+      // This is a consequence of extending int. It is not intended, but it is documented here.
+      charOf("a") + charOf("b") = 97 + 98 and
+      charOf("c") + charOf("d") = 99 + 100 and
+      charOf("e") + charOf("f") = 101 + 102
+    then test.pass("Char addition with char works")
+    else test.fail("Char addition with char doesn't work")
+  }
+}
+
+class TestSplitStringByChar extends Test, Case {
+  override predicate run(Qnit test) {
+    if
+      forall(string sect | sect = ["foo", "bar", "baz"] | sect = charOf(",").split("foo,bar,baz")) and
+      forall(string sect | sect = charOf(",").split("foo,bar,baz") | sect = ["foo", "bar", "baz"])
+    then test.pass("Char split string by char works")
+    else test.fail("Char split string by char doesn't work")
+  }
+}
+
+class TestSplitStringByCharWithIndex extends Test, Case {
+  override predicate run(Qnit test) {
+    if
+      charOf(",").split("foo,bar,baz", 0) = "foo" and
+      charOf(",").split("foo,bar,baz", 1) = "bar" and
+      charOf(",").split("foo,bar,baz", 2) = "baz" and
+      not exists(charOf(",").split("foo,bar,baz", 3))
+    then test.pass("Char split string by char with index works")
+    else test.fail("Char split string by char with index doesn't work")
+  }
+}
+
+class TestIndexInOfString extends Test, Case {
+  override predicate run(Qnit test) {
+    if
+      not exists(charOf("a").indexIn("foo")) and
+      charOf("b").indexIn("bar") = 0 and
+      charOf("f").indexIn("foo") = 0 and
+      charOf("o").indexIn("foo") = [1, 2]
+    then test.pass("Char index in of string is getting the correct indexes")
+    else test.fail("Char index in of string is missing some indexes")
+  }
+}
+
+class TestIndexInOfStringWithIndex extends Test, Case {
+  override predicate run(Qnit test) {
+    if
+      not exists(charOf("a").indexIn("foo", _, 0)) and
+      charOf("b").indexIn("bar", 0, 0) = 0 and
+      not exists(charOf("b").indexIn("bar", 0, 1)) and
+      not exists(charOf("b").indexIn("bar", 1, 0)) and
+      charOf("f").indexIn("foo", 0, 0) = 0 and
+      not exists(charOf("f").indexIn("foo", 0, 1)) and
+      not exists(charOf("f").indexIn("foo", 1, 0)) and
+      charOf("o").indexIn("foo", 0, 0) = 1 and
+      charOf("o").indexIn("foo", 1, 0) = 2 and
+      charOf("o").indexIn("foo", 0, 1) = 1 and
+      charOf("o").indexIn("foo", 1, 1) = 2 and
+      charOf("o").indexIn("foo", 0, 2) = 2 and
+      not exists(charOf("o").indexIn("foo", 1, 2))
+    then test.pass("Char index in of string with index is getting the correct indexes")
+    else test.fail("Char index in of string with index is missing some indexes")
   }
 }
