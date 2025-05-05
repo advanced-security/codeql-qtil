@@ -130,7 +130,7 @@ This is not intended to replace the CodeQL `concat` aggregation, but rather, to 
 
 ```ql
 // Result is "a,b,c"
-select join(",", "a", "b", "c")
+select Qtil::join(",", "a", "b", "c")
 ```
 
 **Escape**: Provides a set of modules for escaping and unescaping strings.
@@ -154,13 +154,13 @@ to handle cases like turning newlines into `\n`, etc.
 
 ```ql
 // Selects "A", "B", "0"
-from Char c
+from Qtil::Char c
 where c.isStr("a") or c = charOf("b") or c = "0".codePointAt(0)
 select b.toUppercase().toString()
 ```
 
 See also the module `Chars` which defines standard nullary predicates that return symbols, for
-instance, `Chars::dollar()` holds for the result `"$"`.
+instance, `Qtil::Chars::dollar()` holds for the result `"$"`.
 
 ### Query Formatting
 
@@ -291,8 +291,8 @@ The declared predicate signatures look as follows:
  - `Qtil::Unary<int>::Ret<string>::pred/1`: A predicate with one int parameter and a string result.
  - `Qtil::Binary<int, string>::pred/2`: A predicate with two parameters, an int and a string, and no
       result.
- - `Binary<int, string>::Ret<int>::pred/2`: A predicate with two parameters, an int and a string,
-      and an int result.
+ - `Qtil::Binary<int, string>::Ret<int>::pred/2`: A predicate with two parameters, an int and a
+      string, and an int result.
  - etc., for `Ternary`, `Quaternary`, and up to `Quinary` predicates.
 
 **SignatureTypes.qll** contains various baseline signature types to aid in writing correct
@@ -309,3 +309,4 @@ module MyModule<Qtil::FiniteType A, Qtil::FiniteType B> { ... }
       `newtype`s and primitives.
  - `Qtil::InfiniteStringableType`: Any finite or infinite class, with `bindingset[this]`,
       Supports primitives. Does not support `newtype`.
+ - `Qtil::StringlikeType`: Any type that extends or is an instanceof `string`.
