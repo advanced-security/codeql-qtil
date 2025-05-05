@@ -19,12 +19,39 @@ predicate defaultEscapeMap(Char real, Char escaped) {
 
 predicate emptyEscapeMap(Char real, Char escaped) { none() }
 
+/**
+ * A predicate to define an escape map that allows for any string to be escaped in such a way that
+ * it can be used in a regex, and matches itself (e.g., special characters match themselves rather
+ * than changing the meaning of the regex).
+ * 
+ * Used by the predicate `escapeRegex`.
+ * 
+ * *Caution*: This does not handle regex UN-escaping. For example, it does not handle unescaping
+ * `\uXXXX` or `\xXX` sequences. In terms of unescaping, this can only unescape a raw string back to
+ * itself after it has been escaped by this same escape map.
+ */
 predicate regexEscapeMap(Char real, Char escaped) {
   // Regex characters do not escape to different characters, but rather to themselves. For example,
   // the newline character escapes to an escaped `n` in most contexts, but a dollar sign is escaped
   // to an escaped dollar sign. An escaped `n` escapes to a newline in most contexts, but an
   // escaped dollar sign in a regex escapes to a plain dollar sign.
-  real.isStr(["(", ")", "|", "\\", ".", "+", "*", "?", "^", "$"]) and escaped = real
+  real.isStr(["(", ")", "|", "\\", ".", "+", "*", "?", "^", "$", "]", "[", "{", "}"]) and
+  escaped = real
+  or
+  real.isStr("\n") and escaped.isStr("n")
+  or
+  real.isStr("\r") and escaped.isStr("r")
+  or
+  real.isStr("\t") and escaped.isStr("t")
+  or
+  // Bell
+  real = 7 and escaped.isStr("a")
+  or
+  // Formfeed
+  real = 12 and escaped.isStr("f")
+  or
+  // Escape
+  real = 27 and escaped.isStr("e")
 }
 
 /**
@@ -105,10 +132,14 @@ module Escape<Binary<Char, Char>::pred/2 escapeMap> {
   string unescape(string input, Char escaper) {
     result =
       concat(int groupIdx, string groupText, string strOut |
+        // We must use a regex as a state machine. The state is either "escaped - grap the next
+        // character literally" or "not escaped - grap the current character if it is not the
+        // escape character. Specify "(?s)" to enable DOTALL mode, so that "." matches newlines,
+        // for the rare scenario where the escape character is a newline.
         groupText =
           input
-              .regexpFind("(\\" + escaper.toString() + ".|[^\\" + escaper.toString() + "])",
-                groupIdx, _) and
+              .regexpFind("(?s)(" + escapeRegexChar(escaper) + ".|[^" + escapeRegexChar(escaper) +
+                  "])", groupIdx, _) and
         unescapeReplaces(escaper, groupText, strOut)
       |
         strOut order by groupIdx
@@ -182,6 +213,30 @@ module Escape<Binary<Char, Char>::pred/2 escapeMap> {
     input.codePointAt(cpIdx) = escaper and
     output = escaper.repeat(2)
   }
+
+  /**
+   * We can't use `Escape<escapeRegexMap/2>::escape` here, as a parameterized module cannot
+   * instantiate itself.
+   *
+   * This is used to create regexes that find the escape character in a string. Without using regex,
+   * we would need to make a recursive predicate with a bindingset (on the string input), which
+   * isn't allowed, to properly find the escape characters and handle escaped escape characters.
+   *
+   * Bootstrap regex escaping here more simply, make sure special characters like `$` and `(` are
+   * escaped to `\$` and `\(`, and make sure alphabetic characters are not (or `w` will be escaped
+   * to `\w` which matches any word character), and special characters like newlines are escaped to
+   * `\n`.
+   */
+  bindingset[char]
+  private string escapeRegexChar(Char char) {
+    if regexEscapeMap(char, _)
+    then
+      exists(Char escaped |
+        regexEscapeMap(char, escaped) and
+        result = "\\" + escaped.toString()
+      )
+    else result = char.toString()
+  }
 }
 
 /**
@@ -199,7 +254,12 @@ module WrapEscape<Nullary::Ret<Char>::pred/0 wrapChar, Binary<Char, Char>::pred/
    * Add the wrapping character to the escape map, so that it is escaped to itself.
    */
   predicate newEscapeMap(Char real, Char escaped) {
-    real = wrapChar() and escaped = wrapChar()
+    // Escape wrapping with a character like a double quote requires escaping inner double quotes.
+    // However, escape wrapping with tabs, when tabs are already escaped to to /t, does not require
+    // additional entries in the escape map.
+    not escapeMap(wrapChar(), _) and
+    real = wrapChar() and
+    escaped = wrapChar()
     or
     escapeMap(real, escaped)
   }
@@ -305,9 +365,10 @@ string unescapeSingleQuote(string str) {
  *
  * For instance, `regexEscape("foo") = "foo"`, and
  * `regexEscape("^foo(bar)baz[qux]$") = "\\^foo\\(bar\\)baz\\[qux\\]\\$"`.
+ * 
+ * To unescape the result of this function back to itself, use the module
+ * `Escape<regexEscapeMap/2>`. An `unescapeRegex` function is not provided, as the name may be
+ * misleading.
  */
 bindingset[str]
 string escapeRegex(string str) { result = Escape<regexEscapeMap/2>::escape(str, charOf("\\")) }
-
-bindingset[str]
-string unescapeRegex(string str) { result = Escape<regexEscapeMap/2>::unescape(str, charOf("\\")) }

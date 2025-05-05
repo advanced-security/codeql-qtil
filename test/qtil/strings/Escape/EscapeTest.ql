@@ -215,3 +215,117 @@ class TestSingleQuoteUnescapeWithDefaultMap extends Test, Case {
     else test.fail("Basic single quote unescape with default map doesn't work")
   }
 }
+
+class TestEscapeWrapWithMappedCharacter extends Test, Case {
+  override predicate run(Qnit test) {
+    if
+      WrapEscape<Chars::colon/0, colonEscapeMap/2>::wrapEscaping("foo:bar", charOf("$")) =
+        ":foo$:bar:"
+    then test.pass("Basic escape wrap with mapped character works")
+    else test.fail("Basic escape wrap with mapped character doesn't work")
+  }
+}
+
+class TestEscapeWrapWithMappedChangeCharacter extends Test, Case {
+  override predicate run(Qnit test) {
+    if
+      WrapEscape<Chars::colon/0, colonToAtEscapeMap/2>::wrapEscaping("foo:bar", charOf("$")) =
+        ":foo$@bar:"
+    then test.pass("Basic escape wrap with mapped change character works")
+    else
+      test.fail("Basic escape wrap with mapped change character doesn't work" +
+          WrapEscape<Chars::colon/0, colonToAtEscapeMap/2>::wrapEscaping("foo:bar", charOf("$")))
+  }
+}
+
+class TestEscapeWithRegexCharacters extends Test, Case {
+  override predicate run(Qnit test) {
+    exists(Char c |
+      c in [
+          charOf("$"), charOf("^"), charOf("*"), charOf("+"), charOf("?"), charOf("("), charOf(")"),
+          charOf("{"), charOf("}"), charOf("["), charOf("]"), charOf("|"), charOf("\\")
+        ]
+    |
+      if
+        Escape<emptyEscapeMap/2>::escape("foo" + c + "bar", c) = "foo" + c.repeat(2) + "bar" and
+        Escape<emptyEscapeMap/2>::unescape(Escape<emptyEscapeMap/2>::escape("foo" + c + "bar", c), c) =
+          "foo" + c + "bar"
+      then test.pass("Basic escape with regex characters works")
+      else test.fail("Basic escape with regex characters doesn't work for char " + c)
+    )
+  }
+}
+
+class TestEscapeWithRegexMetarcharacterClasses extends Test, Case {
+  override predicate run(Qnit test) {
+    // Handle cases where we should not add backslashes to regex behavior, such as `\a`, `\A`, `\b`,
+    // `\B`, `\c`, `\d`, `\D`, `\e`, `\E`, `\G`, `\h`, `\H`, `\k`, `p`, `\Q`, `\R`, `\s`, `\S`,
+    // `\u`, `\v`, `\V`, `\w`, `\W`, `\x`, `\Z`, `\0`.
+    //
+    // Cases like `\n`, `\r`, `\t`, `\f` are checked in the next test.
+    if
+      forall(Char base, Char c |
+        base in [
+            charOf("a"), charOf("b"), charOf("c"), charOf("d"), charOf("e"), charOf("f"),
+            charOf("g"), charOf("h"), charOf("i"), charOf("j"), charOf("k"), charOf("l"),
+            charOf("m"), charOf("n"), charOf("o"), charOf("p"), charOf("q"), charOf("r"),
+            charOf("s"), charOf("t"), charOf("u"), charOf("v"), charOf("w"), charOf("x"),
+            charOf("y"), charOf("z"), charOf("0")
+          ] and
+        c = [base, base.toUppercase()] and
+        not exists(c.indexIn("foobar"))
+      |
+        Escape<emptyEscapeMap/2>::escape("foo" + c + "bar", c) = "foo" + c.repeat(2) + "bar" and
+        Escape<emptyEscapeMap/2>::unescape(Escape<emptyEscapeMap/2>::escape("foo" + c + "bar", c), c) =
+          "foo" + c + "bar"
+      ) and
+      forall(Char c | c in [charOf("f"), charOf("o"), charOf("b"), charOf("a"), charOf("r")] |
+        Escape<emptyEscapeMap/2>::escape("qux" + c + "quip", c) = "qux" + c.repeat(2) + "quip" and
+        Escape<emptyEscapeMap/2>::unescape(Escape<emptyEscapeMap/2>::escape("qux" + c + "quip", c),
+          c) = "qux" + c + "quip"
+      )
+    then test.pass("Basic escape with regex backslash codes works")
+    else test.fail("Basic escape with regex backslash codes doesn't work")
+  }
+}
+
+class TestEscapeWithRegexEscapeMappedMetaCharacters extends Test, Case {
+  Char bell() { result = 7 }
+
+  Char backspace() { result = 8 }
+
+  Char escape() { result = 27 }
+
+  Char formFeed() { result = 12 }
+
+  override predicate run(Qnit test) {
+    // Test tab, newline, carriage return, form feed, and backspace
+    exists(Char c |
+      c in [charOf("\n"), charOf("\t"), charOf("\r"), bell(), formFeed(), escape(), backspace()]
+    |
+      if
+        Escape<emptyEscapeMap/2>::escape("foo" + c + "bar", c) = "foo" + c.repeat(2) + "bar" and
+        Escape<emptyEscapeMap/2>::unescape(Escape<emptyEscapeMap/2>::escape("foo" + c + "bar", c), c) =
+          "foo" + c + "bar"
+      then test.pass("Basic escape with regex escape mapped characters works")
+      else
+        test.fail("Basic escape with regex escape mapped characters doesn't work for char '" + c +
+            "'.")
+    )
+  }
+}
+
+class TestAllAsciiCharacters extends Test, Case {
+  override predicate run(Qnit test) {
+    // Check all ASCII characters
+    exists(Char c | c in [1 .. 127] |
+      if
+        Escape<emptyEscapeMap/2>::escape("foo" + c + "bar", c) =
+          ("foo" + c + "bar").replaceAll(c.toString(), c.repeat(2)) and
+        Escape<emptyEscapeMap/2>::unescape(Escape<emptyEscapeMap/2>::escape("foo" + c + "bar", c), c) =
+          "foo" + c + "bar"
+      then test.pass("Basic escape with all ASCII characters works")
+      else test.fail("Basic escape with all ASCII characters doesn't work far char '" + c + "'.")
+    )
+  }
+}
