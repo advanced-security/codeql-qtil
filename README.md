@@ -139,11 +139,15 @@ _CAUTION: Be careful in applying this escaping, which has not yet been thoroughl
 
 ```ql
 // Result is "foo\\\\bar\\nbaz", "foo\\bar\nbaz"
-select Escape<defaultEscapeMap/2>::escape("foo\\bar\nbaz"),
-    Escape<defaultEscapeMap/2>::unescape("foo\\\\bar\\nbaz")
+select Qtil::Escape<Qtil::defaultEscapeMap/2>::escape("foo\\bar\nbaz"),
+    Qtil::Escape<Qtil::defaultEscapeMap/2>::unescape("foo\\\\bar\\nbaz")
 
 // Result is "\"foo\\\"bar\\\\baz\"", "foo\"bar\\baz"
-select doubleQuoteWrap("foo\"bar\\baz"), unescapeDoubleQuote("\"foo\\\"bar\\\\baz\"")
+select Qtil::doubleQuoteWrap("foo\"bar\\baz"), Qtil::unescapeDoubleQuote("\"foo\\\"bar\\\\baz\"")
+
+// CSV-like functionality: result is "foo\\,bar,baz\\\\qux", "foo,bar"
+select Qtil::SeparatedEscape<Qtil::Chars::comma\0>::EscapeBackslash::of2("foo,bar", "baz\\qux"),
+    Qtil::SeparatedEscape<Qtil::Chars::comma\0>::split("foo\\,bar,baz\\\\qux", Qtil::charOf("\\"), 0)
 ```
 
 Escaping characters will carefully escape and unescape themselves. See documentation on escape maps

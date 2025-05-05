@@ -18,7 +18,7 @@
  * - `TypedListBuilderOf<separator, S, T, toString>`: Predicates to build a string from a list of
  *     arguments of a custom type `T`, converted to strings via the `toString` predicate, using a
  *     custom separator, where the result is a custom type `S` that extends string.
- * 
+ *
  * A recommended use of this module is by using the predicates defined in the `qtil.strings.Chars`
  * module, which defines predicates such as `Char::comma/0`, `Char::colon/0`, `Char::at/0`, etc.
  */
@@ -78,8 +78,7 @@ module ListBuilder<Nullary::Ret<Char>::pred/0 separator> {
  * ```
  */
 module ListBuilderOf<
-  Nullary::Ret<Char>::pred/0 separator, InfiniteType T,
-  Unary<T>::Ret<string>::bindInputOutput/1 toString>
+  Nullary::Ret<Char>::pred/0 separator, InfiniteType T, Unary<T>::Ret<string>::bindInput/1 toString>
 {
   // We do not need to redefine the predicates `of2(...)` to `of8(...)` here, we can use the module
   // `TypedListBuilderOf<separator, S, T, toString>` to do that, where `S` is a string, and `T` and
@@ -172,12 +171,10 @@ module TypedListBuilder<Nullary::Ret<Char>::pred/0 separator, StringlikeType S> 
  */
 module TypedListBuilderOf<
   Nullary::Ret<Char>::pred/0 separator, StringlikeType S, InfiniteType T,
-  Unary<T>::Ret<string>::bindInputOutput/1 toString>
+  Unary<T>::Ret<string>::bindInput/1 toString>
 {
   /* The separator is a character, so we need to convert it to a string. */
-  private string sepStr() {
-    result = separator().toString()
-  }
+  private string sepStr() { result = separator().toString() }
 
   /**
    * Produces a CSV-like list of 1 item, cast to type `S` which extends string, using the custom
