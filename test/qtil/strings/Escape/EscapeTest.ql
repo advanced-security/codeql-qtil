@@ -337,9 +337,9 @@ import SeparatedEscape<Chars::tab/0, defaultEscapeMap/2> as TabSV
 class TestCsvOfX extends Test, Case {
   override predicate run(Qnit test) {
     if
-      Csv::Backslashed::of2("foo", "bar") = "foo,bar" and
-      Csv::Backslashed::of3("foo", "bar", "baz") = "foo,bar,baz" and
-      Csv::Backslashed::of4("foo", "bar", "baz", "qux") = "foo,bar,baz,qux" and
+      Csv::EscapeBackslash::of2("foo", "bar") = "foo,bar" and
+      Csv::EscapeBackslash::of3("foo", "bar", "baz") = "foo,bar,baz" and
+      Csv::EscapeBackslash::of4("foo", "bar", "baz", "qux") = "foo,bar,baz,qux" and
       Csv::EscapedWith<Chars::dollar/0>::of2("foo", "bar") = "foo,bar" and
       Csv::EscapedWith<Chars::dollar/0>::of3("foo", "bar", "baz") = "foo,bar,baz" and
       Csv::EscapedWith<Chars::dollar/0>::of4("foo", "bar", "baz", "qux") = "foo,bar,baz,qux"
@@ -351,9 +351,9 @@ class TestCsvOfX extends Test, Case {
 class TestCsvOfXWithEscape extends Test, Case {
   override predicate run(Qnit test) {
     if
-      Csv::Backslashed::of2("foo,bar", "baz\\qux") = "foo\\,bar,baz\\\\qux" and
+      Csv::EscapeBackslash::of2("foo,bar", "baz\\qux") = "foo\\,bar,baz\\\\qux" and
       Csv::EscapedWith<Chars::dollar/0>::of2("foo,bar", "baz$qux") = "foo$,bar,baz$$qux" and
-      Csv::Backslashed::of3("foo,bar", "baz\\qux", "quux") = "foo\\,bar,baz\\\\qux,quux" and
+      Csv::EscapeBackslash::of3("foo,bar", "baz\\qux", "quux") = "foo\\,bar,baz\\\\qux,quux" and
       Csv::EscapedWith<Chars::dollar/0>::of3("foo,bar", "baz$qux", "quux") =
         "foo$,bar,baz$$qux,quux"
     then test.pass("Basic CSV ofx() with escape works")
@@ -364,9 +364,9 @@ class TestCsvOfXWithEscape extends Test, Case {
 class TestDollarSVOfX extends Test, Case {
   override predicate run(Qnit test) {
     if
-      DollarSV::Backslashed::of2("foo", "bar") = "foo$bar" and
-      DollarSV::Backslashed::of3("foo", "bar", "baz") = "foo$bar$baz" and
-      DollarSV::Backslashed::of4("foo", "bar", "baz", "qux") = "foo$bar$baz$qux" and
+      DollarSV::EscapeBackslash::of2("foo", "bar") = "foo$bar" and
+      DollarSV::EscapeBackslash::of3("foo", "bar", "baz") = "foo$bar$baz" and
+      DollarSV::EscapeBackslash::of4("foo", "bar", "baz", "qux") = "foo$bar$baz$qux" and
       DollarSV::EscapedWith<Chars::at/0>::of2("foo", "bar") = "foo$bar" and
       DollarSV::EscapedWith<Chars::at/0>::of3("foo", "bar", "baz") = "foo$bar$baz" and
       DollarSV::EscapedWith<Chars::at/0>::of4("foo", "bar", "baz", "qux") = "foo$bar$baz$qux"
@@ -378,9 +378,9 @@ class TestDollarSVOfX extends Test, Case {
 class TestDollarSVOfXWithEscape extends Test, Case {
   override predicate run(Qnit test) {
     if
-      DollarSV::Backslashed::of2("foo$bar", "baz\\qux") = "foo\\$bar$baz\\\\qux" and
+      DollarSV::EscapeBackslash::of2("foo$bar", "baz\\qux") = "foo\\$bar$baz\\\\qux" and
       DollarSV::EscapedWith<Chars::at/0>::of2("foo$bar", "baz@qux") = "foo@$bar$baz@@qux" and
-      DollarSV::Backslashed::of3("foo$bar", "baz\\qux", "quux") = "foo\\$bar$baz\\\\qux$quux" and
+      DollarSV::EscapeBackslash::of3("foo$bar", "baz\\qux", "quux") = "foo\\$bar$baz\\\\qux$quux" and
       DollarSV::EscapedWith<Chars::at/0>::of3("foo$bar", "baz@qux", "quux") =
         "foo@$bar$baz@@qux$quux"
     then test.pass("Basic dollarSV ofx() with escape works")
@@ -391,7 +391,7 @@ class TestDollarSVOfXWithEscape extends Test, Case {
 class TestTabSeparatedValuesProperlyEscapeTabs extends Test, Case {
   override predicate run(Qnit test) {
     if
-      TabSV::Backslashed::of2("foo\tbar", "baz\tqux") = "foo\\tbar\tbaz\\tqux" and
+      TabSV::EscapeBackslash::of2("foo\tbar", "baz\tqux") = "foo\\tbar\tbaz\\tqux" and
       TabSV::EscapedWith<Chars::at/0>::of2("foo\tbar", "baz\tqux") = "foo@tbar\tbaz@tqux"
     then test.pass("Basic tab separated values ofx() works")
     else test.fail("Basic tab separated values ofx() doesn't work")
@@ -470,17 +470,9 @@ class TestSplitCsvWithEmptyColumns extends Test, Case {
   }
 }
 
-string empty() { none() }
-
 string emptyIdx(int idx) { none() }
 
-string emptyString() { result = "" }
-
 string emptyStringIdx(int idx) { idx = 0 and result = "" }
-
-string fooBarBaz() { result in ["foo", "bar", "baz"] }
-
-string justFoo() { result = "foo" }
 
 string justFooIdx(int idx) { idx = 0 and result = "foo" }
 
@@ -496,15 +488,9 @@ class TestConcatCsv extends Test, Case {
   override predicate run(Qnit test) {
     if
       Csv::Concat<emptyIdx/1>::join() = "" and
-      Csv::ConcatUnordered<empty/0>::join() = "" and
       Csv::Concat<emptyStringIdx/1>::join() = "" and
-      Csv::ConcatUnordered<emptyString/0>::join() = "" and
       Csv::Concat<justFooIdx/1>::join() = "foo" and
-      Csv::ConcatUnordered<justFoo/0>::join() = "foo" and
-      Csv::Concat<fooBarBazIdx/1>::join() = "foo,bar,baz" and
-      Csv::ConcatUnordered<fooBarBaz/0>::join() in [
-          "foo,bar,baz", "foo,baz,bar", "bar,foo,baz", "bar,baz,foo", "baz,foo,bar", "baz,bar,foo"
-        ]
+      Csv::Concat<fooBarBazIdx/1>::join() = "foo,bar,baz"
     then test.pass("Basic CSV concat works")
     else test.fail("Basic CSV concat doesn't work")
   }

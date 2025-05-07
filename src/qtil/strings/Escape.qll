@@ -19,6 +19,7 @@ predicate defaultEscapeMap(Char real, Char escaped) {
   real.isStr("\t") and escaped.isStr("t")
 }
 
+pragma[inline]
 predicate emptyEscapeMap(Char real, Char escaped) { none() }
 
 /**
@@ -110,9 +111,7 @@ module Escape<Binary<Char, Char>::pred/2 escapeMap> {
     result =
       concat(int cpIn, int cpIdx, string strOut |
         cpIn = input.codePointAt(cpIdx) and
-        if replacesOnEscape(input, escaper, cpIdx, _)
-        then replacesOnEscape(input, escaper, cpIdx, strOut)
-        else strOut = cpIn.toUnicode()
+        replacesOnEscape(cpIn, escaper, strOut)
       |
         strOut order by cpIdx
       )
@@ -187,7 +186,7 @@ module Escape<Binary<Char, Char>::pred/2 escapeMap> {
    */
   bindingset[escaper, group]
   private predicate unescapeReplaces(Char escaper, string group, string output) {
-    group = escaper.repeat(2) and
+    group = escaper.twice() and
     output = escaper.toString()
     or
     exists(Char out, Char inp |
@@ -196,7 +195,7 @@ module Escape<Binary<Char, Char>::pred/2 escapeMap> {
       output = out.toString()
     )
     or
-    not group.codePointAt(0) = escaper and
+    not pragma[only_bind_out](group.codePointAt(0)) = escaper and
     output = group
   }
 
@@ -217,40 +216,46 @@ module Escape<Binary<Char, Char>::pred/2 escapeMap> {
    * changed. However, a newline character is typically not escaped to a backslash before a newline
    * character, but rather to a backslash followed by an `n` character.
    */
-  bindingset[input, escaper, cpIdx]
-  private predicate replacesOnEscape(string input, Char escaper, int cpIdx, string output) {
+  bindingset[input, escaper]
+  pragma[inline_late]
+  private predicate replacesOnEscape(Char input, Char escaper, string output) {
     exists(Char codeOut |
-      escapeMap(input.codePointAt(cpIdx), codeOut) and
+      escapeMap(input, codeOut) and
       output = escaper.toString() + codeOut.toString()
     )
     or
-    input.codePointAt(cpIdx) = escaper and
-    output = escaper.repeat(2)
+    input = escaper and
+    output = escaper.twice()
+    or
+    not escapeMap(input, _) and
+    not input = escaper and
+    output = input.toString()
   }
+}
 
-  /**
-   * We can't use `Escape<escapeRegexMap/2>::escape` here, as a parameterized module cannot
-   * instantiate itself.
-   *
-   * This is used to create regexes that find the escape character in a string. Without using regex,
-   * we would need to make a recursive predicate with a bindingset (on the string input), which
-   * isn't allowed, to properly find the escape characters and handle escaped escape characters.
-   *
-   * Bootstrap regex escaping here more simply, make sure special characters like `$` and `(` are
-   * escaped to `\$` and `\(`, and make sure alphabetic characters are not (or `w` will be escaped
-   * to `\w` which matches any word character), and special characters like newlines are escaped to
-   * `\n`.
-   */
-  bindingset[char]
-  private string escapeRegexChar(Char char) {
-    if regexEscapeMap(char, _)
-    then
-      exists(Char escaped |
-        regexEscapeMap(char, escaped) and
-        result = "\\" + escaped.toString()
-      )
-    else result = char.toString()
-  }
+/**
+ * We can't use `Escape<escapeRegexMap/2>::escape` here, as a parameterized module cannot
+ * instantiate itself.
+ *
+ * This is used to create regexes that find the escape character in a string. Without using regex,
+ * we would need to make a recursive predicate with a bindingset (on the string input), which
+ * isn't allowed, to properly find the escape characters and handle escaped escape characters.
+ *
+ * Bootstrap regex escaping here more simply, make sure special characters like `$` and `(` are
+ * escaped to `\$` and `\(`, and make sure alphabetic characters are not (or `w` will be escaped
+ * to `\w` which matches any word character), and special characters like newlines are escaped to
+ * `\n`.
+ */
+bindingset[char]
+pragma[inline]
+private string escapeRegexChar(Char char) {
+  if regexEscapeMap(char, _)
+  then
+    exists(Char escaped |
+      regexEscapeMap(char, escaped) and
+      result = "\\" + escaped.toString()
+    )
+  else result = char.toString()
 }
 
 /**
@@ -267,6 +272,7 @@ module WrapEscape<Nullary::Ret<Char>::pred/0 wrapChar, Binary<Char, Char>::pred/
   /**
    * Add the wrapping character to the escape map, so that it is escaped to itself.
    */
+  pragma[inline]
   predicate newEscapeMap(Char real, Char escaped) {
     // Escape wrapping with a character like a double quote requires escaping inner double quotes.
     // However, escape wrapping with tabs, when tabs are already escaped to to /t, does not require
@@ -331,11 +337,11 @@ module WrapEscape<Nullary::Ret<Char>::pred/0 wrapChar, Binary<Char, Char>::pred/
  * import SeparatedEscape<Separator::comma/0, defaultEscapeMap> as CSV
  *
  * // Selects "foo\\,bar,baz\\\\qux"
- * select CSV::Backslashed::join("foo,bar", "baz\\qux")
+ * select CSV::EscapeBackslash::join("foo,bar", "baz\\qux")
  *
  * // Selects [0, "foo,bar"] and [1, "baz\\qux"]
  * from int i, string s
- * where s = CSV::Backslashed::split("foo\\bar,baz\\\\qux", i)
+ * where s = CSV::EscapeBackslash::split("foo\\bar,baz\\\\qux", i)
  * select i, s
  *
  * string getItem(int i) { ... }
@@ -348,6 +354,7 @@ module SeparatedEscape<Nullary::Ret<Char>::pred/0 separator, Binary<Char, Char>:
    * This is necessary for the `join` function to work correctly, as it needs to escape the
    * separator character in the string.
    */
+  pragma[inline]
   private predicate newEscapeMap(Char real, Char escaped) {
     // Escape separator with a character like a comma requires escaping inner commas. However,
     // escape wrapping with tabs, when tabs are already escaped to to /t, does not require
@@ -364,7 +371,7 @@ module SeparatedEscape<Nullary::Ret<Char>::pred/0 separator, Binary<Char, Char>:
    * using the specified separator and backslash as the escape character, escaping entries as
    * necessary.
    */
-  module Backslashed {
+  module EscapeBackslash {
     // Import the predicates `of2`, `of3`, etc. from the `ListBuilder` module, and use the
     // `escapeItem` predicate to escape the items in the list.
     import ListBuilderOf<separator/0, string, escapeItem/1>
@@ -431,40 +438,6 @@ module SeparatedEscape<Nullary::Ret<Char>::pred/0 separator, Binary<Char, Char>:
    * A module that can concatenate all of the results of a predicate, unordered, using the specified
    * separator and escaping each item as necessary.
    *
-   * For an ordered version of this module, use `Concat`. Unordered concatenation may be
-   * useful for cases such as maintaining a set of strings, where the order does not matter.
-   *
-   * Usage:
-   * ```ql
-   * import SeparatedEscape<Separator::comma/0, defaultEscapeMap> as CSV
-   *
-   * string name() { result = ["foo", "bar"] }
-   *
-   * // Selects either "foo,bar" or "bar,foo" -- order is not defined.
-   * select CSV::ConcatUnordered<names/0>::join()
-   * ```
-   */
-  module ConcatUnordered<Nullary::Ret<string>::pred/0 items> {
-    /**
-     * Join all items returned by the specified predicate, escaping each item using backslash as the
-     * escape character.
-     */
-    string join() { result = joinEscapedBy(charOf("//")) }
-
-    /**
-     * Join all items returned by the specified predicate, escaping each item using the specified
-     * escape character.
-     */
-    bindingset[escaper]
-    string joinEscapedBy(Char escaper) {
-      result = concat(string str | str = items() | escapeItem(str, escaper), separator().toString())
-    }
-  }
-
-  /**
-   * A module that can concatenate all of the results of a predicate, unordered, using the specified
-   * separator and escaping each item as necessary.
-   *
    * For an unordered version of this module, for cases such as maintaining a set of strings, where
    * the order does not matter, use the module `ConcatUnordered`.
    *
@@ -483,24 +456,26 @@ module SeparatedEscape<Nullary::Ret<Char>::pred/0 separator, Binary<Char, Char>:
      * Join all items returned by the specified predicate, escaping each item using backslash as the
      * escape character.
      */
-    string join() { result = joinEscapedBy(charOf("//")) }
+    string join() {
+      //result = joinEscapedBy(charOf("//")) }
+      result = ConcatDelimOrderFixed<separator/0, escapePredicateItem/1>::join()
+    }
 
     private string escapePredicateItem(int x) { result = escapeItem(items(x)) }
-
-    /**
-     * Join all items returned by the specified predicate, escaping each item using the specified
-     * escape character.
-     */
-    bindingset[escaper]
-    string joinEscapedBy(Char escaper) {
-      result = ConcatDelimOrderFixed<separator/0, escapePredicateItem/1>::join()
-      //result =
-      //  concat(string str, int index |
-      //    str = items(index)
-      //  |
-      //    escapeItem(str, escaper) order by index, escaper.toString()
-      //  )
-    }
+    ///**
+    // * Join all items returned by the specified predicate, escaping each item using the specified
+    // * escape character.
+    // */
+    //bindingset[escaper]
+    //string joinEscapedBy(Char escaper) {
+    //  result = ConcatDelimOrderFixed<separator/0, escapePredicateItem/1>::join()
+    //  //result =
+    //  //  concat(string str, int index |
+    //  //    str = items(index)
+    //  //  |
+    //  //    escapeItem(str, escaper) order by index, escaper.toString()
+    //  //  )
+    //}
   }
 
   /**
@@ -534,8 +509,8 @@ module SeparatedEscape<Nullary::Ret<Char>::pred/0 separator, Binary<Char, Char>:
       //       character. The `*` at the end of the regex means that we can match any number of
       //       characters, including zero. This pattern won't match a separator, and then the java
       //       Pattern.find() method will skip over it to find the next match.
-      escaperRegex = escapeRegex(escaper.toString()) and
-      separatorRegex = escapeRegex(separator().toString()) and
+      escaperRegex = escapeRegexChar(escaper) and
+      separatorRegex = escapeRegexChar(separator()) and
       group =
         str.regexpFind("(?s)(?<=" + separatorRegex + "|^)(" + escaperRegex + ".|[^" + escaperRegex +
             separatorRegex + "])*", index, _) and

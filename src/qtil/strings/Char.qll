@@ -34,12 +34,14 @@ class Char extends InfInstance<int>::Type {
    * Turn the code point into a string containing the relevant unicode character.
    */
   bindingset[this]
+  pragma[inline]
   string toString() { result = inst().toUnicode() }
 
   /**
    * Get the code point of this character.
    */
   bindingset[this]
+  pragma[inline]
   int codePoint() { result = inst() }
 
   /**
@@ -49,6 +51,7 @@ class Char extends InfInstance<int>::Type {
    * `string.isLowercase()`.
    */
   bindingset[this]
+  pragma[inline]
   predicate isLowercase() { toString().isLowercase() }
 
   /**
@@ -59,7 +62,8 @@ class Char extends InfInstance<int>::Type {
    * behavior of `string.toLowerCase()`.
    */
   bindingset[this]
-  Char toLowercase() { result = toString().toLowerCase().codePointAt(0) }
+  pragma[inline]
+  Char toLowercase() { result.isStr(toString().toLowerCase()) }
 
   /**
    * Holds if the character is not a lowercase letter.
@@ -68,6 +72,7 @@ class Char extends InfInstance<int>::Type {
    * `string.isUppercase()`.
    */
   bindingset[this]
+  pragma[inline]
   predicate isUppercase() { toString().isUppercase() }
 
   /**
@@ -78,24 +83,28 @@ class Char extends InfInstance<int>::Type {
    * behavior of `string.toUpperCase()`.
    */
   bindingset[this]
-  Char toUppercase() { result = toString().toUpperCase().codePointAt(0) }
+  pragma[inline]
+  Char toUppercase() { result.isStr(toString().toUpperCase()) }
 
   /**
    * Holds if the character is a digit, i.e. a character in the range 0-9.
    */
   bindingset[this]
+  pragma[inline]
   predicate isDigit() { toString() in ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"] }
 
   /**
    * Holds if the character is a letter, i.e. a character in the range A-Z or a-z.
    */
   bindingset[this]
+  pragma[inline]
   predicate isAlphabetic() { not toString().toLowerCase() = toString().toUpperCase() }
 
   /**
    * Holds if the character is not a digit or a letter, i.e. a symbol or other special character.
    */
   bindingset[this]
+  pragma[inline]
   predicate isSpecial() {
     not isDigit() and
     not isAlphabetic()
@@ -106,6 +115,7 @@ class Char extends InfInstance<int>::Type {
    * codepoint.
    */
   bindingset[this]
+  pragma[inline]
   predicate isAscii() {
     codePoint() >= 0 and
     codePoint() <= 127
@@ -115,7 +125,8 @@ class Char extends InfInstance<int>::Type {
    * Holds if the provided str is contains one character, and that character is the same as this.
    */
   bindingset[s]
-  predicate isStr(string s) { s.codePointAt(0) = this }
+  pragma[inline]
+  predicate isStr(string s) { s = inst().toUnicode() }
 
   /**
    * Repeats this character n times, where n is a non-negative integer.
@@ -123,10 +134,14 @@ class Char extends InfInstance<int>::Type {
    * For example, `charOf("a").repeat(3)` will yield the string "aaa".
    */
   bindingset[this, n]
+  pragma[inline]
   string repeat(int n) {
     n >= 0 and
     result = concat(int x | x = [1 .. n] | this.toString())
   }
+
+  bindingset[this]
+  string twice() { result = this.toString() + this.toString() }
 
   /**
    * Places this character at the start and end of the provided string.
@@ -134,6 +149,7 @@ class Char extends InfInstance<int>::Type {
    * For example, `charOf("$").wrap("foo")` will yield the string "$foo$".
    */
   bindingset[this, s]
+  pragma[inline]
   string wrap(string s) { result = this.toString() + s + this.toString() }
 
   /**
@@ -142,6 +158,7 @@ class Char extends InfInstance<int>::Type {
    * This member is overloaded to allow for 2-8 arguments.
    */
   bindingset[this, v1, v2]
+  pragma[inline]
   string join(string v1, string v2) { result = Str::join(this.toString(), v1, v2) }
 
   /**
@@ -150,6 +167,7 @@ class Char extends InfInstance<int>::Type {
    * This member is overloaded to allow for 2-8 arguments.
    */
   bindingset[this, v1, v2, v3]
+  pragma[inline]
   string join(string v1, string v2, string v3) { result = Str::join(this.toString(), v1, v2, v3) }
 
   /**
@@ -158,6 +176,7 @@ class Char extends InfInstance<int>::Type {
    * This member is overloaded to allow for 2-8 arguments.
    */
   bindingset[this, v1, v2, v3, v4]
+  pragma[inline]
   string join(string v1, string v2, string v3, string v4) {
     result = Str::join(this.toString(), v1, v2, v3, v4)
   }
@@ -168,6 +187,7 @@ class Char extends InfInstance<int>::Type {
    * This member is overloaded to allow for 2-8 arguments.
    */
   bindingset[this, v1, v2, v3, v4, v5]
+  pragma[inline]
   string join(string v1, string v2, string v3, string v4, string v5) {
     result = Str::join(this.toString(), v1, v2, v3, v4, v5)
   }
@@ -178,6 +198,7 @@ class Char extends InfInstance<int>::Type {
    * This member is overloaded to allow for 2-8 arguments.
    */
   bindingset[this, v1, v2, v3, v4, v5, v6]
+  pragma[inline]
   string join(string v1, string v2, string v3, string v4, string v5, string v6) {
     result = Str::join(this.toString(), v1, v2, v3, v4, v5, v6)
   }
@@ -188,6 +209,7 @@ class Char extends InfInstance<int>::Type {
    * This member is overloaded to allow for 2-8 arguments.
    */
   bindingset[this, v1, v2, v3, v4, v5, v6, v7]
+  pragma[inline]
   string join(string v1, string v2, string v3, string v4, string v5, string v6, string v7) {
     result = Str::join(this.toString(), v1, v2, v3, v4, v5, v6, v7)
   }
@@ -198,6 +220,7 @@ class Char extends InfInstance<int>::Type {
    * This member is overloaded to allow for 2-8 arguments.
    */
   bindingset[this, v1, v2, v3, v4, v5, v6, v7, v8]
+  pragma[inline]
   string join(string v1, string v2, string v3, string v4, string v5, string v6, string v7, string v8) {
     result = Str::join(this.toString(), v1, v2, v3, v4, v5, v6, v7, v8)
   }
@@ -208,6 +231,7 @@ class Char extends InfInstance<int>::Type {
    * Holds for all results such that the result is a section of the string after being split.
    */
   bindingset[this, s]
+  pragma[inline]
   string split(string s) { result = s.splitAt(this.toString()) }
 
   /**
@@ -215,6 +239,7 @@ class Char extends InfInstance<int>::Type {
    * character, where n is the idx parameter.
    */
   bindingset[this, s, idx]
+  pragma[inline]
   string split(string s, int idx) { result = s.splitAt(this.toString(), idx) }
 
   /**
@@ -224,6 +249,7 @@ class Char extends InfInstance<int>::Type {
    * Equivalent to `str.indexOf(this.toString())`.
    */
   bindingset[this, s]
+  pragma[inline]
   int indexIn(string s) { result = s.indexOf(this.toString()) }
 
   /**
@@ -234,6 +260,7 @@ class Char extends InfInstance<int>::Type {
    * Equivalent to `str.indexOf(this.toString(), idx, startAt)`.
    */
   bindingset[this, s, startAt]
+  pragma[inline]
   int indexIn(string s, int idx, int startAt) { result = s.indexOf(this.toString(), idx, startAt) }
 }
 
@@ -243,4 +270,5 @@ class Char extends InfInstance<int>::Type {
  * Does not hold if the string is empty or contains more than one character.
  */
 bindingset[s]
+pragma[inline]
 Char charOf(string s) { result.isStr(s) }

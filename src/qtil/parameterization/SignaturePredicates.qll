@@ -14,7 +14,7 @@
  *       result.
  *  - `Ternary<A, B, C>::Ret<D>::pred/3`: A predicate with three parameters, an `A`, a `B`, and a
  *      `C`, and a `D` result.
- *  - etc., for `Quaternary` and `Quinary` predicates.
+ *  - etc., for `Quaternary`, `Quinary`, and `Senary` predicates.
  *
  * ## What is the purpose of this module?
  *
@@ -330,5 +330,46 @@ module Quinary<InfiniteType T1, InfiniteType T2, InfiniteType T3, InfiniteType T
     bindingset[result]
     bindingset[t1, t2, t3, t4, t5]
     signature R bindInputOutput(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5);
+  }
+}
+
+/**
+ * A module for creating senary predicates (predicates with six parameters) without requiring a
+ * signature predicate declaration.
+ *
+ * Examples:
+ *  - `Senary<A, B, C, D, E, F>::pred/6`: A predicate with six parameters, an `A`, a `B`, a `C`, a
+ *       `D`, an `E`, and an `F`, and no result.
+ *  - `Senary<A, B, C, D, E, F>::Ret<G>::pred/6`: A predicate with six parameters, an `A`, a `B`, a
+ *       `C`, a `D`, an `E`, and an `F`, and a result of type `G`.
+ */
+module Senary<
+  InfiniteType T1, InfiniteType T2, InfiniteType T3, InfiniteType T4, InfiniteType T5,
+  InfiniteType T6>
+{
+  /** The resulting signature predicate for this module's type parameters */
+  signature predicate pred(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6);
+
+  /**
+   * A signature predicate with six parameters and no result, with a bindingset on the six
+   *      parameters
+   */
+  bindingset[t1, t2, t3, t4, t5, t6]
+  signature predicate bindInput(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6);
+
+  module Ret<InfiniteType R> {
+    /** The resulting signature predicate for this module's type parameters */
+    signature R pred(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6);
+
+    /**
+     * A signature predicate with six parameters and a result, with a bindingset on the six
+     *        parameters but not the result
+     */
+    bindingset[t1, t2, t3, t4, t5, t6]
+    signature R bindInput(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6);
+
+    /** A signature predicate with six parameters and a result, with a bindingset on the result */
+    bindingset[result]
+    signature R bindOutput(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6);
   }
 }

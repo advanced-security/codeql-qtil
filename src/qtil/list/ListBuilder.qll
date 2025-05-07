@@ -122,6 +122,7 @@ module TypedListBuilder<Nullary::Ret<Char>::pred/0 separator, StringlikeType S> 
    */
   bindingset[result]
   bindingset[s]
+  pragma[inline]
   private string identity(string s) { result = s }
 
   // Import predicates `of2(...)` to `of8(...)` from the module
@@ -174,6 +175,7 @@ module TypedListBuilderOf<
   Unary<T>::Ret<string>::bindInput/1 toString>
 {
   /* The separator is a character, so we need to convert it to a string. */
+  pragma[inline]
   private string sepStr() { result = separator().toString() }
 
   /**

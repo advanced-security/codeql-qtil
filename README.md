@@ -297,7 +297,7 @@ The declared predicate signatures look as follows:
       result.
  - `Qtil::Binary<int, string>::Ret<int>::pred/2`: A predicate with two parameters, an int and a
       string, and an int result.
- - etc., for `Ternary`, `Quaternary`, and up to `Quinary` predicates.
+ - etc., for `Ternary`, `Quaternary`, and up to `Senary` (six parameter) predicates.
 
 **SignatureTypes.qll** contains various baseline signature types to aid in writing correct
 parameterized modules:

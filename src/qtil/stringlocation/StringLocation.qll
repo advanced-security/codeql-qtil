@@ -44,10 +44,58 @@ StringLocation stringLocation(
 }
 
 module LocationToString<LocationSig Location> {
+  bindingset[elem]
+  pragma[inline_late]
   StringLocation stringLocation(Location elem) {
     exists(string filePath, int startLine, int startColumn, int endLine, int endColumn |
       elem.hasLocationInfo(filePath, startLine, startColumn, endLine, endColumn) and
       result = stringLocation(filePath, startLine, startColumn, endLine, endColumn)
     )
+  }
+}
+
+/**
+ * A module that provides a way to concretize a string location, typically for performance
+ * reasons.
+ *
+ * The `hasLocationInfo` predicate may perform redundant string splitting operations due to it being
+ * an infinite type. Assuming the query has reached a finite set of string locations, this module
+ * allows you to create a set of finite and immutable concrete string locations, which can be
+ * used to improve performance.
+ *
+ * Example:
+ *
+ * ```ql
+ * StringLocation getLocations() {
+ *   // Predicate where string locations are highly convenient.
+ * }
+ *
+ * // Selects "file.cpp:1:2:3:4" and efficiently extracts the hasLocationInfo predicate.
+ * from ConcretizeStringLocation<getLocations()>::Location loc
+ * select loc.toString(), loc
+ * ```
+ */
+module ConcretizeStringLocation<Nullary::Ret<string>::pred/0 locations> {
+  class Location extends Instance<StringTuple<Chars::colon/0>::Concretize<locations/0>::Tuple5>::Type
+  {
+    string getFilePath() { result = inst().getFirst() }
+
+    int getStartLine() { result = inst().getSecond().toInt() }
+
+    int getStartColumn() { result = inst().getThird().toInt() }
+
+    int getEndLine() { result = inst().getFourth().toInt() }
+
+    int getEndColumn() { result = inst().getFifth().toInt() }
+
+    predicate hasLocationInfo(
+      string filePath, int startLine, int startColumn, int endLine, int endColumn
+    ) {
+      filePath = getFilePath() and
+      startLine = getStartLine() and
+      startColumn = getStartColumn() and
+      endLine = getEndLine() and
+      endColumn = getEndColumn()
+    }
   }
 }

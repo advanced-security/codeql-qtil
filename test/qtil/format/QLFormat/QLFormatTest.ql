@@ -1,16 +1,25 @@
+/**
+ * @name QlFormatTest
+ * @id ql-format-test
+ * @descirption QlFormatTest
+ * @kind problem
+ * @severity warning
+ */
+
 import cpp
+import cpp as cpp
 import qtil.format.QLFormat
 import QlFormatCpp
 
 module QlFormatCpp {
   module ElementConfig implements LocatableConfig<Location> {
-    class Locatable = Element;
+    class Locatable = cpp::Locatable;
   }
 
   import QlFormat<Location, ElementConfig>
 }
 
-predicate problem(Element elem, Template msg) {
+predicate problem(Locatable elem, Template msg) {
   exists(VariableDeclarationEntry var, Expr initializer |
     elem = var and
     initializer = var.getDeclaration().getInitializer().getExpr() and
@@ -24,4 +33,6 @@ predicate problem(Element elem, Template msg) {
 import Problem<problem/2>::Query
 
 //from VariableDeclarationEntry var, Expr initializer
-//select "Variable " + var.getName() + " with initializer $@.", initializer, initializer.toString()
+//where
+//initializer = var.getDeclaration().getInitializer().getExpr()
+//select var, "Variable " + var.getName() + " with initializer $@.", initializer, initializer.toString()

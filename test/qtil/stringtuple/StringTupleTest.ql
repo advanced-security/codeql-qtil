@@ -182,3 +182,18 @@ class TestStringTuple8 extends Test, Case {
     else test.fail("Incorrect values comma tuple8")
   }
 }
+
+class TestStringTupleEscapesEntries extends Test, Case {
+  override predicate run(Qnit test) {
+    if
+      exists(StringTuple<Chars::comma/0>::Tuple tuple |
+        tuple = StringTuple<Chars::comma/0>::of2("foo,bar", "baz\\,qux") and
+        tuple = "foo\\,bar,baz\\\\\\,qux" and
+        tuple.get(0) = "foo,bar" and
+        tuple.get(1) = "baz\\,qux" and
+        tuple.size() = 2
+      )
+    then test.pass("Values are being escaped correctly in comma tuple2")
+    else test.fail("Values are not being escaped correctly in comma tuple2")
+  }
+}

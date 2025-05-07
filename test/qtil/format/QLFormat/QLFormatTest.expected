@@ -1,3 +1,3 @@
-| test.c:1:5:1:5 | definition of x | Variable x has initializer $@. | test.c:1:9:1:9 | test.c:1:9:1:9 | 0 | file://:0:0:0:0 | :0:0:0:0 | [unused] |
-| test.c:2:5:2:5 | definition of y | Variable y has initializer $@. | test.c:2:9:2:9 | test.c:2:9:2:9 | 1 | file://:0:0:0:0 | :0:0:0:0 | [unused] |
-| test.c:3:5:3:5 | definition of z | Variable z has initializer $@. | test.c:3:9:3:9 | test.c:3:9:3:9 | 2 | file://:0:0:0:0 | :0:0:0:0 | [unused] |
+| test.c:1:5:1:5 | definition of x | Variable x has initializer $@. | test.c:1:9:1:9 | test.c:1:9:1:9 | 0 | file://:0:0:0:0 | (none) | [unused] |
+| test.c:2:5:2:5 | definition of y | Variable y has initializer $@. | test.c:2:9:2:9 | test.c:2:9:2:9 | 1 | file://:0:0:0:0 | (none) | [unused] |
+| test.c:3:5:3:5 | definition of z | Variable z has initializer $@. | test.c:3:9:3:9 | test.c:3:9:3:9 | 2 | file://:0:0:0:0 | (none) | [unused] |
