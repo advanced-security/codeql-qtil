@@ -24,7 +24,7 @@ To use `qtil`, you can either import everything at once, or pick what you need:
 
 ```ql
 // Import everything under the namespace Qtil
-import qtil
+import qtil.Qtil
 class MyPair extends Qtil::Pair<...> { ... }
 
 // or import what you need with no namepsace
@@ -32,7 +32,8 @@ import qtil.tuple.Pair
 class MyPair extends Pair<...> { ... }
 ```
 
-All examples below use the former.
+Most examples below assume that qtil is imported via the former method. Additionally, some qtilities
+are language specific and should typically be accessed by `import qtil.lang`, e.g., `qtil.cpp`.
 
 ## Features
 
@@ -166,6 +167,37 @@ select b.toUppercase().toString()
 See also the module `Chars` which defines standard nullary predicates that return symbols, for
 instance, `Qtil::Chars::dollar()` holds for the result `"$"`.
 
+### ASTs:
+
+The following modules are usable by importing `qtil.lang`, for instance, `qtil.cpp`. However, the
+implementations are shared across languages and are available in a do-it-yourself way as well.
+
+**TwoOperands**: A module to simplify checks that an operator uses two distinct operands in a
+certain manner.
+
+```ql
+import qtil.cpp
+
+predicate intPlusConstant(BinaryExpr e) {
+  exists(Qtil::TwoOperands<BinaryExpr>::Set set |
+    set.getOperation() = e and
+    set.someOperand().getType() instanceof IntType and
+    set.otherOperand().isConstant()
+  )
+}
+
+// Roughly equivalent to:
+predicate intPlusConstantOld(BinaryExpr e) {
+  exists(Expr a, Expr b |
+    a = e.getAnOperand() and
+    b = e.getAnOperand() and
+    not a = b and
+    a.getType() instanceof IntType and
+    b.isConstant()
+  )
+}
+```
+
 ### Query Formatting
 
 ### Inheritance
@@ -221,6 +253,20 @@ class Person extends Qtil::UnderlyingString {
 _Note: this class is effectively the same as `Qtil::InfInstance<string>::Type`, but uses the member `str()` to get the underlying string instead of the member `inst()`._
 
 ### Locations
+
+Location types in CodeQL are different types across languages. To use these classes, import
+`qtil.lang` (for instance, `qtil.cpp`).
+
+**StringLocation**: A class that supports the codification of any location as a string, which the
+CodeQL engine will use as a location when selected by a query. Also includes support to turn
+existing locations into strings with `StringToLocation`, and support to finitize them at the point
+where a query no longer must deal with an infinite set using the `Finitize` module.
+
+**OptionalLocation**: A class that works much like `Option<Location>`, but that also implements the
+`hasLocation()` predicate which the CodeQL engine expects of a location. Allows queries to select
+placeholder locations that may or may not exist.
+
+**NullLocation**: An empty location.
 
 ### Performance
 
