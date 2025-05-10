@@ -164,8 +164,8 @@ where c.isStr("a") or c = charOf("b") or c = "0".codePointAt(0)
 select b.toUppercase().toString()
 ```
 
-See also the module `Chars` which defines standard nullary predicates that return symbols, for
-instance, `Qtil::Chars::dollar()` holds for the result `"$"`.
+See also the module `Chars` which defines standard nullary predicates that common characters, for
+instance, `Qtil::Chars::dollar()` holds for the result `"$"`,`Qtil::Chars::a()` holds for `"a"`, and `Qtil::Chars::upperA()` holds for `"A"`.
 
 ### ASTs:
 
