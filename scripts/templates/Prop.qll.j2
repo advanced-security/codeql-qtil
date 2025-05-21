@@ -1,0 +1,102 @@
+/**
+ * GENERATED CODE. DO NOT MODIFY.
+ */
+import qtil.fn.FnTypes
+import qtil.parameterization.SignatureTypes
+
+{% for module in modules %}
+{% set arity = module.arity %}
+{% set types = module.types %}
+
+/**
+ * A module to represent a "Property" with {{ arity }} arguments, and no result.
+ *
+ * In qtil speak:
+ *  - a "Function" (FnX) is a predicate with a bindingset[] on all of its arguments, and a result 
+ *  - a "Tuple" (TupleX) is a predicate with finite arguments and no result
+ *  - a "Relation" (RelX) is a predicate with finite arguments and a finite result
+ *  - a "Property" (PropX) is a predicate with a bindingset[] on all arguments no result
+ */
+module Prop{{ arity }}<
+    {{ types | map(attribute='typedecl') | join(', ') }},
+    PropType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::prop/{{ arity }} base
+> {
+  /**
+   * Take the given function and make a new one that only has a result when this property holds for
+   * its input parameters.
+   *
+   * Sibling of `FilterRel`, which takes a "relation" instead of a "function."
+   */
+  module Restrict<InfiniteType R, FnType{{ arity }}<R, {{ types | map(attribute='name') | join(', ') }}>::fn/{{ arity }} f> {
+    bindingset[{{ types | map(attribute='varname') |join(', ') }}]
+    R fn({{ types | map(attribute='vardecl') | join(', ') }}) {
+      base({{ types | map(attribute='varname') | join(', ') }}) and
+      result = f({{ types | map(attribute='varname') | join(', ') }})
+    }
+  }
+
+  /**
+   * Take the given relation and restrict its range to only have a relation result for inputs that
+   * satisfy this property.
+   *
+   * Sibling of `Restrict`, which takes a "relation" instead of a "function."
+   */
+  module FilterRel<InfiniteType R, RelType{{ arity }}<R, {{ types | map(attribute='name') | join(', ') }}>::rel/{{ arity }} r> {
+    R rel({{ types | map(attribute='vardecl') | join(', ') }}) {
+      base({{ types | map(attribute='varname') | join(', ') }}) and
+      result = r({{ types | map(attribute='varname') | join(', ') }})
+    }
+  }
+
+  /**
+   * Take the given relation and restrict its range to only have a relation result for inputs that
+   * satisfy this property.
+   *
+   * Sibling of `And`, which takes a "property" instead of a "tuple predicate."
+   */
+  module FilterTp<TpType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::tp/{{ arity }} tpIn> {
+    predicate tp({{ types | map(attribute='vardecl') | join(', ') }}) {
+      tpIn({{ types | map(attribute='varname') | join(', ') }}) and
+      base({{ types | map(attribute='varname') | join(', ') }})
+    }
+  }
+
+  /**
+   * Combine two properties to make one that only holds when both hold.
+   *
+   * Sibling function of `FilterTp`, which takes a "tuple predicate" instead of a "property"
+   */
+  module And<PropType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::prop/{{ arity }} p2> {
+    bindingset[{{ types | map(attribute='varname') |join(', ') }}]
+    predicate prop({{ types | map(attribute='vardecl') | join(', ') }}) {
+      base({{ types | map(attribute='varname') | join(', ') }}) and
+      p2({{ types | map(attribute='varname') | join(', ') }})
+    }
+  }
+
+  /**
+   * Combine two properties to make one that holds when either hold.
+   *
+   * Sibling function of `Filter`, which takes a "tuple predicate" instead of a "property"
+   */
+  module Or<PropType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::prop/{{ arity }} p2> {
+    bindingset[{{ types | map(attribute='varname') |join(', ') }}]
+    predicate prop({{ types | map(attribute='vardecl') | join(', ') }}) {
+      base({{ types | map(attribute='varname') | join(', ') }}) and
+      p2({{ types | map(attribute='varname') | join(', ') }})
+    }
+  }
+
+  /**
+   * Create a property that is the inverse of this one; the new property only holds when the current
+   * property does not, and vice versa.
+   */
+  module Not {
+    bindingset[{{ types | map(attribute='varname') |join(', ') }}]
+    predicate prop({{ types | map(attribute='vardecl') | join(', ') }}) {
+      not base({{ types | map(attribute='varname') | join(', ') }})
+    }
+  }
+}
+
+{% endfor %}

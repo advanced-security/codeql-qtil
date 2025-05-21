@@ -1,0 +1,652 @@
+/**
+ * GENERATED CODE. DO NOT MODIFY.
+ */
+private import qtil.parameterization.SignatureTypes
+private import qtil.fn.FnTypes
+
+{% for module in modules %}
+{% set arity = module.arity %}
+{% set n_ary = module.n_ary %}
+{% set next_arity = arities[arity + 1] %}
+{% set types = module.types %}
+{% set nths = module.nths %}
+
+/**
+ * A module for transforming a "Tuple predicate" with {{ arity }} arguments.
+ *
+ * In qtil speak:
+ *  - a "Function" (FnX) is a predicate with a bindingset[] on all of its arguments, and a result 
+ *  - a "TuplePredicate " (TpX) is a predicate with finite arguments and no result
+ *  - a "Relation" (RelX) is a predicate with finite arguments and a finite result
+ *  - a "Property" (PropX) is a predicate with a bindingset[] on all arguments no result
+ *
+ * Essentially, a tuple predicate `Tp<A, B, C>` represents a finite set of tuples `(a, b, c)`. This
+ * module accepts a tuple predicate (`predicate p(A, B, C)`) as an input, and offers functional
+ * programming features on top of it such as `map` and `filter`, as well as some relational algebra
+ * features such as projection and joins.
+ *
+ * Example:
+ * ```ql
+ * predicate livesIn(Person p, City c) { c = p.getCity() }
+ * string describe(Person p, City c) { result = p.getName() + " lives in " + c.getName() }
+ *
+ * // selects "Peter lives in New York", "Wanda lives in London", ...
+ * select Tp2<Person, City, livesIn/2>::Map<string, describe/2>::find()
+ * ```
+ */
+module Tp{{ arity }}<{{ types | map(attribute='typedecl') | join(', ') }}, TpType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::tp/{{ arity }} base> {
+    
+  {% for nth in nths %}
+
+  /**
+   * Get the set of {{ nth.name }} values in the set of tuples that satisfy the given predicate.
+   */
+  {# Generates: "A getFirst() { base(result, _, _) }" #}
+  {{nth.type}} {{ nth.name }}() {
+    base({{ nth.lodash_get_as('result') }})
+  }
+
+  /**
+   * Get the set of {{ nth.name }} values in the set of tuples that satisfy the given predicate.
+   */
+  {# Generates: "module First { import Tp<A, B, C, getFirst/0> }" #}
+  module {{ nth.name | title }} {
+    import Tp{{ arity }}<{{ types | map(attribute='name') | join(', ') }}, {{ nth.name }}/0>
+  }
+
+  {% endfor %}
+
+  /**
+   * Map a function over the tuples in this tuple set, and get a new tuple predicate back
+   * representing the set of tuples after being transformed by that function.
+   *
+   * Sibling module of `Relate` (which takes a "relation" instead of a "function").
+   *
+   * Note that this implicitly performs a "flatMap," as the mapping function may return zero or
+   * more than one result per tuple.
+   *
+   * Example:
+   * ```ql
+   * predicate livesIn(Person p, City c) { c = p.getCity() }
+   * string describe(Person p, City c) { result = p.getName() + " lives in " + c.getName() }
+   *
+   * // selects "Peter lives in New York", "Wanda lives in London", ...
+   * select Tp2<Person, City, livesIn/2>::Map<string, describe/2>::find()
+   * ```
+   */
+  {# Generates "module Map<InfiniteStringableType R, InfiniteStringableType A, ... C, Fn<R, A, B, C>::fn/3 map>" #}
+  module Map<InfiniteStringableType R, FnType{{ arity }}<R, {{ types | map(attribute='name') | join(', ') }}>::fn/{{ arity }} map> {
+    /**
+     * Get the result of mapping the function `map` over the set of tuples represented by this
+     * tuple predicate.
+     *
+     * For mapping a "relation" (as opposed to a "function") over this tuple set, see `MapRelate`.
+     */
+    R find() {
+      exists({{ types | map(attribute='vardecl') | join(', ') }} |
+        base({{ types | map(attribute='varname') | join(', ') }}) and
+        result = map({{ types | map(attribute='varname') | join(', ') }})
+      )
+    }
+
+    // TODO: import ResultSet<R, find/0>
+  }
+
+  /**
+   * Maps a relation over the tuples in this tuple set, and get a new tuple predicate back
+   * representing the related values to the tuples in this set.
+   *
+   * Sibling module of `Map` (which takes a "function" instead of a "relation").
+   *
+   * Note that this implicitly performs an intersection with the domain tuple set of the given
+   * relation.
+   *
+   * Example:
+   * ```ql
+   * predicate livesIn(Person p, City c) { c = p.getCity() }
+   * Address hasMailingAddress(Person p, City c) { ... }
+   *
+   * // Selects the mailing addresses that correspond to the people, city in `livesIn`.
+   * select Tp2<Person, City, livesIn/2>::Relate<Address, hasMailingAddress/2>::find()
+   * ```
+   *
+   * To preserve `Person`, `City`, see `ExtendRelate`.
+   */
+  module Relate<InfiniteStringableType R, RelType{{ arity }}<R, {{ types | map(attribute='name') | join(', ') }}>::rel/{{ arity }} r> {
+    /**
+     * Get the result of mapping the relation `r` over the set of tuples represented by this tuple
+     * predicate.
+     *
+     * For mapping a "function" (as opposed to a "relation") over this tuple set, see `MapRelate`.
+     */
+    R find() {
+      exists({{ types | map(attribute='vardecl') | join(', ') }} |
+        base({{ types | map(attribute='varname') | join(', ') }}) and
+        result = r({{ types | map(attribute='varname') | join(', ') }})
+      )
+    }
+
+    // TODO: import ResultSet<R, find/0>
+  }
+
+  /**
+   * An alias for `Map`, but the result is a "tuple set" (a predicate(A a) with one parameter and no
+   * result) instead of a `ResultSet` (a predicate `R pred()` with no parameters and result `R`).
+   *
+   * Sibling module of `ProjectRelate1` (which takes a "relation" instead of a "function").
+   *
+   * See `Map` for more details.
+   */
+  module Project1<InfiniteStringableType R, FnType{{ arity }}<R, {{ types | map(attribute='name') | join(', ') }}>::fn/{{ arity }} map> {
+
+    /**
+     * A predicate tuple that represents the result of a projection, from the input tuple
+     * predicate, to a new tuple predicate with a single column derived from applying a tuple to the
+     * given function `map`.
+     *
+     * For projecting this tuple by a "relation" (as opposed to a "function"), see `ProjectRelate`.
+     */
+    predicate tp(R related) {
+      exists({{ types | map(attribute='vardecl') | join(', ') }} |
+        base({{ types | map(attribute='varname') | join(', ') }}) and
+        related = map({{ types | map(attribute='varname') | join(', ') }})
+      )
+    }
+
+    // TODO: import Tp1<R, tp/1> ?
+  }
+
+  /**
+   * An alias for `Relate`, but the result is a "tuple set" (a predicate(A a) with one parameter and no
+   * result) instead of a `ResultSet` (a predicate `R pred()` with no parameters and result `R`).
+   *
+   * Sibling module of `Project1` (which takes a "function" instead of a "relation").
+   *
+   * See `Relate` for more details.
+   */
+  module ProjectRelate1<InfiniteStringableType R, RelType{{ arity }}<R, {{ types | map(attribute='name') | join(', ') }}>::rel/{{ arity }} r> {
+
+    /**
+     * A predicate tuple that represents the result of a projection, from the input tuple
+     * predicate, to a new tuple predicate with a single column derived from the given relation
+     * `r`.
+     *
+     * For projecting this tuple by a "function" (as opposed to a "relation"), see `Project`.
+     */
+    predicate tp(R related) {
+      exists({{ types | map(attribute='vardecl') | join(', ') }} |
+        base({{ types | map(attribute='varname') | join(', ') }}) and
+        related = r({{ types | map(attribute='varname') | join(', ') }})
+      )
+    }
+
+    // TODO: import Tp1<R, tp/1> ?
+  }
+
+  {% for proj_n in range(2, max_arity+1) %}
+
+  /**
+   * Project this tuple set to a new tuple set of {{ proj_n }} values per row, by using a set of
+   * projection functions.
+   *
+   * Sibling module of `ProjectRelate{{ proj_n }}` (which takes a set of "relations" instead of "functions").
+   *
+   * Each project function accepts the values of a tuple from this tuple set, and returns a new
+   * value, where the value returned by the nth function will become the nth column in the new tuple
+   * set.
+   *
+   * For example, the following projection switches (first, last) names to (last, first) names.
+   * ```ql
+   * predicate firstLast(string first, string last) { exists(Person p | ... ) }
+   *
+   * import Tp2<string, string, firstLast/2>
+   *   ::Project2<string, string,
+   *       Tuples2<string, string>::getFirst/2,
+   *       Tuples2<string, string>::getSecond/2>
+   *   as LastFirst
+   *
+   * // Selects ("Curie", "Maria"), ("Einstein", "Albert"), etc.
+   * from string a, string b where LastFirst::tp(a, b) select a, b
+   * ```
+   */
+  module Project{{ proj_n }}<
+    {# InfiniteStringableType A0, InfiniteStringableType B0, ... #}
+    {{ arities[proj_n] | map(attribute='typedecl') | join(', ') }},
+    {# FnType3<AA, A, B, C>::type/3 pja #}
+    {% for type in arities[proj_n] %}
+      FnType{{ arity }}<{{ type.name }}, {{ types | map(attribute='name') | join(', ') }}>::fn/{{ arity }} pj{{ type.varname }}
+      {% if not loop.last %}, {% endif %}
+    {% endfor %}
+    > {
+      predicate tp({{ arities[proj_n] | map(attribute='vardecl') | join(', ') }}) {
+        exists({{ types | map(attribute='vardecl') | join(', ') }} |
+          base({{types | map(attribute='varname') | join(', ')}}) and
+          {% for type in arities[proj_n] %}
+          {{ type.varname }} = pj{{ type.varname}}({{ types | map(attribute='varname') | join(', ') }})
+          {% if not loop.last %} and {% endif %}
+          {% endfor %}
+        )
+      }
+    }
+
+  /**
+   * Project this tuple set to a new tuple set of {{ proj_n }} values per row, by using a set of
+   * relations.
+   *
+   * Sibling module of `Project{{ proj_n }}` (which takes a set of "functions" instead of "relations").
+   *
+   * Each projection relation accepts the values of a tuple from this tuple set, and returns a new
+   * value, where the value held by the nth relation will become the nth column in the new tuple
+   * set.
+   *
+   * For example, the following projection switches (first, last) names to (last, first) names.
+   * ```ql
+   * predicate siblings(Person a, Person b) { ... }
+   * Person motherOf(Person a, Person b) { ... }
+   * Person fatherOf(Person a, Person b) { ... }
+   *
+   * import Tp2<Person, Person, siblings/2>
+   *     ::Project2<Person, Person, motherOf/2, fatherOf/2>
+   *   as SiblingParents
+   *
+   * // Selects (mother, father) that have a pair of children
+   * from Person mother, Person father where SiblingParents::tp(mother, father)
+   * select mother, father
+   * ```
+   */
+  module ProjectRelate{{ proj_n }}<
+    {# InfiniteStringableType A0, InfiniteStringableType B0, ... #}
+    {{ arities[proj_n] | map(attribute='typedecl') | join(', ') }},
+    {# RelType3<AA, A, B, C>::type/3 pja #}
+    {% for type in arities[proj_n] %}
+      RelType{{ arity }}<{{ type.name }}, {{ types | map(attribute='name') | join(', ') }}>::rel/{{ arity }} pj{{ type.varname }}
+      {% if not loop.last %}, {% endif %}
+    {% endfor %}
+    > {
+      predicate tp({{ arities[proj_n] | map(attribute='vardecl') | join(', ') }}) {
+        exists({{ types | map(attribute='vardecl') | join(', ') }} |
+          base({{types | map(attribute='varname') | join(', ')}}) and
+          {% for type in arities[proj_n] %}
+          {{ type.varname }} = pj{{ type.varname}}({{ types | map(attribute='varname') | join(', ') }})
+          {% if not loop.last %} and {% endif %}
+          {% endfor %}
+        )
+      }
+    }
+
+  {% endfor %}
+
+  {% for nth in nths %}
+
+  /**
+   * Maps the set of {{ nth.name }} values in the set of tuples that satisfy the given predicate,
+   * against a mapper function.
+   *
+   * Sibling function of `MapRelate{{ nth.name | title }}`, which operates on "relations" instead of
+   * "functions."
+   *
+   * Example:
+   * ```ql
+   * predicate employs(Company company, Person person) { ... }
+   *
+   * // Selects the ages of employed People.
+   * select Tp2<Company, Person, employs/2>
+   *   ::MapSecond<int, getAge/1>
+   *   ::find()
+   * ```
+   */
+  {# Generates: "module MapFirst<InfiniteStringableType R, FnType1<R, A>::fn/1>" #}
+  module Map{{ nth.name | title }}<InfiniteStringableType R, FnType1<R, {{ types[nth.idx].name }}>::fn/1 map> {
+    R find() {
+      exists({{ types[nth.idx].vardecl }} |
+        base({{ nth.lodash_get_as(types[nth.idx].varname) }}) and
+        result = map({{ types[nth.idx].varname }})
+      )
+    }
+  }
+
+  /**
+   * Maps the set of {{ nth.name }} values in the set of tuples that satisfy the given predicate,
+   * against a mapper relation.
+   *
+   * Sibling function of `Map{{ nth.name | title }}`, which operates on "functions" instead of
+   * "relations."
+   *
+   * Example:
+   * ```ql
+   * predicate employs(Company company, Person person) { ... }
+   * Pet getPets(Person p) { ... }
+   *
+   * // Selects the pets of employed People.
+   * select Tp2<Company, Person, employs/2>
+   *   ::MapRelateSecond<Pet, getPets/1>
+   *   ::find()
+   * ```
+   */
+  {# Generates: "module MapFirst<InfiniteStringableType R, RelType1<R, A>:reln/1>" #}
+  module MapRelate{{ nth.name | title }}<InfiniteStringableType R, RelType1<R, {{ types[nth.idx].name }}>::rel/1 map> {
+    R find() {
+      exists({{ types[nth.idx].vardecl }} |
+        base({{ nth.lodash_get_as(types[nth.idx].varname) }}) and
+        result = map({{ types[nth.idx].varname }})
+      )
+    }
+  }
+  {% endfor %}
+
+  {% if arity < 5 %}
+  /**
+   * Extend this tuple predicate to have an additional column, by intersecting it with a tuple
+   * predicate with one additional parameter and all existing matching.
+   */
+  {# Generates: "module ExtendIntersect<InfiniteStringableType A, ... C, TpType3<A, B, C>> #}
+  module ExtendIntersect<InfiniteStringableType Z, TpType{{ arity + 1 }}<{{ types | map(attribute='name') | join(', ') }}, Z>::tp/{{ arity + 1}} tp2> {
+    predicate tp({{ types | map(attribute='vardecl') | join(', ') }}, Z z) {
+      base({{ types | map(attribute='varname') | join(', ') }}) and
+      tp2({{ types | map(attribute='varname') | join(', ') }}, z)
+    }
+  }
+
+  /**
+   * Extend this tuple predicate to have an additional column, by running a provided function over
+   * each tuple in this predicate's tuple set, and using the result of that function as the new
+   * column.
+   *
+   * Sibling module of `ExtendByRelation`, which takes a "relation" instead of a "function."
+   */
+  module ExtendByFn<InfiniteStringableType R, FnType{{ arity }}<R, {{ types | map(attribute='name') | join(', ') }}>::fn/{{ arity }} ext> {
+    predicate tp({{ types | map(attribute='vardecl') | join(', ') }}, R r) {
+      base({{ types | map(attribute='varname') | join(', ') }}) and
+      r = ext({{ types | map(attribute='varname') | join(', ') }})
+    }
+  }
+
+  /**
+   * Extend this tuple predicate to have an additional column, by running a provided relation over
+   * each tuple in this predicate's tuple set, and using the result of that relation as the new
+   * column.
+   *
+   * Sibling module of `ExtendByFn`, which takes a "function" instead of a "relation."
+   */
+  module ExtendByRelation<InfiniteStringableType R, RelType{{ arity }}<R, {{ types | map(attribute='name') | join(', ') }}>::rel/{{ arity }} ext> {
+    predicate tp({{ types | map(attribute='vardecl') | join(', ') }}, R r) {
+      base({{ types | map(attribute='varname') | join(', ') }}) and
+      r = ext({{ types | map(attribute='varname') | join(', ') }})
+    }
+  }
+  {% endif %}
+
+  {% for nth in nths %}
+
+  /**
+   * Maps the set of {{ nth.name }} values in the set of tuples that satisfy the given predicate,
+   * against a mapper function, and use the result to add a column to this tuple set.
+   *
+   * Sibling function of `ExtendRelate{{ nth.name | title }}`, which operates on "relations" instead of
+   * "functions."
+   *
+   * Example:
+   * ```ql
+   * predicate hasName(Person person, string name) { ... }
+   * string getInitials(string name) { ... }
+   *
+   * // Selects (person, name, initials)
+   * import Tp2<Person, string, hasName/2>
+   *   ::ExtendMapSecond<string, getInitials/1>
+   *   ::Query
+   * ```
+   */
+  {# Generates: "module ExtendMapFirst<InfiniteStringableType R, FnType1<R, A>::fn/1>" #}
+  module ExtendMap{{ nth.name | title }}<InfiniteStringableType R, FnType1<R, {{ types[nth.idx].name }}>::fn/1 map> {
+    predicate tp({{ types | map(attribute='vardecl') | join(', ') }}, R r) {
+      base({{ types | map(attribute='varname') | join(', ') }}) and
+      r = map({{ nth.varname }})
+    }
+  }
+
+  /**
+   * Maps the set of {{ nth.name }} values in the set of tuples that satisfy the given predicate,
+   * against a mapper function, and use the result to add a column to this tuple set.
+   *
+   * Sibling function of `ExtendRelate{{ nth.name | title }}`, which operates on "relations" instead of
+   * "functions."
+   *
+   * Example:
+   * ```ql
+   * predicate employs(Company company, Person person) { ... }
+   * Address hasAddress(Person p) { ... }
+   *
+   * // Selects (company, person, age) for all employed people.
+   * import Tp2<Company, Person, employs/2>
+   *   ::ExtendRelateSecond<getAge/1>
+   *   ::Query
+   * ```
+   */
+  {# Generates: "module ExtendRelateFirst<InfiniteStringableType R, RelType1<R, A>::rel/1>" #}
+  module ExtendRelate{{ nth.name | title }}<InfiniteStringableType R, RelType1<R, {{ types[nth.idx].name }}>::rel/1 map> {
+    predicate tp({{ types | map(attribute='vardecl') | join(', ') }}, R r) {
+      base({{ types | map(attribute='varname') | join(', ') }}) and
+      r = map({{ nth.varname }})
+    }
+  }
+
+  {% endfor %}
+
+  /**
+   * Takes a property which filters the contents of the current tuple set and produces a new one.
+   *
+   * Sibling predicate of `intersect`, which takes a "tuple predicate" instead of a "property."
+   */
+  module Filter<PropType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::prop/{{ arity }} flt> {
+    predicate tp({{ types | map(attribute='vardecl') | join(', ') }}) {
+      flt({{types | map(attribute='varname') | join (', ') }}) and
+      base({{types | map(attribute='varname') | join (', ') }})
+    }
+  }
+
+  /**
+   * Takes a tuple set and intersects it with the current tuple set to produce a new one.
+   *
+   * Sibling predicate of `filter`, which takes a "property" instead of a "tuple set."
+   */
+  module Intersect<TpType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::tp/{{ arity }} tp2> {
+    predicate tp({{ types | map(attribute='vardecl') | join(', ') }}) {
+      tp2({{types | map(attribute='varname') | join (', ') }}) and
+      base({{types | map(attribute='varname') | join (', ') }})
+    }
+  }
+
+  {# TODO: filterFirst / filterSecond / intersectOnFirst / intersectOnSecond, etc #}
+
+  /**
+   * Creates a new tuple predicate that is a union of the current tuple set and the given one.
+   */
+  module Union<TpType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::tp/{{ arity }} tp2> {
+    predicate tp({{ types | map(attribute='vardecl') | join(', ') }}) {
+      tp2({{types | map(attribute='varname') | join (', ') }}) or
+      base({{types | map(attribute='varname') | join (', ') }})
+    }
+  }
+
+  /**
+   * Creates a new tuple predicate that holds the elements only in the current tuple set, not the
+   * given one.
+   */
+  module Difference<TpType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::tp/{{ arity }} tp2> {
+    predicate tp({{ types | map(attribute='vardecl') | join(', ') }}) {
+      base({{types | map(attribute='varname') | join (', ') }}) and
+      not tp2({{types | map(attribute='varname') | join (', ') }})
+    }
+  }
+
+  {# TODO: differenceFirst, differenceSecond, etc #}
+  {# TODO: filterNot, filterNotFirst, filterNotSecond etc #}
+
+  /**
+   * Checks if (a, b, c, ...) is a member of the tuple set represented by this "tuple predicate."
+   */
+  predicate contains({{ types | map(attribute='vardecl') | join(', ') }}) {
+    base({{types | map(attribute='varname') | join (', ') }})
+  }
+
+  {# TODO: containsFirst, containsSecond, ... #}
+
+  /**
+   * A module with a single predicate, `holds`, that holds if the current tuple set contains all
+   * of the tuples of the given tuple predicate `tp2`.
+   */
+  module ContainsAll<TpType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::tp/{{ arity }} tp2> {
+    predicate holds() {
+      forall({{ types | map(attribute='vardecl') | join(', ') }} |
+        tp2({{types | map(attribute='varname') | join (', ') }}) |
+        base({{types | map(attribute='varname') | join (', ') }})
+      )
+    }
+  }
+
+  {# TODO: firstContainsAll, secondContainsAll, ... #}
+
+  /**
+   * A module with a single predicate, `holds`, that holds if the current tuple set contains any
+   * of the tuples of the given tuple predicate `tp2`.
+   *
+   * Sibling predicate of `AnyHoldsFor`, which takes a "property" instead of a "tuple predicate."
+   */
+  module ContainsAny<TpType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::tp/{{ arity }} tp2> {
+    predicate holds() {
+      exists({{ types | map(attribute='vardecl') | join(', ') }} |
+        tp2({{types | map(attribute='varname') | join (', ') }}) and
+        base({{types | map(attribute='varname') | join (', ') }})
+      )
+    }
+  }
+
+  {# TODO: firstContainsAny, secondContainsAny, ... #}
+
+  /**
+   * A module with a single predicate, `holds`, that holds if any of the tuples in the current tuple
+   * satisfy the given property `prop`.
+   *
+   * Sibling predicate of `ContainsAny`, which takes a "tuple predicate" instead of a "property."
+   */
+  module AnyHoldsFor<PropType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::prop/{{ arity }} prop> {
+    predicate holds() {
+      exists({{ types | map(attribute='vardecl') | join(', ') }} |
+        base({{types | map(attribute='varname') | join (', ') }}) and
+        prop({{types | map(attribute='varname') | join (', ') }})
+      )
+    }
+  }
+
+  /**
+   * A module with a single predicate, `holds`, that holds if all of the tuples in the current tuple
+   * set satisfy the given property `prop`.
+   *
+   * Sibling predicate of `ContainedBy` which takes a "tuple predicate" instead of a "property."
+   */
+  module AllHoldsFor<PropType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::prop/{{ arity }} prop> {
+    predicate holds() {
+      forall({{ types | map(attribute='vardecl') | join(', ') }} |
+        base({{types | map(attribute='varname') | join (', ') }}) |
+        prop({{types | map(attribute='varname') | join (', ') }})
+      )
+    }
+  }
+
+  {# TODO: AllFirstHoldFor, AllSecondHoldFor, ... #}
+
+  /**
+   * A module with a single predicate, `holds`, that holds if all of the tuples in the current tuple
+   * set satisfy the given property `prop`.
+   *
+   * Sibling predicate of `AllHoldsFor`, which takes a "property" instead of a "tuple predicate."
+   */
+  module ContainedBy<TpType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::tp/{{ arity }} tp2> {
+    predicate holds() {
+      forall({{ types | map(attribute='vardecl') | join(', ') }} |
+        base({{types | map(attribute='varname') | join (', ') }}) |
+        tp2({{types | map(attribute='varname') | join (', ') }})
+      )
+    }
+  }
+
+  {# TODO: FirstContainedBy, SecondContainedBy, ... #}
+
+  {% if arity > 1 %}
+    {% for nth in nths %}
+
+  /**
+   * Drop the {{ nth.name }} column in the set of tuples that satisfy the given predicate, and get
+   * a new tuple set after that column has been dropped.
+   */
+  {# Generates: "predicate dropFirst(B b, C c) { base(_, b, c) }" #}
+  predicate drop{{ nth.name | title }}(
+    {{ types | rejectattr('idx', 'eq', nth.idx) | map(attribute='vardecl') | join(', ') }}
+  ) {
+    base(
+    {% for type in types %}
+      {% if type.idx == nth.idx %} _ {% else %} {{ type.varname }} {% endif %}
+      {% if not loop.last %}, {% endif %}
+    {% endfor %}
+    )
+  }
+
+  {# TODO: module DropFirst that imports TpX<dropFirst> #}
+
+    {% endfor %}
+  {% endif %}
+
+  {% for join_n in range(2, max_arity+1) %}
+    {% if join_n + arity <= max_arity %}
+
+  /**
+   * A basic, but very flexible join operation, taking a new tuple predicate to join as well as a
+   * function for each that maps it to a value of type J.
+   *
+   * For instance, given sets of tuples `(a, b, c)` and `(d, e)` and join functions `(a, b, c) -> a`
+   * and `(d, e) -> e`, this module will join both tuple sets on `a = e`.
+   */
+  {# Generates: "Join2ByFns<J, A0, B0, TpType2<A0, B0>::tp/2 tp2, FnType2<J, A0, B0>::fn/2 tp2j, FnType3<J, A, B, C>::fn/3 tpj>" #}
+  module Join{{join_n}}ByFns<InfiniteStringableType J,
+      {{ arities[join_n] | map(attribute='typedecl') | join(', ') }},
+      TpType{{ join_n }}<{{ arities[join_n] | map(attribute='name') | join(', ') }}>::tp/{{ join_n }} tp2,
+      FnType{{ join_n }}<J, {{ arities[join_n] | map(attribute='name') | join(', ') }}>::fn/{{ join_n }} tp2j,
+      FnType{{ arity }}<J, {{ types | map(attribute='name') | join(', ') }}>::fn/{{ arity }} tpj
+  > {
+    predicate tp(
+        {{ types | map(attribute='vardecl') | join(', ') }},
+        {{ arities[join_n] | map(attribute='vardecl') | join(', ') }}
+    ) {
+        base({{ types | map(attribute='varname') | join(', ') }}) and
+        tp2({{ arities[join_n] | map(attribute='varname') | join(', ') }}) and
+        tpj({{ types | map(attribute='varname') | join(', ') }})
+          = tp2j({{ arities[join_n] | map(attribute='varname') | join(', ') }})
+    }
+  }
+
+  {# TODO: a *lot* more join functionality. #}
+
+    {% endif %}
+  {% endfor %}
+
+  /**
+   * Count the number of tuples in this tuple set.
+   */
+  int doCount() {
+    result = count({{ types | map(attribute='vardecl') | join(', ') }} |
+        base({{ types | map(attribute='varname') | join(', ') }}))
+  }
+
+  {# TODO: doCount(A a), doCount(A a, B b), ... #}
+  {# TODO: countFirst, countSecond, ... #}
+
+  /**
+   * Query for the contents of this tuple, by defining a query predicate `tpQuery` to import.
+   */
+  module Query {
+    query predicate tpQuery({{ types | map(attribute='vardecl') | join(', ') }}) {
+      base({{ types | map(attribute='varname') | join(', ') }})
+    }
+  }
+}
+{% endfor %}

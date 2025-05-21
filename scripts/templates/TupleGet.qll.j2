@@ -1,0 +1,20 @@
+/**
+ * GENERATE CODE. DO NOT MODIFY.
+ */
+import qtil.parameterization.SignatureTypes
+
+{% for module in modules %}
+{% set arity = module.arity %}
+{% set types = module.types %}
+{% set nths = module.nths %}
+
+module Tuple{{ arity }}Get<{{ types | map(attribute='typedecl') | join(', ') }}> {
+  {% for nth in nths %}
+  bindingset[{{ types | map(attribute='varname') | join(', ') }}]
+  {{ nth.type }} get{{ nth.name | title }}({{ types | map(attribute='vardecl') | join(', ')}}) {
+    result = {{nth.varname}}
+  }
+  {% endfor %}
+}
+
+{% endfor %}

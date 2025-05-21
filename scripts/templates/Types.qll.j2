@@ -1,0 +1,44 @@
+/**
+ * GENERATE CODE. DO NOT MODIFY.
+ */
+private import qtil.parameterization.SignatureTypes
+{# #}
+{% for module in modules %}
+    {% set arity = module.arity %}
+    {% set types = module.types %}
+    {% set kind = module.kind %}
+    {% set kindname = module.kindname %}
+    {% set unbound_params = module.unbound_params %}
+    {# #}
+    {% if module.has_return %}
+        {% if arity == 0 %}
+            {# As in: "module Fn0<InfiniteType R>" #}
+            {% set returndecl = "InfiniteType R" %}
+        {% else %}
+            {# As in: "module Fn0<InfiniteType R, InfiniteType A, ...>" #}
+            {% set returndecl = "InfiniteType R, " %}
+        {% endif %}
+        {% set predreturn = "R" %}
+    {% else %}
+        {% set returndecl = "" %}
+        {% set predreturn = "predicate" %}
+    {% endif %}
+
+/**
+ * A module to define the signature of a "{{ kindname }}" with {{ arity }} arguments, and a result.
+ *
+ * See `{{ kind }}{{ arity }}` for more details.
+ *
+ * GENERATED CODE. DO NOT MODIFY.
+ */
+module {{ kind }}Type{{ arity }}<{{ returndecl }}{{ types | map(attribute='typedecl') | join(', ') }}> {
+    /**
+     * The signature of a "Function" predicate with arguments {{ types | map(attribute='name') | join(', ') }} and
+     * return type R.
+     */
+{% if unbound_params and arity != 0 %}
+    bindingset[{{ types | map(attribute='varname') | join(', ') }}]
+{% endif %}
+    signature {{ predreturn }} {{ kind | lower }}({{types | map(attribute='vardecl') | join(', ') }});
+}
+{% endfor %}

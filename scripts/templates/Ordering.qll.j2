@@ -1,0 +1,28 @@
+/**
+ * GENERATE CODE. DO NOT MODIFY.
+ */
+import qtil.parameterization.SignatureTypes
+
+{% for module in modules %}
+{% set arity = module.arity %}
+{% set types = module.types %}
+
+module Ordering{{ arity }}<{{ types | map(attribute='typedecl') | join(', ') }}> {
+  signature module Sig {
+    int getRank({{ types | map(attribute='vardecl') | join(', ') }});
+  }
+  signature module StrSig {
+    string getRank({{ types | map(attribute='vardecl') | join(', ') }});
+  }
+
+  module ByStr<StrSig Config> implements Sig {
+    int getRank({{ types | map(attribute='vardecl') | join(', ') }}) {
+      Config::getRank({{ types | map(attribute='varname') | join(', ') }})
+          = rank[result](string str, {{ types | map(attribute='vardecl2') | join(', ') }} |
+              str = Config::getRank({{ types | map(attribute='varname2') | join (', ') }}) |
+              str )
+    }
+  }
+}
+
+{% endfor %}

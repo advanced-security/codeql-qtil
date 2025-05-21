@@ -1,0 +1,134 @@
+/**
+ * GENERATED CODE. DO NOT MODIFY.
+ */
+import qtil.fn.FnTypes
+import qtil.parameterization.SignatureTypes
+
+{% for module in modules %}
+{% set arity = module.arity %}
+{% set n_ary = module.n_ary %}
+{% set next_arity = arities[arity + 1] %}
+{% set types = module.types %}
+{% set rtype = module.rtype %}
+{% set ptypes = module.ptypes %}
+{% set nths = module.nths %}
+
+/**
+ * A module to represent a "Function" with {{ arity }} arguments, and a result.
+ *
+ * In qtil speak:
+ *  - a "Function" (FnX) is a predicate with a bindingset[] on all of its arguments, and a result 
+ *  - a "Tuple" (TupleX) is a predicate with finite arguments and no result
+ *  - a "Relation" (RelX) is a predicate with finite arguments and a finite result
+ *  - a "Property" (PropX) is a predicate with a bindingset[] on all arguments no result
+ */
+module Fn{{ arity }}<
+    {{ types | map(attribute='typedecl') | join(', ') }},
+    FnType{{ arity }}<{{ types | map(attribute='name') | join(', ') }}>::fn/{{ arity }} base
+> {
+  /**
+   * Take a predicate to map the output of this function according to the mapper.
+   *
+   * Example:
+   * ```ql
+   * bindingset[x]
+   * int toInt(string x) { result.toString() = x }
+   *
+   * bindingset[x]
+   * int double(int x) { result = x * 2 }
+   *
+   * int doubleStringNumber(string x) {
+   *   // doubleStringNumber("4") = 8, doubleStringNumber("7") = 14, etc
+   *   result = Fn1<int, string, toInt/1>::Map<int, double/1>::fn(x)
+   * }
+   * ```
+   *
+   * To map the arguments, rather than the result, use `TupleX::Map`
+   */
+  module Compose<InfiniteType R2, FnType1<R2, {{ rtype.name }}>::fn/1 f2> {
+    /**
+     * Get the values that have been mapped from the oginal base predicate by the mapper function.
+     *
+     * See the `Map` for more detail and example usage.
+     */
+    {% if arity > 0 %}
+    bindingset[{{ ptypes | map(attribute='varname') |join(', ') }}]
+    {% endif %}
+    R2 fn({{ ptypes | map(attribute='vardecl') | join(', ') }}) {
+      result = f2(base({{ ptypes | map(attribute='varname') | join(', ') }}))
+    }
+  }
+
+  {% if arity > 0 %}
+  /**
+   * Filter this function to only produce an output when the inputs satisfy the given property.
+   *
+   * Sibling function of `ToRelation`, which takes a "tuple predicate" instead of a "property"
+   */
+  module If<PropType{{ arity }}<{{ ptypes | map(attribute='name') | join(', ') }}>::prop/{{ arity }} prop> {
+    bindingset[{{ ptypes | map(attribute='varname') |join(', ') }}]
+    {{ rtype.name }} fn({{ ptypes | map(attribute='vardecl') | join(', ') }}) {
+      prop({{ ptypes | map(attribute='varname') | join(', ') }}) and
+      result = base({{ ptypes | map(attribute='varname') | join(', ') }})
+    }
+  }
+
+  /**
+   * Apply this function to all tuples in the provided tuple predicate in order to build a relation
+   * between the input tuples and the function result.
+   *
+   * Sibling function of `If`, which takes a "property" instead of a "tuple predicate."
+   */
+  module ToRelation<TpType{{ arity }}<{{ ptypes | map(attribute='name') | join(', ') }}>::tp/{{ arity }} tp> {
+    {{ rtype.name }} rel({{ ptypes | map(attribute='vardecl') | join(', ') }}) {
+      tp({{ ptypes | map(attribute='varname') | join(', ') }}) and
+      result = base({{ ptypes | map(attribute='varname') | join(', ') }})
+    }
+  }
+
+  /**
+   * Apply this function to all tuples in the provided tuple predicate.
+   */
+  module Apply<TpType{{ arity }}<{{ ptypes | map(attribute='name') | join(', ') }}>::tp/{{ arity }} tp> {
+    {{ rtype.name }} fn() {
+      exists({{ ptypes | map(attribute='vardecl') | join(', ') }} |
+        tp({{ ptypes | map(attribute='varname') | join(', ') }}) and
+        result = base({{ ptypes | map(attribute='varname') | join(', ') }})
+      )
+    }
+  }
+  {% endif %}
+
+  /**
+   * Filter this function to only produce an output when the output satisfies the given property.
+   *
+   * Sibling predicate of `ToLookup`, which takes a "tuple predicate" instead of a "property."
+   */
+  module Filter<PropType1<{{ rtype.name }}>::prop/1 prop> {
+    {% if arity > 0 %}
+    bindingset[{{ ptypes | map(attribute='varname') |join(', ') }}]
+    {% endif %}
+    {{ rtype.name }} fn({{ ptypes | map(attribute='vardecl') | join(', ') }}) {
+      result = base({{ ptypes | map(attribute='varname') | join(', ') }}) and
+      prop(result)
+    }
+  }
+
+  /**
+   * Use the output of this function as a lookup to values that exist in the provided unary tuple
+   * predicate.
+   *
+   * Sibling predicate of `Filter`, which takes a "property" instead of a "tuple predicate."
+   */
+  module ToLookup<TpType1<{{ rtype.name }}>::tp/1 tp> {
+    {% if arity > 0 %}
+    bindingset[{{ ptypes | map(attribute='varname') |join(', ') }}]
+    {% endif %}
+    {{ rtype.name }} fn({{ ptypes | map(attribute='vardecl') | join(', ') }}) {
+      result = base({{ ptypes | map(attribute='varname') | join(', ') }}) and
+      tp(result)
+    }
+  }
+}
+
+{% endfor %}
