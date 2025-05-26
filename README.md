@@ -252,6 +252,21 @@ class Person extends Qtil::UnderlyingString {
 
 _Note: this class is effectively the same as `Qtil::InfInstance<string>::Type`, but uses the member `str()` to get the underlying string instead of the member `inst()`._
 
+**Finitize**: A module to produce a finite type from an infinite type (such as `string`, `int`, or
+`Qtil::InfInstance<string>::Type`, etc.) by providing predicate that constrains that infinite type.
+
+```ql
+class Person extends Qtil::UnderlyingString { ... }
+predicate realPerson(Person p) { p in ["Marie Curie", "Albert Einstein", ...] }
+
+class RealPerson = Qtil::Finitize<Person, realPerson/1>::Type;
+```
+
+Since infinite types should generally be avoided, but sometimes are necessary to enable certain
+clean APIs, a common pattern is to have a stage where infinite types are collected, and then use
+a constraint such as this one to finitize them at a later stage, to reduce the impact of using
+infinite types in a query.
+
 ### Locations
 
 Location types in CodeQL are different types across languages. To use these classes, import
