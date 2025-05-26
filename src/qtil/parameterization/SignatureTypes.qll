@@ -1,4 +1,31 @@
 /**
+ * A module to declare any finite type as a signature type, without a separate declaration.
+ * 
+ * With this module, rather than writing `signature class ExprSig extends Expr;`, you can simply
+ * declare a module `module MyModule<Signature<Expr>::Type T> { ... }` to declare a parameterized
+ * module that takes a type that extends `Expr` as a parameter.
+ * 
+ * To create an infinite signature type, use `InfSignature` instead.
+ */
+module Signature<FiniteType T> {
+  signature class Type extends T;
+}
+
+/**
+ * A module to declare any infinite type as a signature type, without a separate declaration.
+ * 
+ * With this module, rather than writing `signature class MyInt extends int;` with a `bindingset`,
+ * you can simply declare a module `module MyModule<InfSignature<MyInt>::Type T> { ... }` to declare
+ * a * parameterized module that takes a type that extends `int` as a parameter.
+ * 
+ * To create a finite signature type, use `Signature` instead.
+ */
+module InfSignature<InfiniteType T> {
+  bindingset[this]
+  signature class Type extends T;
+}
+
+/**
  * A common signature type that can be used to represent any finite type, including `newtype`s.
  * 
  * Cannot be used to represent infinite types, such as `int` or `string`, but can be used to

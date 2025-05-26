@@ -444,15 +444,23 @@ The declared predicate signatures look as follows:
  - etc., for `Ternary`, `Quaternary`, and up to `Senary` (six parameter) predicates.
 
 **SignatureTypes.qll** contains various baseline signature types to aid in writing correct
-parameterized modules:
+parameterized modules, as well as a utility to create a signature type from any existing type.
 
 ```ql
+// A module that accepts any type that is a subclass of `Expr`:
+module MyModule<Qtil::Signature<Expr>::Type ExprType> { ... }>
+
+// A module that accepts any pair of finite types:
 module MyModule<Qtil::FiniteType A, Qtil::FiniteType B> { ... }
 ```
 
+ - `Qtil::Signature<T>::Type`: A module that allows you to create a signature type from any existing
+      type `T`. This is useful for parameterized modules that need to accept a type as a parameter.
  - `Qtil::FiniteType`: Any finite type. Supports `newtype`s. No support for primitive types.
  - `Qtil::FiniteStringableType`: Any finite class (has a `toString()` member). No support for
       `newtype`s or primitive types.
+ - `Qtil::InfSignature<T>::Type`: Like `Qtil::Signature<T>::Type`, but allows you to create a signature
+      type from any existing infinite type `T`.
  - `Qtil::InfiniteType`: Any finite or infinite type, with `bindingset[this]`. Supports
       `newtype`s and primitives.
  - `Qtil::InfiniteStringableType`: Any finite or infinite class, with `bindingset[this]`,
