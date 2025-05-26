@@ -26,8 +26,8 @@ predicate problem(Locatable elem, Template msg) {
     initializer = var.getDeclaration().getInitializer().getExpr() and
     msg =
       tpl("Variable {varname} has initializer {initializer}.")
-          .withParam("varname", var.getName())
-          .withParam("initializer", initializer.toString(), initializer)
+          .text("varname", var.getName())
+          .link("initializer", initializer)
   )
 }
 

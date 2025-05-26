@@ -200,6 +200,89 @@ predicate intPlusConstantOld(BinaryExpr e) {
 
 ### Query Formatting
 
+**QlFormat** offers a way of formatting CodeQL query messages in a consistent way, with varying
+numbers of placeholders, via a template-like syntax. This module is useful for writing more
+user-friendly messages for certain types of queries, with a cleaner query implementation.
+
+QlFormat can be used as follows:
+
+```ql
+import qtil.Cpp // or qtil.Java, etc.
+
+// Define a problem predicate for a Locatable and a Qtil::Template:
+predicate problem(Locatable elem, Qtil::Template template) {
+  exists(Variable var, FunctionCall fc |
+    var = elem and
+    fc = var.getInitializer().getAChild*() and
+    template = Qtil::tpl("Initializer of variable '{name}' calls {fn}.")
+      .withParam("name", var.getName())
+      .withParam("fn", fc.getFunction().getName(), fc.getFunction())
+  )
+}
+
+// Import the Problem::Query module:
+import Qtil::Problem<problem/2>::Query
+```
+
+The resulting query results will insert the variable name into the alert message, and insert a
+placeholder link from the function name to the function itself.
+
+This is particularly useful for when queries have different placeholders, or use placeholders in
+different orders:
+
+```ql
+predicate problem(...) {
+  ... // Previous case which has a placeholder for a function call
+  or
+  // Mixed with alternate case which has no placeholder:
+  exists(Variable var |
+    var = elem and
+    not exists(FunctionCall fc | fc = var.getInitializer().getAChild*()) and
+    template = Qtil::tpl("Variable '{name}' has no initializer.")
+      .withParam("name", var.getName())
+  )
+}
+```
+
+This mixture of query results with different numbers of placeholders can be done without the
+`QlFormat` features of qtil, but this approach can allow for much better readability and
+maintainability of the query code.
+
+**CustomPathProblem**: Allows users to create a query that has a custom trace through the source
+code. For example, CodeQL data flow `PathGraph` shows dataflow through a program. However, by using
+this module, query authors can trace any path -- a call graph, inheritance chain, transitive
+file imports, etc.
+
+To use the `CustomPathProblem` module, you must define a graph where each `Node` is a `Locatable`,
+and the (directed) edges through that graph. Then by defining start nodes and end nodes, this
+module will attempt to efficiently find paths to be reported as problems.
+
+```ql
+/**
+ * Find paths through which `main.cpp` may transitively `#include` a banned file "banned_header.h".
+ * ...
+ * @kind path-problem
+ * ...
+ */
+module MyPathProblem implements Qtil::CustomPathProblemConfigSig {
+  class Node = IncludeDirective;
+  predicate start(IncludeDirective n) { node.isInFile("main.cpp") }
+  predicate end(IncludeDirective l) { node.includesFile("banned_header.h") }
+  predicate edge(IncludeDirective a, IncludeDirective b) {
+    b = a.getIncludedFile().getAnIncludeDirective()
+  }
+}
+
+import CustomPathProblem<MyPathProblem>
+from IncludeDirective start, IncludeDirective end
+where problem(start, end) // This limits the query to the identified problematic paths.
+select end, start, end, "Transitive inclusion of banned_header.h from main.cpp"
+```
+
+If you wish to perform a path search such as the above, but without reporting problems, you can
+use the `Qtil::GraphPathSearch` module instead, which provides an efficient search algorithm
+without producing a `@kind path-problem` query.
+
 ### Inheritance
 
 **Instance**: A module to make `instanceof` inheritance easier in CodeQL, by writing
@@ -282,41 +365,6 @@ where a query no longer must deal with an infinite set using the `Finitize` modu
 placeholder locations that may or may not exist.
 
 **NullLocation**: An empty location.
-
-**CustomPathProblem**: Allows users to create a query that has a custom trace through the source
-code. For example, CodeQL data flow `PathGraph` shows dataflow through a program. However, by using
-this module, query authors can trace any path -- a call graph, inheritance chain, transitive
-file imports, etc.
-
-To use the `CustomPathProblem` module, you must define a graph where each `Node` is a `Locatable`,
-and the (directed) edges through that graph. Then by defining start nodes and end nodes, this
-module will attempt to efficiently find paths to be reported as problems.
-
-```ql
-/**
- * Find paths through which `main.cpp` may transitively `#include` a banned file "banned_header.h".
- * ...
- * @kind path-problem
- * ...
- */
-module MyPathProblem implements Qtil::CustomPathProblemConfigSig {
-  class Node = IncludeDirective;
-  predicate start(IncludeDirective n) { node.isInFile("main.cpp") }
-  predicate end(IncludeDirective l) { node.includesFile("banned_header.h") }
-  predicate edge(IncludeDirective a, IncludeDirective b) {
-    b = a.getIncludedFile().getAnIncludeDirective()
-  }
-}
-
-import CustomPathProblem<MyPathProblem>
-from IncludeDirective start, IncludeDirective end
-where problem(start, end) // This limits the query to the identified problematic paths.
-select end, start, end, "Transitive inclusion of banned_header.h from main.cpp"
-```
-
-If you wish to perform a path search such as the above, but without reporting problems, you can
-use the `Qtil::GraphPathSearchSig` module instead, which provides an efficient search algorithm
-without producing a `@kind path-problem` query.
 
 **Locatable**: A signature module that allows cross language support for locatable elements in a
 query language, for instance C++ or Java.
