@@ -9,6 +9,7 @@
 import cpp
 import cpp as cpp
 import qtil.format.QLFormat
+import qtil.locations.Locatable
 import QlFormatCpp
 
 module QlFormatCpp {
