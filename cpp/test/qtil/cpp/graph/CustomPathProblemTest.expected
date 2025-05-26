@@ -1,0 +1,9 @@
+edges
+| test.cpp:2:9:2:11 | mid | test.cpp:4:9:4:11 | end |  |  |
+| test.cpp:3:9:3:13 | start | test.cpp:2:9:2:11 | mid |  |  |
+nodes
+| test.cpp:2:9:2:11 | mid | semmle.label | mid |
+| test.cpp:3:9:3:13 | start | semmle.label | start |
+| test.cpp:4:9:4:11 | end | semmle.label | end |
+#select
+| test.cpp:3:9:3:13 | start | test.cpp:4:9:4:11 | end | Path from $@ to $@. | start | test.cpp:3:9:3:13 | start | end | test.cpp:4:9:4:11 | end |
