@@ -1,5 +1,5 @@
 import qtil.testing.Qnit
-import qtil.stringlocation.StringLocation
+import qtil.locations.StringLocation
 
 class TestFromString extends Test, Case {
   override predicate run(Qnit test) {
