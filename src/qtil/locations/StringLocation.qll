@@ -7,13 +7,13 @@ private import codeql.util.Location
 
 /**
  * An infinite class that can represent any location, backed by a string.
- * 
+ *
  * To "construct" a string location, use the `stringLocation()` predicate.
- * 
+ *
  * This class is useful anywhere that strings or infinite types are useful, and for reporting
  * locations that don't exist in a database. For instance, it can be useful to store these locations
  * in an infinite StringTuple. For more, see `LocationToString`.
- * 
+ *
  * *Caution*: Infinite types are not always the best choice for performance. Before using this
  * class, consider if you can reasonably use the standard finite type Location type instead. When
  * your use has reached a finite set of locations, you can use the `FinitizeStringLocation` module
@@ -50,7 +50,7 @@ class StringLocation extends InfInstance<StrTup::Tuple>::Type {
 
 /**
  * "Construct" a string location from a file path and line/column numbers.
- * 
+ *
  * See `StringLocation` for more details.
  */
 bindingset[filePath, startLine, startColumn, endLine, endColumn]
@@ -66,13 +66,13 @@ StringLocation stringLocation(
  * A module that provides a way to convert a location to a `StringLocation`.
  *
  * This module is parameterized because each language has its own way of representing locations.
- * 
+ *
  * Typically, this module should be imported via `qtil.lang` for the query you are writing, e.g.,
  * `qtil.cpp` or `qtil.java`, rather than instantiating it with a location signature yourself.
  *
  * ```ql
  * import qtil.cpp
- * 
+ *
  * // Selects function names and locations via a string tuple.
  * from StringTuple tuple, Function f
  * where tuple = StringTuple::of2(f.getName(), stringLocation(f.getLocation()))
@@ -82,7 +82,7 @@ StringLocation stringLocation(
 module LocationToString<LocationSig Location> {
   /**
    * Construct a `StringLocation` from the given location object.
-   * 
+   *
    * See `StringLocation` for more details.
    */
   bindingset[elem]
@@ -116,18 +116,26 @@ module LocationToString<LocationSig Location> {
  * select loc.toString(), loc
  * ```
  */
-module FinitizeStringLocation<Unary<string>::pred/1 locations> {
-  class Location extends Instance<StringTuple<Chars::colon/0>::Finitize<locations/1>::Tuple5>::Type
-  {
-    string getFilePath() { result = inst().getFirst() }
+module FinitizeStringLocation<Unary<StringLocation>::pred/1 locations> {
+  private import qtil.inheritance.Finitize
+  private import qtil.parameterization.Finalize
 
-    int getStartLine() { result = inst().getSecond().toInt() }
+  /**
+   * The finite class.
+   * 
+   * Note that we have to override getFilePath(), getStartLine(), etc. to ensure that the
+   * `bindingset[this]` is removed, so that the class can be used as a location.
+   */
+  class Location extends Final<Finitize<StringLocation, locations/1>::Type>::Type {
+    string getFilePath() { result = super.getFilePath() }
 
-    int getStartColumn() { result = inst().getThird().toInt() }
+    int getStartLine() { result = super.getStartLine() }
 
-    int getEndLine() { result = inst().getFourth().toInt() }
+    int getStartColumn() { result = super.getStartColumn() }
 
-    int getEndColumn() { result = inst().getFifth().toInt() }
+    int getEndLine() { result = super.getEndLine() }
+
+    int getEndColumn() { result = super.getEndColumn() }
 
     predicate hasLocationInfo(
       string filePath, int startLine, int startColumn, int endLine, int endColumn
