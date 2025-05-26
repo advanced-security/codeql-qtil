@@ -51,27 +51,14 @@
  */
 
 private import qtil.inheritance.UnderlyingString
+private import qtil.inheritance.Finitize
 private import qtil.parameterization.Finalize
 private import qtil.parameterization.SignaturePredicates
 private import codeql.util.Location
-private import qtil.stringlocation.StringLocation
+private import qtil.locations.StringLocation
 private import qtil.tuple.Pair
-private import qtil.stringlocation.NullLocation
-
-/**
- * A signature module that is required to configure the QlFormat module to understand locations
- * in the current query language.
- *
- * This module should have preexisting implementations in the `qtil` modules for each language,
- * so that you don't have to implement it yourself, for instance, `qtil.cpp.format.QLFormat`.
- */
-signature module LocatableConfig<LocationSig Location> {
-  class Locatable {
-    Location getLocation();
-
-    string toString();
-  }
-}
+private import qtil.locations.OptionalLocation
+private import qtil.locations.Locatable
 
 module QlFormat<LocationSig Location, LocatableConfig<Location> LocConfig> {
   private class Locatable = LocConfig::Locatable;
@@ -93,6 +80,7 @@ module QlFormat<LocationSig Location, LocatableConfig<Location> LocConfig> {
     }
 
     bindingset[this, key, text]
+    pragma[inline_late]
     Template withParam(string key, string text) { result = str().replaceAll("{" + key + "}", text) }
 
     bindingset[this, key, text, elem]
@@ -115,69 +103,54 @@ module QlFormat<LocationSig Location, LocatableConfig<Location> LocConfig> {
   }
 
   module Problem<Binary<Locatable, Template>::pred/2 problem> {
+    private predicate templateExists(Template str) { problem(_, str) }
+
     /**
      * A performance related class to prevent CodeQL from splitting template strings multiple times.
      * At this point, there are a finite set of templates, so using a finite type is generally
      * preferable and more performant.
      */
-    private class ConcreteTemplate extends string {
-      ConcreteTemplate() { exists(Problem p | this = p.getTemplateString()) }
-
-      string getMessage() { result = this.(Template).getMessage() }
-
-      predicate hasParam(string key, int index, string text, string location) {
+    private class FiniteTemplate extends Final<Finitize<Template, templateExists/1>::Type>::Type
+    {
+      pragma[nomagic]
+      predicate hasParam2(string key, int index, string text, string location) {
         // Perform the same concretization trick. There is a finite set of parameters within each
         // template, so we can use a finite type and get a large performance boost.
-        exists(TConcreteParam p | p = TParam(this, index, key, text, location))
+        "{" + key + "}" = this.str().regexpFind("\\{[a-zA-Z0-9_]+\\}", index, _) and
+        super.hasParam(key, text, location, index)
       }
     }
-
-    /**
-     * A performance-related class to prevent CodeQL from splitting template strings multiple
-     * times. Once this type has been computed, no splitting needs to be performed again.
-     */
-    private newtype TConcreteParam =
-      TParam(ConcreteTemplate template, int index, string key, string text, string location) {
-        "{" + key + "}" = template.regexpFind("\\{[a-zA-Z0-9_]+\\}", index, _) and
-        template.(Template).hasParam(key, text, location, index)
-      }
 
     class Problem extends Final<Pair<Locatable, Template, problem/2>::Pair>::Type {
       Locatable getLocatable() { result = this.getFirst() }
 
       string getMessage() { result = getTemplate().getMessage() }
 
-      ConcreteTemplate getTemplate() { result = this.getSecond() }
-
-      /**
-       * We must have a member to get the template string, so that ConcreteTemplate can be
-       * constrained to the set of strings used in templates.
-       */
-      string getTemplateString() { result = this.getSecond() }
+      FiniteTemplate getTemplate() { result = this.getSecond() }
 
       string getFormattedMessage() {
         result = getMessage().regexpReplaceAll("\\{[a-zA-Z0-9_]+\\}", "\\$@")
       }
 
-      predicate hasParamIndex(int idx) { getTemplate().hasParam(_, idx, _, _) }
+      predicate hasParamIndex(int idx) { getTemplate().hasParam2(_, idx, _, _) }
 
       predicate hasFormattedParam(int idx, string str, string elem) {
-        getTemplate().hasParam(_, idx, str, elem)
+        getTemplate().hasParam2(_, idx, str, elem)
       }
     }
 
     module Query {
-      /** A predicate for usage with the ConcretizedStringLocation module, for performance. */
-      private string existsStrLoc() {
-        exists(Problem p | p.getTemplate().hasParam(_, _, _, result))
+      /** A predicate for usage with the FinitizedStringLocation module, for performance. */
+      private predicate existsStrLoc(StringLocation str) {
+        exists(Problem p | p.getTemplate().hasParam2(_, _, _, str))
       }
 
-      // The problem predicate is now fully known, and the set of locations is finite. Use the
-      // concretized version of the string location to avoid redundant string splitting. This makes
-      // a huge difference in performance.
-      private class ConcreteLocation = ConcretizeStringLocation<existsStrLoc/0>::Location;
+      // The problem predicate is now fully known, and the set of locations is finite. Use a finite
+      // type to hold the locations to avoid redundant string splitting. This makes a huge
+      // difference in performance.
+      private class FiniteLocation = FinitizeStringLocation<existsStrLoc/1>::Location;
 
-      private class OptionalLocation = OptionalLocation<ConcreteLocation>::Location;
+      private class OptionalLocation = OptionalLocation<FiniteLocation>::Location;
 
       bindingset[idx]
       private predicate getExtra(Problem problem, int idx, string str, OptionalLocation elem) {
