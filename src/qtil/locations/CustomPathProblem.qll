@@ -121,13 +121,13 @@ signature module CustomPathProblemConfigSig {
  * ```
  */
 module CustomPathProblem<CustomPathProblemConfigSig Config> {
-  private import qtil.performance.ForwardReverse as FR
+  private import qtil.graph.GraphPathSearch as Search
 
-  private module ForwardReverseConfig implements FR::ForwardReverseSig<Config::Node> {
+  private module ForwardReverseConfig implements Search::GraphPathSearchSig<Config::Node> {
     import Config
   }
 
-  private import FR::ForwardReverse<Config::Node, ForwardReverseConfig> as SearchResults
+  private import Search::GraphPathSearch<Config::Node, ForwardReverseConfig> as SearchResults
 
   /** The magical `edges` query predicate that powers `@kind path-problem` along with `nodes`. */
   query predicate edges(LocConfig::Locatable a, LocConfig::Locatable b, string key, string val) {
