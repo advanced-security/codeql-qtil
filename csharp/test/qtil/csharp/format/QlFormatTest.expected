@@ -1,0 +1,1 @@
+| test.cs:3:13:3:13 | x | Variable x has initializer $@. | test.cs:3:17:3:17 | test.cs:3:17:3:17 | 0 | file://:0:0:0:0 | (none) | [unused] |
