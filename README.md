@@ -268,6 +268,45 @@ placeholder locations that may or may not exist.
 
 **NullLocation**: An empty location.
 
+**CustomPathProblem**: Allows users to create a query that has a custom trace through the source
+code. For example, CodeQL data flow `PathGraph` shows dataflow through a program. However, by using
+this module, query authors can trace any path -- a call graph, inheritance chain, transitive
+file imports, etc.
+
+To use the `CustomPathProblem` module, you must define a graph where each `Node` is a `Locatable`,
+and the (directed) edges through that graph. Then by defining start nodes and end nodes, this
+module will attempt to efficiently find paths to be reported as problems.
+
+```ql
+/**
+ * Find paths through which `main.cpp` may transitively `#include` a banned file "banned_header.h".
+ * ...
+ * @kind path-problem
+ * ...
+ */
+module MyPathProblem implements Qtil::CustomPathProblemConfigSig {
+  class Node = IncludeDirective;
+  predicate start(IncludeDirective n) { node.isInFile("main.cpp") }
+  predicate end(IncludeDirective l) { node.includesFile("banned_header.h") }
+  predicate edge(IncludeDirective a, IncludeDirective b) {
+    b = a.getIncludedFile().getAnIncludeDirective()
+  }
+}
+
+import CustomPathProblem<MyPathProblem>
+from IncludeDirective start, IncludeDirective end
+where problem(start, end) // This limits the query to the identified problematic paths.
+select end, start, end, "Transitive inclusion of banned_header.h from main.cpp"
+```
+
+**Locatable**: A signature module that allows cross language support for locatable elements in a
+query language, for instance C++ or Java.
+
+This module, and `qtil` modules that depend on it, should already have preexisting
+language-specific implementations in the `qtil` modules for each language, so that you don't have
+to implement it yourself, for instance, in `qtil.Cpp` or `qtil.Java`. However, implementing this
+module allows you to add qtil support for new languages.
+
 ### Performance
 
 **ForwardReverse**: A module that implements a performant CodeQL graph search pattern called

@@ -133,6 +133,22 @@ module ForwardReverse<FiniteType Node, ForwardReverseSig<Node> Config> {
   }
 
   /**
+   * A start node, end node pair that are connected in the graph.
+   */
+  predicate hasConnection(ReverseNode n1, ReverseNode n2) {
+    Config::start(n1) and
+    Config::end(n2) and
+    (hasPath(n1, n2) or n1 = n2)
+  }
+
+  /**
+   * All relevant edges in the graph which participate in a connection from a start to an end node.
+   */
+  predicate pathEdge(ReverseNode n1, ReverseNode n2) {
+    Config::edge(n1, n2)
+  }
+
+  /**
    * A performant path search from a set of start nodes to a set of end nodes.
    * 
    * This predicate is the main entry point for the forward-reverse pruning pattern.
@@ -150,9 +166,8 @@ module ForwardReverse<FiniteType Node, ForwardReverseSig<Node> Config> {
    * Note: this is fast to compute because limits the search space to nodes found by the fast unary
    * searches done to find `ForwardNode` and `ReverseNode`.
    */
-  predicate hasPath(Node n1, Node n2) {
-    n1 instanceof ReverseNode and
-    n2 instanceof ReverseNode and
+  predicate hasPath(ReverseNode n1, ReverseNode n2) {
+    Config::start(n1) and
     Config::edge(n1, n2)
     or
     exists(ReverseNode nMid |
