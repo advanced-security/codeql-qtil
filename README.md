@@ -299,6 +299,10 @@ where problem(start, end) // This limits the query to the identified problematic
 select end, start, end, "Transitive inclusion of banned_header.h from main.cpp"
 ```
 
+If you wish to perform a path search such as the above, but without reporting problems, you can
+use the `Qtil::GraphPathSearchSig` module instead, which provides an efficient search algorithm
+without producing a `@kind path-problem` query.
+
 **Locatable**: A signature module that allows cross language support for locatable elements in a
 query language, for instance C++ or Java.
 
@@ -307,36 +311,28 @@ language-specific implementations in the `qtil` modules for each language, so th
 to implement it yourself, for instance, in `qtil.Cpp` or `qtil.Java`. However, implementing this
 module allows you to add qtil support for new languages.
 
-### Performance
+### Graphs
 
-**ForwardReverse**: A module that implements a performant CodeQL graph search pattern called
-"forward reverse pruning," a pattern widely used in the CodeQL dataflow libraries.
+**GraphPathSearch**: A module for efficiently finding paths in custom directed graphs from a set of
+starting nodes to a set of ending nodes. For performance, this module uses a pattern called "forward
+reverse pruning," a pattern widely used in the CodeQL dataflow libraries.
 
 ```ql
-module Config implement Qtil::ForwardReverseSig<Person> {
+module Config implement Qtil::GraphPathSearchSig<Person> {
   predicate start(Person p) { p.checkSomething() }
   predicate end(Person p) { p.checkSomethingElse() }
   predicate edge(Person a, Person b) { a.getParent() = b }
 }
 
 from Person a, Person b
-where Qtil::ForwardReverse<Person, Config>::hasPath(a, b)
+where Qtil::GraphPathSearch<Person, Config>::hasPath(a, b)
 select a, b
 ```
 
-This pattern takes a set of starting points, ending points, and edges in a graph. From the starting
-nodes it scans forward along edges to find all reachable nodes. This is fast because it is a unary,
-rather than binary, operation. These are called "forward nodes." Then, the from the set of ending
-points that are also forward nodes (reachable from the starting points), we reverse the process to
-find all forward nodes that reach end nodes. This is also fast because it is another unary
-operation. These are called "reverse nodes." As a last step, this smaller set of reverse nodes is
-far more efficient to search for paths connecting starting points to ending points.
+This module takes a set of starting points, ending points, and edges in a graph, and the predicate
+`hasPath` reveals which end nodes are reachable from the given start nodes.
 
-The performance of this module depends heavily on its configuration predicates.
-
-This module may not fit your use case exactly as is. In this case, this module can be an example
-performance optimization to draw inspiration from as you create a solution that fits your specific
-needs.
+For displaying the discovered paths to users, see the `CustomPathProblem` module above.
 
 ### Testing
 

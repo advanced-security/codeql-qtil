@@ -1,10 +1,10 @@
 import qtil.testing.Qnit
-import qtil.performance.ForwardReverse
+import qtil.graph.GraphPathSearch
 import Family
 
 signature class FiniteType;
 
-module BartToGrandpaConfig implements ForwardReverseSig<Person> {
+module BartToGrandpaConfig implements GraphPathSearchSig<Person> {
   predicate start(Person p) { p.getName() = "Bart" }
 
   predicate end(Person p) { p.getName() = "Grandpa" }
@@ -12,7 +12,7 @@ module BartToGrandpaConfig implements ForwardReverseSig<Person> {
   predicate edge(Person p1, Person p2) { p2 = p1.getAParent() }
 }
 
-module GrandpaToBartConfig implements ForwardReverseSig<Person> {
+module GrandpaToBartConfig implements GraphPathSearchSig<Person> {
   predicate start(Person p) { p.getName() = "Grandpa" }
 
   predicate end(Person p) { p.getName() = "Bart" }
@@ -26,7 +26,7 @@ class TestBartForwardNodesContain extends Test, Case {
       forall(Person p |
         p.getName() = ["Bart", "Homer", "Marge", "Clancy", "Jacquelin", "Mona", "Grandpa"]
       |
-        p instanceof ForwardReverse<Person, BartToGrandpaConfig>::ForwardNode
+        p instanceof GraphPathSearch<Person, BartToGrandpaConfig>::ForwardNode
       )
     then test.pass("All forward nodes from Bart exist")
     else test.fail("Some forward nodes from Bart are missing")
@@ -36,7 +36,7 @@ class TestBartForwardNodesContain extends Test, Case {
 class TestBartForwardNodesDoNotContain extends Test, Case {
   override predicate run(Qnit test) {
     if
-      exists(ForwardReverse<Person, BartToGrandpaConfig>::ForwardNode person |
+      exists(GraphPathSearch<Person, BartToGrandpaConfig>::ForwardNode person |
         not person.getName() = ["Bart", "Homer", "Marge", "Clancy", "Jacquelin", "Mona", "Grandpa"]
       )
     then test.fail("Some unexpected forward nodes from Bart exist")
@@ -48,7 +48,7 @@ class TestBartReverseNodesContain extends Test, Case {
   override predicate run(Qnit test) {
     if
       forall(Person p | p.getName() = ["Bart", "Homer", "Grandpa"] |
-        p instanceof ForwardReverse<Person, BartToGrandpaConfig>::ReverseNode
+        p instanceof GraphPathSearch<Person, BartToGrandpaConfig>::ReverseNode
       )
     then test.pass("All reverse nodes from Bart exist")
     else test.fail("Some reverse nodes from Bart are missing")
@@ -58,7 +58,7 @@ class TestBartReverseNodesContain extends Test, Case {
 class TestBartReverseNodesDoNotContain extends Test, Case {
   override predicate run(Qnit test) {
     if
-      exists(ForwardReverse<Person, BartToGrandpaConfig>::ReverseNode person |
+      exists(GraphPathSearch<Person, BartToGrandpaConfig>::ReverseNode person |
         not person.getName() = ["Bart", "Homer", "Grandpa"]
       )
     then test.fail("Some unexpected reverse nodes from Bart exist")
@@ -70,7 +70,7 @@ class TestGrandpaToBartForwardNodesContain extends Test, Case {
   override predicate run(Qnit test) {
     if
       forall(Person p | p.getName() = ["Grandpa", "Homer", "Bart", "Maggie", "Lisa"] |
-        p instanceof ForwardReverse<Person, GrandpaToBartConfig>::ForwardNode
+        p instanceof GraphPathSearch<Person, GrandpaToBartConfig>::ForwardNode
       )
     then test.pass("All forward nodes from Grandpa exist")
     else test.fail("Some forward nodes from Grandpa are missing")
@@ -80,7 +80,7 @@ class TestGrandpaToBartForwardNodesContain extends Test, Case {
 class TestGrandpaToBartForwardNodesDoNotContain extends Test, Case {
   override predicate run(Qnit test) {
     if
-      exists(ForwardReverse<Person, GrandpaToBartConfig>::ForwardNode person |
+      exists(GraphPathSearch<Person, GrandpaToBartConfig>::ForwardNode person |
         not person.getName() = ["Grandpa", "Homer", "Bart", "Maggie", "Lisa"]
       )
     then test.fail("Some unexpected forward nodes from Grandpa exist")
@@ -92,7 +92,7 @@ class TestGrandpaToBartReverseNodesContain extends Test, Case {
   override predicate run(Qnit test) {
     if
       forall(Person p | p.getName() = ["Grandpa", "Homer", "Bart"] |
-        p instanceof ForwardReverse<Person, GrandpaToBartConfig>::ReverseNode
+        p instanceof GraphPathSearch<Person, GrandpaToBartConfig>::ReverseNode
       )
     then test.pass("All reverse nodes from Grandpa exist")
     else test.fail("Some reverse nodes from Grandpa are missing")
@@ -102,7 +102,7 @@ class TestGrandpaToBartReverseNodesContain extends Test, Case {
 class TestGrandpaToBartReverseNodesDoNotContain extends Test, Case {
   override predicate run(Qnit test) {
     if
-      exists(ForwardReverse<Person, GrandpaToBartConfig>::ReverseNode person |
+      exists(GraphPathSearch<Person, GrandpaToBartConfig>::ReverseNode person |
         not person.getName() = ["Grandpa", "Homer", "Bart"]
       )
     then test.fail("Some unexpected reverse nodes from Grandpa exist")

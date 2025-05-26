@@ -1,5 +1,5 @@
 /**
- * A module that implements a performance pattern in CodeQL for exploring graphs called
+ * A module for efficiently finding paths in a directional graph using a performant pattern called
  * forward-reverse pruning.
  * 
  * This pattern is useful for efficiently finding connections between nodes in a directional graph.
@@ -15,17 +15,18 @@ private import qtil.parameterization.SignatureTypes
 private import qtil.parameterization.Finalize
 
 /**
- * Implement this signature to utilize forward-reverse pruning on your graph.
+ * Implement this signature to define a graph, and a search for paths within that graph, using the
+ * `GraphPathSearch` module.
  * 
  * ```ql
- * module MyConfig implements ForwardReverseSig<Node> {
+ * module MyConfig implements GraphPathSearchSig<Node> {
  *   predicate start(Node n1) { ... }
  *   predicate edge(Node n1, Node n2) { ... }
  *   predicate end(Node n1) { ... }
  * }
  * ```
  */
-signature module ForwardReverseSig<FiniteType Node> {
+signature module GraphPathSearchSig<FiniteType Node> {
   /**
    * The nodes that begin the search of the graph.
    * 
@@ -63,18 +64,22 @@ signature module ForwardReverseSig<FiniteType Node> {
 }
 
 /**
- * A module that implements a performance pattern in CodeQL for exploring graphs called
- * forward-reverse pruning.
+ * A module that implements an efficient search for a path within a custom directional graph from a
+ * set of start nodes to a set of end nodes.
  * 
- * This pattern is useful for efficiently finding connections between nodes in a directional graph.
- * In a first pass, it finds nodes reachable from the starting point. In the second pass, it finds
- * the subset of those nodes that can be reached from the end point. Together, these create a path
- * from start points to end points.
+ * To show discovered paths to users, see the module `CustomPathProblem` which uses this module as
+ * its underlying search implementation.
  * 
- * To use this module, provide an implementation of the `ForwardReverseSig` signature as follows:
+ * This module uses a pattern called "forward reverse pruning" for efficiency. This pattern is
+ * useful for reducing the search space when looking for paths in a directional graph. In a first
+ * pass, it finds nodes reachable from the starting point. In the second pass, it finds the subset
+ * of those nodes that can be reached from the end point. Together, these create a path from start
+ * points to end points.
+ * 
+ * To use this module, provide an implementation of the `GraphPathSearchSig` signature as follows:
  * 
  * ```ql
- * module Config implements ForwardReverseSig<Person> {
+ * module Config implements GraphPathSearchSig<Person> {
  *   predicate start(Person p) { p.checkSomething() }
  *   predicate edge(Person p1, Person p2) { p2 = p1.getAParent() }
  *   predicate end(Person p) { p.checkSomethingElse() }
@@ -91,7 +96,7 @@ signature module ForwardReverseSig<FiniteType Node> {
  * ```ql
  * from Person p1, Person p2
  * // Fast graph path detection thanks to forward-reverse pruning.
- * where ForwardReverse<Person, Config>::hasPath(p1, p2)
+ * where GraphPathSearch<Person, Config>::hasPath(p1, p2)
  * select p1, p2
  * ```
  * 
@@ -101,7 +106,7 @@ signature module ForwardReverseSig<FiniteType Node> {
  * 
  * These classes may be useful in addition to the `hasPath` predicate.
  */
-module ForwardReverse<FiniteType Node, ForwardReverseSig<Node> Config> {
+module GraphPathSearch<FiniteType Node, GraphPathSearchSig<Node> Config> {
   /**
    * The set of all nodes reachable from the start nodes (inclusive).
    * 
@@ -149,17 +154,17 @@ module ForwardReverse<FiniteType Node, ForwardReverseSig<Node> Config> {
   }
 
   /**
-   * A performant path search from a set of start nodes to a set of end nodes.
+   * A performant path search within a custom directed graph from a set of start nodes to a set of
+   * end nodes.
    * 
-   * This predicate is the main entry point for the forward-reverse pruning pattern.
-   * 
-   * The design of the config predicates has a great effect in how well this performance pattern
-   * will ultimately perform.
+   * This predicate is the main entry point for the forward-reverse pruning pattern. The design of
+   * the config predicates has a great effect in how well this performance pattern will ultimately
+   * perform.
    *
    * Example:
    * ```ql
    * from Person p1, Person p2
-   * where ForwardReverse<Person, Config>::hasPath(p1, p2)
+   * where GraphPathSearch<Person, Config>::hasPath(p1, p2)
    * select p1, p2
    * ```
    * 
