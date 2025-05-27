@@ -35,6 +35,20 @@ class MyPair extends Pair<...> { ... }
 Most examples below assume that qtil is imported via the former method. Additionally, some qtilities
 are language specific and should typically be accessed by `import qtil.lang`, e.g., `qtil.cpp`.
 
+## Supported Languages
+
+- C/C++: ✅ available as `import qtil.Cpp` in pack `GithubSecurityLab/qtil-cpp`
+- C#: ✅ available as `import qtil.CSharp` in pack `GithubSecurityLab/qtil-csharp`
+- Go: ✅ available as `import qtil.Go` in pack `GithubSecurityLab/qtil-go`
+- Java: ✅ available as `import qtil.Java` in pack `GithubSecurityLab/qtil-java`
+- JavaScript: ✅ available as `import qtil.Javascript` in pack `GithubSecurityLab/qtil-javascript`
+- Python: ✅ available as `import qtil.Python` in pack `GithubSecurityLab/qtil-python`
+- Ruby: ✅ available as `import qtil.Ruby` in pack `GithubSecurityLab/qtil-ruby`
+- Rust: ❌ not yet available
+- Swift: ✅ available as `import qtil.Swift` in pack `GithubSecurityLab/qtil-swift`
+- QL: ❌ not yet available
+- other languages: ❌ not supported by CodeQL.
+
 ## Features
 
 ### Pairs, Tuples, and Products, oh my!
@@ -215,8 +229,8 @@ predicate problem(Locatable elem, Qtil::Template template) {
     var = elem and
     fc = var.getInitializer().getAChild*() and
     template = Qtil::tpl("Initializer of variable '{name}' calls {fn}.")
-      .withParam("name", var.getName())
-      .withParam("fn", fc.getFunction().getName(), fc.getFunction())
+      .text("name", var.getName())
+      .link("fn", fc.getFunction())
   )
 }
 
@@ -239,7 +253,7 @@ predicate problem(...) {
     var = elem and
     not exists(FunctionCall fc | fc = var.getInitializer().getAChild*()) and
     template = Qtil::tpl("Variable '{name}' has no initializer.")
-      .withParam("name", var.getName())
+      .text("name", var.getName())
   )
 }
 ```
