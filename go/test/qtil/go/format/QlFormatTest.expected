@@ -1,0 +1,1 @@
+| test.go:3:5:3:9 | value declaration specifier | Variable x has initializer $@. | test.go:3:9:3:9 | test.go:3:9:3:9 | 0 | file://:0:0:0:0 | (none) | [unused] |
