@@ -1,0 +1,9 @@
+edges
+| test.java:3:9:3:20 | int mid | test.java:5:9:5:20 | int end |  |  |
+| test.java:4:9:4:22 | int start | test.java:3:9:3:20 | int mid |  |  |
+nodes
+| test.java:3:9:3:20 | int mid | semmle.label | int mid |
+| test.java:4:9:4:22 | int start | semmle.label | int start |
+| test.java:5:9:5:20 | int end | semmle.label | int end |
+#select
+| test.java:4:9:4:22 | int start | test.java:5:9:5:20 | int end | Path from $@ to $@. | start | test.java:4:9:4:22 | int start | end | test.java:5:9:5:20 | int end |

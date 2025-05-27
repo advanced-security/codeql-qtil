@@ -1,0 +1,1 @@
+| test.java:3:9:3:18 | int x | Variable x has initializer $@. | test.java:3:17:3:17 | test.java:3:17:3:17 | 0 | file://:0:0:0:0 | (none) | [unused] |

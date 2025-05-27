@@ -1,0 +1,2 @@
+| test.java:6:12:6:16 | ... + ... | test.java:6:12:6:12 | a | test.java:6:16:6:16 | b |
+| test.java:7:12:7:16 | ... + ... | test.java:7:16:7:16 | a | test.java:7:12:7:12 | b |
