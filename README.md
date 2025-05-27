@@ -397,7 +397,50 @@ This module takes a set of starting points, ending points, and edges in a graph,
 
 For displaying the discovered paths to users, see the `CustomPathProblem` module above.
 
-### Testing
+### Testing with Qnit
+
+While codeql's `test run` subcommand is a great way to test queries, it can be better in some cases
+to write a more traditional unit test for CodeQL libraries. Rather than selecting a set of outputs
+in a query and then inspecting that the query result (in the `.expectations` file) makes sense, qtil
+provides a library called "Qnit" for writing direct test cases with expectations, so that there's
+better cohesion between a test case and its expected output.
+
+To use Qnit, import the `qtil.testing.Qnit` module, and create a test class that extends
+`Test, Case`. Inside the class override the `run(Qnit test)` member predicate, and conditionally
+call `test.pass(name)` or `test.fail(description)` as appropriate.
+
+```ql
+import qtil.testing.Qnit
+
+class MyTest extends Test, Case {
+  override predicate run(Qnit test) {
+    if 1 = 1
+    then test.pass("1 equals 1")
+    else test.fail("1 does not equal 1")
+  }
+}
+```
+
+You may define as many test classes as you like, and they will all be run when you run the command
+`codeql test run $TESTDIR`. If all tests pass, the test will output "{n} tests passed." If any test
+fails, the result of each test will be selected (including failing and passing tests).
+
+For correct use, ensure that each test class passes with a unique name, and that tests always hold
+for some result, whether its a pass or a fail.
+
+```
+  override predicate run(Qnit test) {
+    if 1 = 1
+    then test.pass("1 equals 1") // Ensure this is unique to the test
+    else none() // This would be valid CodeQL, but it would not fail.
+  }
+```
+
+It is particularly risky, albeit useful, to write `test.fail("..." + somePredicate().toString())`,
+as this test will **not** fail if `somePredicate()` does not hold. This is a risky pattern, and so
+should only be applied with some caution.
+
+See the README in the `qtil.testing` directory for more information on how to use Qnit.
 
 ### Parameterization
 
