@@ -1,0 +1,1 @@
+| test.py:1:1:1:5 | AssignStmt | Variable x defined with value $@. | test.py:1:5:1:5 | test.py:1:5:1:5 | IntegerLiteral | file://:0:0:0:0 | (none) | [unused] |

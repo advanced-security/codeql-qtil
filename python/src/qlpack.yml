@@ -1,0 +1,8 @@
+name: mfairhurst/qtil-python
+library: true
+warnOnImplicitThis: false
+version: 0.0.1
+license: MIT
+dependencies:
+  codeql/python-all: '>=0.0.1 <5.0.0'
+  mfairhurst/qtil: 0.0.1

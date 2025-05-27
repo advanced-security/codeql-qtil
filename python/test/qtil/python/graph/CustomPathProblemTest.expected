@@ -1,0 +1,9 @@
+edges
+| test.py:4:5:4:7 | mid | test.py:3:5:3:7 | end |  |  |
+| test.py:5:5:5:9 | start | test.py:4:5:4:7 | mid |  |  |
+nodes
+| test.py:3:5:3:7 | end | semmle.label | end |
+| test.py:4:5:4:7 | mid | semmle.label | mid |
+| test.py:5:5:5:9 | start | semmle.label | start |
+#select
+| test.py:5:5:5:9 | start | test.py:3:5:3:7 | end | Path from $@ to $@. | start | test.py:5:5:5:9 | start | end | test.py:3:5:3:7 | end |

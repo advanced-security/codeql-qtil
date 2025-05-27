@@ -1,0 +1,2 @@
+| test.py:3:5:3:9 | BinaryExpr | test.py:3:5:3:5 | a | test.py:3:9:3:9 | b |
+| test.py:4:5:4:9 | BinaryExpr | test.py:4:9:4:9 | a | test.py:4:5:4:5 | b |
