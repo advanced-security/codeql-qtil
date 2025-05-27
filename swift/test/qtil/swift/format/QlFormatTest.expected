@@ -1,0 +1,1 @@
+| test.swift:1:5:1:5 | x | Variable x has initializer $@. | test.swift:1:9:1:9 | test.swift:1:9:1:9 | 0 | file://:0:0:0:0 | (none) | [unused] |

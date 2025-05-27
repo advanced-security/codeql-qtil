@@ -1,0 +1,9 @@
+edges
+| test.swift:2:9:2:9 | mid | test.swift:4:9:4:9 | end |  |  |
+| test.swift:3:9:3:9 | start | test.swift:2:9:2:9 | mid |  |  |
+nodes
+| test.swift:2:9:2:9 | mid | semmle.label | mid |
+| test.swift:3:9:3:9 | start | semmle.label | start |
+| test.swift:4:9:4:9 | end | semmle.label | end |
+#select
+| test.swift:3:9:3:9 | start | test.swift:4:9:4:9 | end | Path from $@ to $@. | start | test.swift:3:9:3:9 | start | end | test.swift:4:9:4:9 | end |

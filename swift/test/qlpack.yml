@@ -1,0 +1,8 @@
+name: mfairhurst/qtil-swift-test
+library: true
+warnOnImplicitThis: false
+version: 0.0.1
+license: MIT
+dependencies:
+  mfairhurst/qtil-swift: "*"
+extractor: swift
