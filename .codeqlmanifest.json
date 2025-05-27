@@ -1,6 +1,22 @@
 {
   "provide": [
     "src/qlpack.yml",
-    "test/qlpack.yml"
+    "test/qlpack.yml",
+    "cpp/src/qlpack.yml",
+    "cpp/test/qlpack.yml",
+    "java/src/qlpack.yml",
+    "java/test/qlpack.yml",
+    "python/src/qlpack.yml",
+    "python/test/qlpack.yml",
+    "javascript/src/qlpack.yml",
+    "javascript/test/qlpack.yml",
+    "go/src/qlpack.yml",
+    "go/test/qlpack.yml",
+    "csharp/src/qlpack.yml",
+    "csharp/test/qlpack.yml",
+    "ruby/src/qlpack.yml",
+    "ruby/test/qlpack.yml",
+    "swift/src/qlpack.yml",
+    "swift/test/qlpack.yml"
   ]
 }
