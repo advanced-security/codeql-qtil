@@ -39,7 +39,7 @@ To install `qtil` for CodeQL development, add the following dependency to the `q
 ...
 dependencies:
   ...
-  GithubSecurityLab/qtil: "*"
+  advanced-security/qtil: "*"
 ```
 
 To use `qtil`, you can either import everything at once, or pick what you need:
@@ -59,15 +59,15 @@ are language specific and should typically be accessed by `import qtil.lang`, e.
 
 ## Supported Languages
 
-- C/C++: ✅ available as `import qtil.Cpp` in pack `GithubSecurityLab/qtil-cpp`
-- C#: ✅ available as `import qtil.CSharp` in pack `GithubSecurityLab/qtil-csharp`
-- Go: ✅ available as `import qtil.Go` in pack `GithubSecurityLab/qtil-go`
-- Java: ✅ available as `import qtil.Java` in pack `GithubSecurityLab/qtil-java`
-- JavaScript: ✅ available as `import qtil.Javascript` in pack `GithubSecurityLab/qtil-javascript`
-- Python: ✅ available as `import qtil.Python` in pack `GithubSecurityLab/qtil-python`
-- Ruby: ✅ available as `import qtil.Ruby` in pack `GithubSecurityLab/qtil-ruby`
+- C/C++: ✅ available as `import qtil.Cpp` in pack `advanced-security/qtil-cpp`
+- C#: ✅ available as `import qtil.CSharp` in pack `advanced-security/qtil-csharp`
+- Go: ✅ available as `import qtil.Go` in pack `advanced-security/qtil-go`
+- Java: ✅ available as `import qtil.Java` in pack `advanced-security/qtil-java`
+- JavaScript: ✅ available as `import qtil.Javascript` in pack `advanced-security/qtil-javascript`
+- Python: ✅ available as `import qtil.Python` in pack `advanced-security/qtil-python`
+- Ruby: ✅ available as `import qtil.Ruby` in pack `advanced-security/qtil-ruby`
 - Rust: ❌ not yet available
-- Swift: ✅ available as `import qtil.Swift` in pack `GithubSecurityLab/qtil-swift`
+- Swift: ✅ available as `import qtil.Swift` in pack `advanced-security/qtil-swift`
 - QL: ❌ not yet available
 - other languages: ❌ not supported by CodeQL.
 

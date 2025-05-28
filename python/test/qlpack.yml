@@ -1,8 +1,8 @@
-name: mfairhurst/qtil-python-test
+name: advanced-security/qtil-python-test
 library: true
 warnOnImplicitThis: false
 version: 0.0.1
 license: MIT
 dependencies:
-  mfairhurst/qtil-python: "*"
+  advanced-security/qtil-python: "*"
 extractor: python

@@ -1,8 +1,8 @@
-name: mfairhurst/qtil-java
+name: advanced-security/qtil-java
 library: true
 warnOnImplicitThis: false
 version: 0.0.1
 license: MIT
 dependencies:
   codeql/java-all: '>=0.0.1 <8.0.0'
-  mfairhurst/qtil: 0.0.1
+  advanced-security/qtil: 0.0.1

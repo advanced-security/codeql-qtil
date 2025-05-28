@@ -1,8 +1,8 @@
-name: mfairhurst/qtil-csharp
+name: advanced-security/qtil-csharp
 library: true
 warnOnImplicitThis: false
 version: 0.0.1
 license: MIT
 dependencies:
   codeql/csharp-all: '>=0.0.1 <6.0.0'
-  mfairhurst/qtil: 0.0.1
+  advanced-security/qtil: 0.0.1

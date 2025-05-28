@@ -1,9 +1,9 @@
-name: mfairhurst/qtil-test
+name: advanced-security/qtil-test
 library: true
 warnOnImplicitThis: false
 version: 0.0.1
 license: MIT
 dependencies:
-  mfairhurst/qtil: "*"
+  advanced-security/qtil: "*"
   codeql/cpp-all: "2.1.1"
 extractor: cpp
