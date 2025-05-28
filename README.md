@@ -546,6 +546,11 @@ module MyModule<Qtil::FiniteType A, Qtil::FiniteType B> { ... }
       Supports primitives. Does not support `newtype`.
  - `Qtil::StringlikeType`: Any type that extends or is an instanceof `string`.
 
+## Contributing
+
+This project welcomes contributions and suggestions. See [Contributing](CONTRIBUTING.md) for more
+details.
+
 ## Support
 
 This project is intended to be useful and help the CodeQL community. That said, we may not have
