@@ -9,7 +9,29 @@ For examples of the former, `qtil` has conveniences such as string escaping. For
 
 Let's dive in!
 
-## Installing and using qtil
+## License 
+
+This project is licensed under the terms of the MIT open source license. Please refer to [MIT](./LICENSE.txt) for the full terms.
+
+CodeQL is subject to the [GithHub CodeQL Terms & Conditions](https://securitylab.github.com/tools/codeql/license).
+
+## Background
+
+This pack is just a collection of useful ideas, and no specific new features are currently planned.
+If you have an idea on how to make writing CodeQL queries easier, please open an issue or a pull
+request! And make sure to check back in on occasion to see what new features may have been added.
+
+## Requirements 
+
+To use this library, you should have the CodeQL CLI installed, and a license to use CodeQL on your
+project (it is free for open source). For writing queries, we recommend using the
+[VsCode CodeQL starter workspace](https://github.com/github/vscode-codeql-starter) and using the
+CodeQL vscode extension.
+
+Once a query development is up and running, you are ready to install `qtil` with the instructions
+below.
+
+### Installing and using qtil
 
 To install `qtil` for CodeQL development, add the following dependency to the `qlpack.yml` for your project:
 
@@ -523,3 +545,18 @@ module MyModule<Qtil::FiniteType A, Qtil::FiniteType B> { ... }
  - `Qtil::InfiniteStringableType`: Any finite or infinite class, with `bindingset[this]`,
       Supports primitives. Does not support `newtype`.
  - `Qtil::StringlikeType`: Any type that extends or is an instanceof `string`.
+
+## Support
+
+This project is intended to be useful and help the CodeQL community. That said, we may not have
+time and resources to support every feature request or bug report, and when support is offered it
+may be subject to some delay.
+
+If you have a feature request or bug report that is of significant importance to you, please do make
+its importance and urgency clear in your issue or pull request, to increase the likelihood of
+receiving timely support amidst our busy jobs here at GitHub!
+
+## Maintainers
+
+This project is currently maintained by @michaelrfairhurst with help from other CodeQL/security
+experts at GitHub.
