@@ -2,8 +2,6 @@ import qtil.testing.Qnit
 import qtil.graph.GraphPathSearch
 import Family
 
-signature class FiniteType;
-
 module BartToGrandpaConfig implements GraphPathSearchSig<Person> {
   predicate start(Person p) { p.getName() = "Bart" }
 
