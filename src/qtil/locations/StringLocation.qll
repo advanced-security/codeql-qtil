@@ -122,7 +122,7 @@ module FinitizeStringLocation<Unary<StringLocation>::pred/1 locations> {
 
   /**
    * The finite class.
-   * 
+   *
    * Note that we have to override getFilePath(), getStartLine(), etc. to ensure that the
    * `bindingset[this]` is removed, so that the class can be used as a location.
    */

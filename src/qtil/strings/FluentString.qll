@@ -1,8 +1,6 @@
-
-bindingset[s] bindingset[result]
-FluentString fluentString(string s) {
-    result = s
-}
+bindingset[result]
+bindingset[s]
+FluentString fluentString(string s) { result = s }
 
 class FluentString extends string {
   bindingset[this]

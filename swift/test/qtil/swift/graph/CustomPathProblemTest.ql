@@ -7,9 +7,7 @@ module CallGraphPathProblemConfig implements CustomPathProblemConfigSig {
 
   predicate start(Node n) { n.getName() = "start" }
 
-  predicate end(Node n) {
-    n.getName() = "end"
-  }
+  predicate end(Node n) { n.getName() = "end" }
 
   predicate edge(VarDecl a, VarDecl b) {
     exists(AssignExpr assign |

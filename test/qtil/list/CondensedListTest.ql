@@ -1,7 +1,6 @@
 import qtil.list.CondensedList
 import qtil.testing.Qnit
 import fib
-
 import CondenseList<Fib, identity/1>::Global
 import CondenseList<Fib, identity/1>::GroupBy<TEvenOrOdd, evenOrOdd/1> as Grouped
 

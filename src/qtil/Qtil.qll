@@ -30,14 +30,12 @@ module Qtil {
   import qtil.tuple.Product
   import qtil.tuple.StringTuple
   import qtil.tuple.Tuple
-
   // The following files are not imported, because the require configuration per language to be
   // useful. They should be imported in the language-specific modules, such as `qtil.cpp` or
   // `qtil.java`, etc:
   // import qtil.ast.TwoOperands
   // import qtil.locations.CustomPathProblem
   // import qtil.format.QLFormat
-
   // Qnit is not imported by default.
   // import qtil.testing.Qnit
 }

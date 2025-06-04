@@ -170,9 +170,11 @@ class TestMapRelateFirst extends Test, Case {
 class TestMapRelateSecond extends Test, Case {
   override predicate run(Qnit test) {
     if
-      count(Tp2<string, string, person/2>::MapRelateSecond<string, mightHaveFirstName/1>::find()) = 5 and
+      count(Tp2<string, string, person/2>::MapRelateSecond<string, mightHaveFirstName/1>::find()) =
+        5 and
       Tp2<string, string, person/2>::MapRelateSecond<string, mightHaveFirstName/1>::find() = "Marie" and
-      Tp2<string, string, person/2>::MapRelateSecond<string, mightHaveFirstName/1>::find() = "Albert" and
+      Tp2<string, string, person/2>::MapRelateSecond<string, mightHaveFirstName/1>::find() =
+        "Albert" and
       Tp2<string, string, person/2>::MapRelateSecond<string, mightHaveFirstName/1>::find() = "Ada" and
       Tp2<string, string, person/2>::MapRelateSecond<string, mightHaveFirstName/1>::find() = "Alan" and
       Tp2<string, string, person/2>::MapRelateSecond<string, mightHaveFirstName/1>::find() = "Grace"
@@ -288,8 +290,8 @@ class TestExtendMapSecond extends Test, Case {
       ) = 5 and
       Tp2<string, string, person/2>::ExtendMapSecond<string, toUpperCase/1>::tp("Marie", "Curie",
         "CURIE") and
-      Tp2<string, string, person/2>::ExtendMapSecond<string, toUpperCase/1>::tp("Albert", "Einstein",
-        "EINSTEIN") and
+      Tp2<string, string, person/2>::ExtendMapSecond<string, toUpperCase/1>::tp("Albert",
+        "Einstein", "EINSTEIN") and
       Tp2<string, string, person/2>::ExtendMapSecond<string, toUpperCase/1>::tp("Ada", "Lovelace",
         "LOVELACE") and
       Tp2<string, string, person/2>::ExtendMapSecond<string, toUpperCase/1>::tp("Alan", "Turing",
@@ -300,6 +302,7 @@ class TestExtendMapSecond extends Test, Case {
     else test.fail("ExtendMapSecond gets incorrect names")
   }
 }
+
 class TestExtendRelateSecond extends Test, Case {
   override predicate run(Qnit test) {
     if

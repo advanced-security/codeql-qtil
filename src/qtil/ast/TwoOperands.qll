@@ -136,7 +136,7 @@ module TwoOperands<FiniteStringableType Operand, TwoOperandsSig<Operand>::HasOpe
    *    approach is done to allow the CodeQL engine to perform optimizations by inlining which
    *    would not be possible if the `Set` class was a `newtype` of all operand pairs, while
    *    allowing that `someOperand()` and `otherOperand()` to consistent and different.
-   * 
+   *
    * For an alternative, more minimal API see the `set` predicate.
    */
   class Set extends Instance<Operand>::Type {
@@ -165,26 +165,26 @@ module TwoOperands<FiniteStringableType Operand, TwoOperandsSig<Operand>::HasOpe
 
   /**
    * Get a set of operands for the given operation, ordered (a, b) or (b, a).
-   * 
+   *
    * Never mix `getASet` calls without binding the result, e.g.
    * `...::getASet(e).someOperand().... and ...::getASet(e).otherOperand()....`, or else the
    * `getASet` predicate may hold for two different orders of the two operands. The consequence of
    * this is that `.someOperand()` and `otherOperand()` may refer to the same operand. Always bind
    * the result of this predicate to a singular instance, e.g.
    * `exists(TwoOperands<BinaryExpr>::Set set | ... )`.
-   * 
+   *
    * Example usage:
    * ```ql
    * predicate myBinaryTest(TwoOperands<BinaryExpr>::Set set) {
    *   set.someOperand().isInteger() and
    *   set.otherOperand().isConstant()
    * }
-   * 
+   *
    * from BinaryExpr e
    * where myBinaryTest(TwoOperands<BinaryExpr>::getASet(e))
    * select e, "found match"
    * ```
-   * 
+   *
    * For an alternative, more minimal API see the `set` predicate.
    */
   Set getASet(HasOperands a) { result = a.getAnOperand() }

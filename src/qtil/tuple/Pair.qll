@@ -24,8 +24,7 @@ private import qtil.parameterization.SignaturePredicates
  * Each tuple type exposes the `getFirst()` and `getSecond()` member predicates, which retrieves
  * the first and second values of the pair, respectively.
  */
-module Pair<InfiniteStringableType A, InfiniteStringableType B, Binary<A, B>::pred/2 constraint>
-{
+module Pair<InfiniteStringableType A, InfiniteStringableType B, Binary<A, B>::pred/2 constraint> {
   private newtype TAll = TSome(A a, B b) { constraint(a, b) }
 
   class Pair extends TAll {

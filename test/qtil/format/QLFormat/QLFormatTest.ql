@@ -32,7 +32,6 @@ predicate problem(Locatable elem, Template msg) {
 }
 
 import Problem<problem/2>::Query
-
 //from VariableDeclarationEntry var, Expr initializer
 //where
 //initializer = var.getDeclaration().getInitializer().getExpr()
