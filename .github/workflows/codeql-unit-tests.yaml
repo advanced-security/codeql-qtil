@@ -95,6 +95,7 @@ jobs:
   validate-test-results:
     name: Validate test results
     needs: compile-and-test
+    if: ${{ always() }}
     runs-on: ubuntu-latest
     steps:
       - name: Check if compile-and-test job failed to complete, if so fail
