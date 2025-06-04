@@ -23,7 +23,7 @@ args = parser.parse_args()
 # Find the root of the repo
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-packs = get_workspace_packs.get_workspace_packs(root)
+packs = get_workspace_packs(root)
 
 # Find the CodeQL packs in the repo. This can also return packs outside of the repo, if those packs
 # are installed in a sibling directory to the CLI.
