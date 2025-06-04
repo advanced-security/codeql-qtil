@@ -21,7 +21,7 @@ parser.add_argument('--codeql', required=False, default='codeql', help="Path to 
 args = parser.parse_args()
 
 # Find the root of the repo
-root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 packs = get_workspace_packs(root)
 
