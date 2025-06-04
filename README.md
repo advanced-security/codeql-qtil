@@ -203,6 +203,27 @@ select b.toUppercase().toString()
 See also the module `Chars` which defines standard nullary predicates that common characters, for
 instance, `Qtil::Chars::dollar()` holds for the result `"$"`,`Qtil::Chars::a()` holds for `"a"`, and `Qtil::Chars::upperA()` holds for `"A"`.
 
+**Tagged strings**: Attach a tag class to string values with the `Tagged<YourTag>::String` type:
+
+```
+newtype TMyTag = TTagA() or TTagB();
+class MyTag extends TMyTag {
+  string toString() {
+    this = TTagA() and result = "tag_a"
+    or
+    this = TTagB() and result = "tag_b"
+  }
+}
+
+Tagged<MyTag>::String getTaggedString() {
+  result.make(TTagA(), "string value")
+}
+
+from Tagged<MyTag>::String str
+where str = getTaggedString()
+select str.getTag(), str.getStr()
+```
+
 ### ASTs:
 
 The following modules are usable by importing `qtil.lang`, for instance, `qtil.cpp`. However, the
