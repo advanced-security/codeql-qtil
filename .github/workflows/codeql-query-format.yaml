@@ -9,22 +9,19 @@ env:
 
 jobs:
   validate-query-formatting:
-      runs-on: ubuntu-22.04
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v4
-          with:
-            ref: ${{ inputs.ref }}
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Setup CodeQL
         id: install-codeql
         uses: ./.github/actions/install-codeql
 
-        - name: Validate query format
-          run: |
-            codeql version
-            find . \( -name \*.ql -or -name \*.qll \) -print0 | xargs -0 --max-procs "$XARGS_MAX_PROCS" codeql query format --in-place
+      - name: Validate query format
+        run: |
+          codeql version
+          find . \( -name \*.ql -or -name \*.qll \) -print0 | xargs -0 --max-procs "$XARGS_MAX_PROCS" codeql query format --in-place
 
-            git diff
-            git diff --compact-summary
-            git diff --quiet
+          git diff
+          git diff --compact-summary
+          git diff --quiet
