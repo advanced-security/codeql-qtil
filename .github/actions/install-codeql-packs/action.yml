@@ -12,6 +12,12 @@ inputs:
       The `--mode` option to `codeql pack install`.
     required: true
     default: verify
+  
+  language:
+    description: |
+      The language of the CodeQL library pack to install.
+    required: false
+    default: common
 
 runs:
   using: composite
@@ -22,4 +28,4 @@ runs:
         CODEQL_CLI: ${{ inputs.cli_path }}
       run: |
         PATH=$PATH:$CODEQL_CLI
-        python .github/scripts/install-packs.py --mode ${{ inputs.mode }}
+        python .github/scripts/install-packs.py --mode ${{ inputs.mode }} --language ${{ inputs.language }}
