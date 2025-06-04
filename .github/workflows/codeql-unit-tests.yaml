@@ -28,10 +28,9 @@ jobs:
 
       - name: Pre-Compile Queries
         id: pre-compile-queries
+        if: ${{ matrix.language != 'common' }}
         run: |
-         if [ "${{ matrix.language }}" != "common" ]; then
-           ${{ github.workspace }}/codeql_home/codeql/codeql query compile --threads 0 ${{ matrix.language }}
-         fi
+         ${{ github.workspace }}/codeql_home/codeql/codeql query compile --threads 0 ${{ matrix.language }}
 
       - name: Test Queries
         env:
