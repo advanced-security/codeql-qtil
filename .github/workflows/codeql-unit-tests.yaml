@@ -7,6 +7,7 @@ on:
 
 jobs:
   compile-and-test:
+    name: Compile and Test CodeQL Packs
     runs-on: ubuntu-latest
     
     strategy:
@@ -25,6 +26,7 @@ jobs:
         uses: ./.github/actions/install-codeql-packs
         with:
           cli_path: ${{ github.workspace }}/codeql_home/codeql
+          language: ${{ matrix.language }}
 
       - name: Pre-Compile Queries
         id: pre-compile-queries
