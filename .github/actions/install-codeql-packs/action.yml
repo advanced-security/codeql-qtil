@@ -22,4 +22,4 @@ runs:
         CODEQL_CLI: ${{ inputs.cli_path }}
       run: |
         PATH=$PATH:$CODEQL_CLI
-        python scripts/install-packs.py --mode ${{ inputs.mode }}
+        python .github/scripts/install-packs.py --mode ${{ inputs.mode }}
