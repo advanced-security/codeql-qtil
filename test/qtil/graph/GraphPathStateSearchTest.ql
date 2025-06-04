@@ -2,18 +2,26 @@ import qtil.testing.Qnit
 import qtil.graph.GraphPathStateSearch
 import Family
 
-bindingset[relation] bindingset[result]
+bindingset[relation]
+bindingset[result]
 string parentString(string relation) {
-  if relation = "child" then result = "parent"
-  else if relation = "parent" then result = "grandparent"
-  else result = "great " + relation
+  if relation = "child"
+  then result = "parent"
+  else
+    if relation = "parent"
+    then result = "grandparent"
+    else result = "great " + relation
 }
 
-bindingset[relation] bindingset[result]
+bindingset[relation]
+bindingset[result]
 string childString(string relation) {
-  if relation = "parent" then result = "child"
-  else if relation = "child" then result = "grandchild"
-  else result = "great " + relation
+  if relation = "parent"
+  then result = "child"
+  else
+    if relation = "child"
+    then result = "grandchild"
+    else result = "great " + relation
 }
 
 module BartToGrandpaConfig implements GraphPathStateSearchSig<Person> {
@@ -23,7 +31,8 @@ module BartToGrandpaConfig implements GraphPathStateSearchSig<Person> {
 
   predicate end(Person p, string state) { p.getName() = "Grandpa" and state = "grandparent" }
 
-  bindingset[s2] bindingset[s1]
+  bindingset[s1]
+  bindingset[s2]
   predicate edge(Person p1, string s1, Person p2, string s2) {
     p2 = p1.getAParent() and
     s2 = parentString(s1)
@@ -37,9 +46,12 @@ module GrandpaToBartConfig implements GraphPathStateSearchSig<Person> {
 
   predicate end(Person p, string state) { p.getName() = "Bart" and state = "grandchild" }
 
-  bindingset[s2] bindingset[s1]
-  predicate edge(Person p1, State s1, Person p2, State s2) { p2 = p1.getAChild() and 
-    s2 = childString(s1) }
+  bindingset[s1]
+  bindingset[s2]
+  predicate edge(Person p1, State s1, Person p2, State s2) {
+    p2 = p1.getAChild() and
+    s2 = childString(s1)
+  }
 }
 
 class TestBartForwardNodesContain extends Test, Case {
@@ -57,33 +69,39 @@ class TestBartForwardNodesContain extends Test, Case {
 
 class TestBartForwardNodesState extends Test, Case {
   override predicate run(Qnit test) {
-    if exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
+    if
+      exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
         fwd.getName() = "Bart" and
         fwd.getState() = "child"
-    ) and exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
+      ) and
+      exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
         fwd.getName() = "Marge" and
         fwd.getState() = "parent"
-    ) and exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
+      ) and
+      exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
         fwd.getName() = "Homer" and
         fwd.getState() = "parent"
-    ) and exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
+      ) and
+      exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
         fwd.getName() = "Clancy" and
         fwd.getState() = "grandparent"
-    ) and exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
+      ) and
+      exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
         fwd.getName() = "Jacquelin" and
         fwd.getState() = "grandparent"
-    ) and exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
+      ) and
+      exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
         fwd.getName() = "Mona" and
         fwd.getState() = "grandparent"
-    ) and exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
+      ) and
+      exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ForwardNode fwd |
         fwd.getName() = "Grandpa" and
         fwd.getState() = "grandparent"
-    )
+      )
     then test.pass("All forward nodes from Bart have the correct state")
     else test.fail("Some forward nodes from Bart have incorrect state")
   }
 }
-
 
 class TestBartForwardNodesDoNotContain extends Test, Case {
   override predicate run(Qnit test) {
@@ -110,16 +128,18 @@ class TestBartReverseNodesContain extends Test, Case {
 class TestBartReverseNodesState extends Test, Case {
   override predicate run(Qnit test) {
     if
-       exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ReverseNode rev |
+      exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ReverseNode rev |
         rev.getName() = "Bart" and
         rev.getState() = "child"
-    ) and exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ReverseNode rev |
+      ) and
+      exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ReverseNode rev |
         rev.getName() = "Homer" and
         rev.getState() = "parent"
-    ) and exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ReverseNode rev |
+      ) and
+      exists(GraphPathStateSearch<Person, BartToGrandpaConfig>::ReverseNode rev |
         rev.getName() = "Grandpa" and
         rev.getState() = "grandparent"
-    )
+      )
     then test.pass("All reverse nodes from Bart have the correct state")
     else test.fail("Some reverse nodes from Bart have incorrect state")
   }
@@ -138,11 +158,13 @@ class TestBartReverseNodesDoNotContain extends Test, Case {
 
 class TestBartToGrandpaHasPath extends Test, Case {
   override predicate run(Qnit test) {
-    if exists(Person bart, Person grandpa |
+    if
+      exists(Person bart, Person grandpa |
         bart.getName() = "Bart" and
         grandpa.getName() = "Grandpa" and
-      GraphPathStateSearch<Person, BartToGrandpaConfig>::hasPath(bart, "child", grandpa, "grandparent")
-    )
+        GraphPathStateSearch<Person, BartToGrandpaConfig>::hasPath(bart, "child", grandpa,
+          "grandparent")
+      )
     then test.pass("Path from Bart to Grandpa exists")
     else test.fail("Path from Bart to Grandpa does not exist")
   }
@@ -161,22 +183,27 @@ class TestGrandpaToBartForwardNodesContain extends Test, Case {
 
 class TestGrandpaToBartForwardNodesState extends Test, Case {
   override predicate run(Qnit test) {
-    if exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ForwardNode fwd |
+    if
+      exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ForwardNode fwd |
         fwd.getName() = "Grandpa" and
         fwd.getState() = "parent"
-    ) and exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ForwardNode fwd |
+      ) and
+      exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ForwardNode fwd |
         fwd.getName() = "Homer" and
         fwd.getState() = "child"
-    ) and exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ForwardNode fwd |
+      ) and
+      exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ForwardNode fwd |
         fwd.getName() = "Bart" and
         fwd.getState() = "grandchild"
-    ) and exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ForwardNode fwd |
+      ) and
+      exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ForwardNode fwd |
         fwd.getName() = "Maggie" and
         fwd.getState() = "grandchild"
-    ) and exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ForwardNode fwd |
+      ) and
+      exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ForwardNode fwd |
         fwd.getName() = "Lisa" and
         fwd.getState() = "grandchild"
-    )
+      )
     then test.pass("All forward nodes from Grandpa have the correct state")
     else test.fail("Some forward nodes from Grandpa have incorrect state")
   }
@@ -206,16 +233,19 @@ class TestGrandpaToBartReverseNodesContain extends Test, Case {
 
 class TestGrandpaToBartReverseNodesState extends Test, Case {
   override predicate run(Qnit test) {
-    if exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ReverseNode rev |
+    if
+      exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ReverseNode rev |
         rev.getName() = "Grandpa" and
         rev.getState() = "parent"
-    ) and exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ReverseNode rev |
+      ) and
+      exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ReverseNode rev |
         rev.getName() = "Homer" and
         rev.getState() = "child"
-    ) and exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ReverseNode rev |
+      ) and
+      exists(GraphPathStateSearch<Person, GrandpaToBartConfig>::ReverseNode rev |
         rev.getName() = "Bart" and
         rev.getState() = "grandchild"
-    )
+      )
     then test.pass("All reverse nodes from Grandpa have the correct state")
     else test.fail("Some reverse nodes from Grandpa have incorrect state")
   }
@@ -234,11 +264,13 @@ class TestGrandpaToBartReverseNodesDoNotContain extends Test, Case {
 
 class TestGrandpaToBartHasPath extends Test, Case {
   override predicate run(Qnit test) {
-    if exists(Person grandpa, Person bart |
+    if
+      exists(Person grandpa, Person bart |
         grandpa.getName() = "Grandpa" and
         bart.getName() = "Bart" and
-      GraphPathStateSearch<Person, GrandpaToBartConfig>::hasPath(grandpa, "parent", bart, "grandchild")
-    )
+        GraphPathStateSearch<Person, GrandpaToBartConfig>::hasPath(grandpa, "parent", bart,
+          "grandchild")
+      )
     then test.pass("Path from Grandpa to Bart exists")
     else test.fail("Path from Grandpa to Bart does not exist")
   }

@@ -26,7 +26,7 @@ private import qtil.parameterization.Finalize
  *   predicate end(Node n1) { ... }
  * }
  * ```
- * 
+ *
  * To track state as well as flow, use `GraphPathStateSearchSig` instead.
  */
 signature module GraphPathSearchSig<FiniteType Node> {
@@ -108,7 +108,7 @@ signature module GraphPathSearchSig<FiniteType Node> {
  * - `ReverseNode`: All forward nodes that reach end nodes.
  *
  * These classes may be useful in addition to the `hasPath` predicate.
- * 
+ *
  * To track state as well as flow, use `GraphPathStateSearch` instead.
  */
 module GraphPathSearch<FiniteType Node, GraphPathSearchSig<Node> Config> {

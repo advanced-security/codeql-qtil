@@ -48,7 +48,8 @@ module PathStateProblem<LocationSig Location, LocatableConfig<Location> LocConfi
      * However, the underlying search algorithm is efficient, so this should be fast in many cases
      * even if this is a very large relation.
      */
-    bindingset[s1] bindingset[s2]
+    bindingset[s1]
+    bindingset[s2]
     predicate edge(Node a, State s1, Node b, State s2);
 
     /**
