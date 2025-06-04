@@ -21,8 +21,6 @@ jobs:
         uses: ./.github/actions/install-codeql
 
         - name: Validate query format
-          env:
-            LANGUAGE: ${{ matrix.language }}
           run: |
             codeql version
             find . \( -name \*.ql -or -name \*.qll \) -print0 | xargs -0 --max-procs "$XARGS_MAX_PROCS" codeql query format --in-place
