@@ -319,6 +319,9 @@ If you wish to perform a path search such as the above, but without reporting pr
 use the `Qtil::GraphPathSearch` module instead, which provides an efficient search algorithm
 without producing a `@kind path-problem` query.
 
+For a custom path problem with stateful flow tracking (see `GraphPathStateSearch` for more info),
+use `CustomPathStateProblem`.
+
 ### Inheritance
 
 **Instance**: A module to make `instanceof` inheritance easier in CodeQL, by writing
@@ -432,6 +435,37 @@ This module takes a set of starting points, ending points, and edges in a graph,
 `hasPath` reveals which end nodes are reachable from the given start nodes.
 
 For displaying the discovered paths to users, see the `CustomPathProblem` module above.
+
+**GraphPathStateSearch**: An expansion of the above module that allows for tracking state from
+start to end of a path, with potential transformation of that state on each edge.
+
+For example, this can be used to set a maximum search depth or to find cycles in a graph (such as
+recursive functions).
+
+```
+class RecursiveFunctionSearch implements Qtil::GraphPathStateSearchSig<Function> {
+  // Our state is, conceptually, just the function we started the search from. However, we must
+  // distinguish end nodes based on whether at least one step was taken to reach them. If we don't,
+  // then all functions will have a flow path (of zero length) to themselves.
+  newtype State = TNoStepTaken(Function f) or TStepsTaken(Function f);
+
+  // Start nodes haven't yet taken a step, so the state is NoStepTaken
+  predicate start(Function f, State state) { state = TNoStepTaken(f) }
+
+  // End nodes are functions that reach themselves after at least one step.
+  predicate end(Function f, State state) { state = TStepsTaken(f) }
+
+  predicate edge(Function f0, State s0, Function f1, State s1) {
+    // Connect each functions to the functions that they call.
+    f0.calls(f1) and
+    exists(Function initial |
+      // Forward the function along the edge, noting that at least one step has been taken.
+      (s0 = TNoStepTaken(initial) or s0 = TStepsTaken(initial)) and
+      s1 = TStepsTaken(initial)
+    )
+  }
+}
+```
 
 ### Testing with Qnit
 
