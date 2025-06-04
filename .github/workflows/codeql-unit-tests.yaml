@@ -51,7 +51,7 @@ jobs:
 
           runner_temp = os.environ['RUNNER_TEMP']
 
-          if ${{ matrix.language }} == 'common':
+          if '${{ matrix.language }}' == 'common':
             test_root = Path('${{ github.workspace }}', 'test')
           else:
             test_root = Path('${{ github.workspace }}', '${{ matrix.language }}', 'test')
