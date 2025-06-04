@@ -35,7 +35,7 @@
  *
  * // Option 2: create a custom finite type backed by a string
  * class FiniteStringType extends UnderlyingString {
- * 
+ *
  *   // Properly bind str() in the constructor:
  *   FiniteStringType() { str() = ["a", "b", "c"] }
  *
@@ -43,7 +43,7 @@
  *   string myMember() { result = str() + " is my method" }
  * }
  * ```
- * 
+ *
  * At this point, the members can be used to produce almost any API through string operations. For
  * instance, a set of names could be represented as a comma-separated alphabetical list. See the
  * caution above about performance.
@@ -52,12 +52,13 @@ bindingset[this]
 class UnderlyingString instanceof string {
   /**
    * Get the underlying string value backing this type.
-   * 
+   *
    * Specifies bindingsets to allow for two-way bindings, so that the underlying string value can be
    * constrained to a finite set of values and vice versa. Specified as `final` for performance and
    * maintainability reasons.
    */
-  bindingset[this] bindingset[result]
+  bindingset[result]
+  bindingset[this]
   final string str() { result = this }
 
   /** Default `toString()` implementation, to simply return the underlying string. */

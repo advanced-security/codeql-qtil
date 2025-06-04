@@ -66,7 +66,7 @@ module OptionalLocation<LocationSig L> {
 
     /**
      * Location info predicate so that CodeQL can use this class as a location.
-     * 
+     *
      * Only holds if the location exists. If it does not exist, and this is selected as a query
      * location, then the CodeQL engine will use an empty filename and line/column numbers of 0.
      */

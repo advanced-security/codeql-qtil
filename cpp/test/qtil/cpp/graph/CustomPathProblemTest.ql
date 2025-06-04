@@ -7,13 +7,9 @@ module CallGraphPathProblemConfig implements CustomPathProblemConfigSig {
 
   predicate start(Node n) { n.getName() = "start" }
 
-  predicate end(Node n) {
-    n.getName() = "end"
-  }
+  predicate end(Node n) { n.getName() = "end" }
 
-  predicate edge(Variable a, Variable b) {
-    a.getAnAssignedValue().(VariableAccess).getTarget() = b
-  }
+  predicate edge(Variable a, Variable b) { a.getAnAssignedValue().(VariableAccess).getTarget() = b }
 }
 
 import CustomPathProblem<CallGraphPathProblemConfig>

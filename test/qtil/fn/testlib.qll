@@ -25,27 +25,19 @@ bindingset[i]
 predicate isOdd(int i) { i % 2 = 1 }
 
 bindingset[str]
-string toUpperCase(string str) {
-  result = str.toUpperCase()
-}
+string toUpperCase(string str) { result = str.toUpperCase() }
 
 bindingset[a, b]
-string spaceJoin(string a, string b) {
-  result = a + " " + b
-}
+string spaceJoin(string a, string b) { result = a + " " + b }
 
-bindingset[a, b] 
-string rspaceJoin(string a, string b) {
-  result = b + " " + a
-}
+bindingset[a, b]
+string rspaceJoin(string a, string b) { result = b + " " + a }
 
 bindingset[i]
 string stringifyInt(int i) { result = i.toString() }
 
 bindingset[str]
-predicate isOneChar(string str) {
-  str.length() = 1
-}
+predicate isOneChar(string str) { str.length() = 1 }
 
 predicate person(string firstName, string lastName) {
   firstName = "Marie" and lastName = "Curie"
@@ -70,13 +62,9 @@ string getInitials(string firstName, string lastName) {
   result = firstName.charAt(0).toUpperCase() + lastName.charAt(0).toUpperCase()
 }
 
-string mightHaveLastName(string firstName) {
-    person(firstName, result)
-}
+string mightHaveLastName(string firstName) { person(firstName, result) }
 
-string mightHaveFirstName(string lastName) {
-    person(result, lastName)
-}
+string mightHaveFirstName(string lastName) { person(result, lastName) }
 
 predicate personInitialed(string firstName, string lastName, string initials) {
   getInitials(firstName, lastName) = initials

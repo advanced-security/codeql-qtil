@@ -20,10 +20,8 @@ class TestBasicListBuilder extends Test, Case {
       ListBuilder<Chars::colon/0>::of6("a", "b", "c", "d", "e", "f") = "a:b:c:d:e:f" and
       ListBuilder<Chars::comma/0>::of7("a", "b", "c", "d", "e", "f", "g") = "a,b,c,d,e,f,g" and
       ListBuilder<Chars::colon/0>::of7("a", "b", "c", "d", "e", "f", "g") = "a:b:c:d:e:f:g" and
-      ListBuilder<Chars::comma/0>::of8("a", "b", "c", "d", "e", "f", "g", "h") =
-        "a,b,c,d,e,f,g,h" and
-      ListBuilder<Chars::colon/0>::of8("a", "b", "c", "d", "e", "f", "g", "h") =
-        "a:b:c:d:e:f:g:h"
+      ListBuilder<Chars::comma/0>::of8("a", "b", "c", "d", "e", "f", "g", "h") = "a,b,c,d,e,f,g,h" and
+      ListBuilder<Chars::colon/0>::of8("a", "b", "c", "d", "e", "f", "g", "h") = "a:b:c:d:e:f:g:h"
     then test.pass("Basic list builder works")
     else test.fail("Basic list builder does not work")
   }
@@ -60,10 +58,10 @@ class TestTypedListBuilder extends Test, Case {
           .isEqualTo("a,b,c,d,e,f,g") and
       TypedListBuilder<Chars::colon/0, TestExtendsString>::of7("a", "b", "c", "d", "e", "f", "g")
           .isEqualTo("a:b:c:d:e:f:g") and
-      TypedListBuilder<Chars::comma/0, TestExtendsString>::of8("a", "b", "c", "d", "e", "f",
-        "g", "h").isEqualTo("a,b,c,d,e,f,g,h") and
-      TypedListBuilder<Chars::colon/0, TestExtendsString>::of8("a", "b", "c", "d", "e", "f",
-        "g", "h").isEqualTo("a:b:c:d:e:f:g:h")
+      TypedListBuilder<Chars::comma/0, TestExtendsString>::of8("a", "b", "c", "d", "e", "f", "g",
+        "h").isEqualTo("a,b,c,d,e,f,g,h") and
+      TypedListBuilder<Chars::colon/0, TestExtendsString>::of8("a", "b", "c", "d", "e", "f", "g",
+        "h").isEqualTo("a:b:c:d:e:f:g:h")
     then test.pass("Typed list builder works")
     else test.fail("Typed list builder does not work")
   }
@@ -91,10 +89,8 @@ class TestListBuilderOf extends Test, Case {
       ListBuilderOf<Chars::colon/0, int, intToString/1>::of5(1, 2, 3, 4, 5) = "1:2:3:4:5" and
       ListBuilderOf<Chars::comma/0, int, intToString/1>::of6(1, 2, 3, 4, 5, 6) = "1,2,3,4,5,6" and
       ListBuilderOf<Chars::colon/0, int, intToString/1>::of6(1, 2, 3, 4, 5, 6) = "1:2:3:4:5:6" and
-      ListBuilderOf<Chars::comma/0, int, intToString/1>::of7(1, 2, 3, 4, 5, 6, 7) =
-        "1,2,3,4,5,6,7" and
-      ListBuilderOf<Chars::colon/0, int, intToString/1>::of7(1, 2, 3, 4, 5, 6, 7) =
-        "1:2:3:4:5:6:7" and
+      ListBuilderOf<Chars::comma/0, int, intToString/1>::of7(1, 2, 3, 4, 5, 6, 7) = "1,2,3,4,5,6,7" and
+      ListBuilderOf<Chars::colon/0, int, intToString/1>::of7(1, 2, 3, 4, 5, 6, 7) = "1:2:3:4:5:6:7" and
       ListBuilderOf<Chars::comma/0, int, intToString/1>::of8(1, 2, 3, 4, 5, 6, 7, 8) =
         "1,2,3,4,5,6,7,8" and
       ListBuilderOf<Chars::colon/0, int, intToString/1>::of8(1, 2, 3, 4, 5, 6, 7, 8) =

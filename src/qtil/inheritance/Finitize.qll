@@ -5,7 +5,7 @@ private import qtil.parameterization.Finalize
 /**
  * A module to convert an infinite type to a finite type by constraining it to a finite set of
  * values.
- * 
+ *
  * The result of instantiating this module exposes a `Type` class that is the finite version of the
  * infinite input type, e.g. `Finitize<MyInfiniteType, myConstraint/1>::Type`.
  *
@@ -19,7 +19,7 @@ private import qtil.parameterization.Finalize
  *   result = str.toUpperCase()
  * }
  * ```
- * 
+ *
  * Note that this module cannot strip `bindingset[this]` from the members of the given infinite type
  * without knowing the names and signatures. This isn't usually a problem, but can prevent the use
  * of some parameterized modules. This module does strip the `bindingset[this]` from the
