@@ -1,7 +1,19 @@
 import argparse
 import os
 import subprocess
-import get_workspace_packs
+import glob
+import json
+
+def get_workspace_packs(root):
+    # Find the packs by globbing using the 'provide' patterns in the manifest.
+    os.chdir(root)
+    with open('.codeqlmanifest.json') as manifest_file:
+        manifest = json.load(manifest_file)
+    packs = []
+    for pattern in manifest['provide']:
+        packs.extend(glob.glob(pattern, recursive=True))
+
+    return packs
 
 parser = argparse.ArgumentParser(description="Install CodeQL library pack dependencies.")
 parser.add_argument('--mode', required=False, choices=['use-lock', 'update', 'verify', 'no-lock'], default="use-lock", help="Installation mode, identical to the `--mode` argument to `codeql pack install`")
