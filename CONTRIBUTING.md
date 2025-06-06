@@ -1,7 +1,7 @@
 ## Contributing
 
-[fork]: https://github.com/github/REPO/fork
-[pr]: https://github.com/github/REPO/compare
+[fork]: https://github.com/advanced-security/codeql-qtil/fork
+[pr]: https://github.com/advanced-security/codeql-qtil/compare
 [code-of-conduct]: CODE_OF_CONDUCT.md
 
 Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great.
@@ -30,7 +30,7 @@ The next step, after registering and discussing your improvement, is proposing t
 5. Ensure the files are appropriately formatted: QL files should be formatted with `codeql query format`.
 6. Create new tests for any new features or changes to existing features. Ensure all existing tests pass. Tests can be run with `codeql test run $DIR`, where `$DIR` is either `/test` in the repo root, or `$LANG/test` for a specific language.
 7. If relevant, ensure the change will be applied to all languages supported by qtil. Exceptions can be applied if necessary.
-8. Push to your fork and [submit a draft pull request](https://github.com/github/codeql-coding-standards/compare). Make sure to select **Create Draft Pull Request**.
+8. Push to your fork and [submit a draft pull request](https://github.com/advanced-security/codeql-qtil/compare). Make sure to select **Create Draft Pull Request**.
 9. Address failed checks, if any.
 10. Mark the [pull request ready for review](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/changing-the-stage-of-a-pull-request#marking-a-pull-request-as-ready-for-review).
 11. Pat your self on the back and wait for your pull request to be reviewed and merged.

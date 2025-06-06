@@ -13,7 +13,7 @@ Let's dive in!
 
 This project is licensed under the terms of the MIT open source license. Please refer to [MIT](./LICENSE.txt) for the full terms.
 
-CodeQL is subject to the [GithHub CodeQL Terms & Conditions](https://securitylab.github.com/tools/codeql/license).
+CodeQL is subject to the [GitHub CodeQL Terms & Conditions](https://securitylab.github.com/tools/codeql/license).
 
 ## Background
 
@@ -49,7 +49,7 @@ To use `qtil`, you can either import everything at once, or pick what you need:
 import qtil.Qtil
 class MyPair extends Qtil::Pair<...> { ... }
 
-// or import what you need with no namepsace
+// or import what you need with no namespace
 import qtil.tuple.Pair
 class MyPair extends Pair<...> { ... }
 ```
@@ -135,7 +135,7 @@ class AgeOrderedCityPerson extends Qtil::Ordered<Person>::GroupBy<City>::Type {
 
 // Selects people, along with the next youngest and next oldest in the same city.
 from AgeOrderedCityPerson p
-select p.getName(), p.getCity(), p.getPrevious.getName(), p.getNext.getName()
+select p.getName(), p.getCity(), p.getPrevious().getName(), p.getNext().getName()
 ```
 
 **CondensedList**: Like the `Ordered` class, but creates a separate `ListEntry` type rather than
@@ -183,8 +183,8 @@ select Qtil::Escape<Qtil::defaultEscapeMap/2>::escape("foo\\bar\nbaz"),
 select Qtil::doubleQuoteWrap("foo\"bar\\baz"), Qtil::unescapeDoubleQuote("\"foo\\\"bar\\\\baz\"")
 
 // CSV-like functionality: result is "foo\\,bar,baz\\\\qux", "foo,bar"
-select Qtil::SeparatedEscape<Qtil::Chars::comma\0>::EscapeBackslash::of2("foo,bar", "baz\\qux"),
-    Qtil::SeparatedEscape<Qtil::Chars::comma\0>::split("foo\\,bar,baz\\\\qux", Qtil::charOf("\\"), 0)
+select Qtil::SeparatedEscape<Qtil::Chars::comma/0>::EscapeBackslash::of2("foo,bar", "baz\\qux"),
+    Qtil::SeparatedEscape<Qtil::Chars::comma/0>::split("foo\\,bar,baz\\\\qux", Qtil::charOf("\\"), 0)
 ```
 
 Escaping characters will carefully escape and unescape themselves. See documentation on escape maps
@@ -350,7 +350,7 @@ primitives) require special care, which `InfInstance` handles correctly, allowin
 some contexts, such as parameterized modules. Simply extend `Qtil::Final<T>::Type` instead of
 declaring a final alias type.
 
-```
+```ql
 // Use CodeQL "final" extension:
 class MyFoo1 extends Qtil::Final<Foo>::Type { ... }
 
@@ -464,7 +464,7 @@ fails, the result of each test will be selected (including failing and passing t
 For correct use, ensure that each test class passes with a unique name, and that tests always hold
 for some result, whether its a pass or a fail.
 
-```
+```ql
   override predicate run(Qnit test) {
     if 1 = 1
     then test.pass("1 equals 1") // Ensure this is unique to the test
@@ -493,7 +493,7 @@ module MyModule<binary/2 binop> { ... }
 
 This module allows you to write:
 
-```
+```ql
 module MyModule<Qtil::Binary<int, int>::pred/2 binop> { ... }
 ```
 
@@ -563,5 +563,5 @@ receiving timely support amidst our busy jobs here at GitHub!
 
 ## Maintainers
 
-This project is currently maintained by @michaelrfairhurst with help from other CodeQL/security
-experts at GitHub.
+This project is currently maintained by CodeQL/security/code quality experts. Support on any given
+day is likely to come from @michaelrfairhurst.
