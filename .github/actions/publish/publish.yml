@@ -1,0 +1,85 @@
+name: Publish CodeQL Packs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  publish_core:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+
+    steps:
+      - uses: actions/checkout@v4
+
+      #- name: Check core qtil (src) pack
+      #  id: check_version
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #  run: |
+      #    PUBLISHED_VERSION=$(gh api /orgs/advanced-security/packages/container/qtil/versions --jq '.[0].metadata.container.tags[0]')
+      #    CURRENT_VERSION=$(grep version src/qlpack.yml | awk '{print $2}')
+      #    echo "Published version: $PUBLISHED_VERSION"
+      #    echo "Local version: $CURRENT_VERSION"
+      #    if [ "$PUBLISHED_VERSION" != "$CURRENT_VERSION" ]; then
+      #      echo "publish=true" >> $GITHUB_OUTPUT
+      #    fi
+      - name: Setup CodeQL
+      #  if: steps.check_version.outputs.publish == 'true'
+        uses: ./.github/actions/install-codeql
+
+      - name: Publish core qtil (src) pack.
+      #  if: steps.check_version.outputs.publish == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Publishing pack 'qtil'."
+          codeql pack install "src"
+          codeql pack publish --dry-run "src"
+
+  publish_langs:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        lang: ["cpp", "csharp", "go", "java", "javascript", "python", "ruby", "swift"] 
+
+    steps:
+      - uses: actions/checkout@v4
+
+      #- name: Check qtil-LANG (src) pack
+      #  id: check_version
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #  run: |
+      #    PUBLISHED_VERSION=$(gh api /orgs/advanced-security/packages/container/qtil-${{ matrix.language }}/versions --jq '.[0].metadata.container.tags[0]')
+      #    CURRENT_VERSION=$(grep version ${{ matrix.language }}/src/qlpack.yml | awk '{print $2}')
+      #    echo "Published version: $PUBLISHED_VERSION"
+      #    echo "Local version: $CURRENT_VERSION"
+      #    if [ "$PUBLISHED_VERSION" != "$CURRENT_VERSION" ]; then
+      #      echo "publish=true" >> $GITHUB_OUTPUT
+      #    fi
+      - name: Setup CodeQL
+      #  if: steps.check_version.outputs.publish == 'true'
+        uses: ./.github/actions/install-codeql
+
+      - name: Publish qtil-LANG (src) pack.
+      #  if: steps.check_version.outputs.publish == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Publishing pack 'qtil-${{ matrix.language }}'."
+          codeql pack install "${{ matrix.language }}/src"
+          codeql pack publish --dry-run "${{ matrix.language }}/src"
