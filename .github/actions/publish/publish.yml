@@ -35,7 +35,7 @@ jobs:
       #  if: steps.check_version.outputs.publish == 'true'
         uses: ./.github/actions/install-codeql
 
-      - name: Publish core qtil (src) pack.
+      - name: Publish core qtil (src) pack
       #  if: steps.check_version.outputs.publish == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -54,7 +54,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ["cpp", "csharp", "go", "java", "javascript", "python", "ruby", "swift"] 
+        language: ["cpp", "csharp", "go", "java", "javascript", "python", "ruby", "swift"]
 
     steps:
       - uses: actions/checkout@v4
@@ -75,7 +75,7 @@ jobs:
       #  if: steps.check_version.outputs.publish == 'true'
         uses: ./.github/actions/install-codeql
 
-      - name: Publish qtil-LANGUAGE (src) pack.
+      - name: Publish qtil-LANGUAGE (src) pack
       #  if: steps.check_version.outputs.publish == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
