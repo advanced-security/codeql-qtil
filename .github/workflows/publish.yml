@@ -33,6 +33,9 @@ jobs:
           else
             echo "publish=false" >> $GITHUB_OUTPUT
           fi
+      - name: Log skipped publishing
+        if: steps.check_version.outputs.publish == 'false'
+        run: echo "Publishing is skipped as the local version matches the published version."
       - name: Setup CodeQL
         if: steps.check_version.outputs.publish == 'true'
         uses: ./.github/actions/install-codeql
