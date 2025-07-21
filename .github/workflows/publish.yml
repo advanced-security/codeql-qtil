@@ -47,7 +47,7 @@ jobs:
         run: |
           echo "Publishing pack 'qtil'."
           codeql pack install "src"
-          codeql pack publish --dry-run "src"
+          codeql pack publish "src"
 
   publish_langs:
     runs-on: ubuntu-latest
@@ -92,4 +92,4 @@ jobs:
         run: |
           echo "Publishing pack 'qtil-${{ matrix.language }}'."
           codeql pack install "${{ matrix.language }}/src"
-          codeql pack publish --dry-run "${{ matrix.language }}/src"
+          codeql pack publish "${{ matrix.language }}/src"
