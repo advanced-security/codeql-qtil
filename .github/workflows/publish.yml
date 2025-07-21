@@ -42,7 +42,7 @@ jobs:
         run: |
           echo "Publishing pack 'qtil'."
           codeql pack install "src"
-          codeql pack publish --dry-run "src"
+          codeql pack publish "src"
 
   publish_langs:
     runs-on: ubuntu-latest
