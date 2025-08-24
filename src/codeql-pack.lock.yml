@@ -2,5 +2,5 @@
 lockVersion: 1.0.0
 dependencies:
   codeql/util:
-    version: 1.0.12
+    version: 2.0.16
 compiled: false
