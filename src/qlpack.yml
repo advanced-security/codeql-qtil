@@ -1,7 +1,7 @@
 name: advanced-security/qtil
 library: true
 warnOnImplicitThis: false
-version: 0.0.2
+version: 0.0.3
 license: MIT
 dependencies:
-  codeql/util: ">=1.0.12 <3.0.0"
+  codeql/util: ">=2.0.0 <3.0.0"
