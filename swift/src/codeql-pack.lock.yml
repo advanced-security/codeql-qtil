@@ -2,21 +2,21 @@
 lockVersion: 1.0.0
 dependencies:
   codeql/controlflow:
-    version: 1.0.12
+    version: 2.0.7
   codeql/dataflow:
-    version: 1.1.6
+    version: 2.0.7
   codeql/mad:
-    version: 1.0.12
+    version: 1.0.23
   codeql/regex:
-    version: 1.0.12
+    version: 1.0.23
   codeql/ssa:
-    version: 1.0.12
+    version: 1.1.2
   codeql/swift-all:
-    version: 2.0.4
+    version: 4.3.0
   codeql/tutorial:
-    version: 1.0.12
+    version: 1.0.23
   codeql/typetracking:
-    version: 1.0.12
+    version: 2.0.7
   codeql/util:
-    version: 1.0.12
+    version: 2.0.10
 compiled: false

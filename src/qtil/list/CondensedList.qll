@@ -59,10 +59,10 @@ module CondenseList<FiniteStringableType Item, Unary<Item>::Ret<int>::pred/1 get
    */
   module GroupBy<InfiniteType Division, Unary<Item>::Ret<Division>::pred/1 getDivision> {
     private newtype TList =
-      THead(Item l, Division t) { denseRank(t, l) = 1 } or
-      TCons(ListEntry prev, Item l) { prev.getDenseIndex() = denseRank(prev.getDivision(), l) - 1 }
+      THead(Item l, Division t) { l = denseRank(t, 1) } or
+      TCons(ListEntry prev, Item l) { l = denseRank(prev.getDivision(), prev.getDenseIndex() + 1) }
 
-    private module DenseRankConfig implements DenseRankInputSig2 {
+    private module DenseRankConfig implements DenseRankInputSig1 {
       class Ranked = Item;
 
       class C = Division;
@@ -70,7 +70,7 @@ module CondenseList<FiniteStringableType Item, Unary<Item>::Ret<int>::pred/1 get
       int getRank(Division d, Item i) { result = getSparseIndex(i) and d = getDivision(i) }
     }
 
-    private import DenseRank2<DenseRankConfig>
+    private import DenseRank1<DenseRankConfig>
 
     class ListEntry extends TList {
       Division getDivision() {
@@ -87,7 +87,7 @@ module CondenseList<FiniteStringableType Item, Unary<Item>::Ret<int>::pred/1 get
         this = TCons(_, result)
       }
 
-      int getDenseIndex() { result = denseRank(getDivision(), getItem()) }
+      int getDenseIndex() { getItem() = denseRank(getDivision(), result) }
 
       ListEntry getPrev() { this = TCons(result, _) }
 
