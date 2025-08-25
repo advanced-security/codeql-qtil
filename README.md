@@ -1,5 +1,5 @@
 <div align="center">
-<img src="assets/logo.png" style="width: 220px;">
+<img src="assets/logo.jpg" style="width: 220px;">
 </div>
 
 # qtil, a util library for CodeQL!
