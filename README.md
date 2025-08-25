@@ -1,3 +1,7 @@
+<div align="center">
+<img src="assets/logo.jpg" style="width: 220px;">
+</div>
+
 # qtil, a util library for CodeQL!
 
 `qtil` is a utility library providing a wide array of features and conveniences for CodeQL. `qtil` is developed under the following two guiding principles:
