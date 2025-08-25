@@ -111,6 +111,41 @@ from Qtil::Product<Person, City>::Product product
 select product.getFirst(), product.getSecond()
 ```
 
+**AggregableTuple**: A class that can aggregate multiple values at a time, which can be useful for
+creating generic APIs involving unknown/configurable aggregation steps.
+
+```ql
+AggregableTuple::Piece getData(Person p) {
+  result = initString(p.getName()).addInt(p.getAge())
+}
+
+int two() { result = 2 }
+
+predicate useSum(AggregableTuple::Sum<two/0>::Sum agg) {
+  exists(int countVal, string nameJoin, int ageSum |
+    countVal = agg.countTotal() and
+    nameJoin = agg.asJoinedString(", ") and
+    ageSum = agg.asSummedInt() and
+    ... // Use the aggregation results in some way
+  )
+}
+```
+
+To aggregate the `AggregableTuple::Piece` values, each should be cast to a string and concatenated
+with a comma separator. The resulting value can be cast to an `AggregableTuple::Sum` type.
+
+```ql
+predicate createAndUseSum() {
+  exists(string agg |
+    agg = concat(string piece | piece = getData(getAPerson()) | piece, ",") and
+    useSum(agg)
+  )
+}
+```
+
+It is very important that every tuple is the same width and type, and that the `Sum` type is given
+the correct width as a parameter, otherwise the aggregation will not work correctly.
+
 ### Lists
 
 **Ordered**: Takes orderable data, and automatically adds `getPrevious()`, `getNext()` predicate members for ease of traversal.
