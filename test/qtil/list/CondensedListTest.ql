@@ -14,7 +14,7 @@ class TestFib2 extends Test, Case {
         x.getNext().getItem() = 3
       )
     then test.pass("Correct handling of fib 2")
-    else test.fail("Incorrect handling of fib 2)")
+    else test.fail("Incorrect handling of fib 2")
   }
 }
 
