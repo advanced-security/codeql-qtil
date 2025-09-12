@@ -238,6 +238,20 @@ predicate intPlusConstantOld(BinaryExpr e) {
 }
 ```
 
+### Control flow:
+
+_(qtil-cpp only)_ **BlockId**: This module assigns IDs to blocks or control flow nodes. It currently
+assigns unique IDs to each block/node, except it can produce duplicates IDs in the presence of
+switch/case statements. This module has a language-agnostic implementation but it is currently only
+implemented for C/C++.
+
+```ql
+import qtil.cpp.BlockId
+
+from BasicBlock b
+select b, blockId(b)
+```
+
 ### Query Formatting
 
 **QlFormat** offers a way of formatting CodeQL query messages in a consistent way, with varying
