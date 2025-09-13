@@ -6,12 +6,14 @@ on:
   # Automatically run the setup steps when an associated workflow is changed.
   push:
     paths:
-      - .github/workflows/copilot-setup-steps.yml
-      - .github/actions/setup-codeql-environment/action.yml
+      - .github/workflows/copilot-setup-steps.yaml
+      - .github/actions/install-codeql/action.yaml
+      - .github/actions/install-codeql-packs/action.yaml
   pull_request:
     paths:
-      - .github/workflows/copilot-setup-steps.yml
-      - .github/actions/setup-codeql-environment/action.yml
+      - .github/workflows/copilot-setup-steps.yaml
+      - .github/actions/install-codeql/action.yaml
+      - .github/actions/install-codeql-packs/action.yaml
 
 jobs:
   # The job MUST be called `copilot-setup-steps` or it will not be picked up by Copilot.
