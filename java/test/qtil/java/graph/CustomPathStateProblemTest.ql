@@ -10,7 +10,7 @@ module CallGraphPathStateProblemConfig implements CustomPathStateProblemConfigSi
   predicate start(Node n, int depth) { n.getName() = "start" and depth = 0 }
 
   bindingset[depth]
-  predicate end(Node n, int depth) { n.getName() = "end" }
+  predicate end(Node n, int depth) { n.getName() = "end" and depth >= 0 }
 
   bindingset[depth1]
   bindingset[depth2]
@@ -19,7 +19,7 @@ module CallGraphPathStateProblemConfig implements CustomPathStateProblemConfigSi
     exists(LocalVariableDeclExpr declA, LocalVariableDeclExpr declB |
       declA.getVariable() = a and
       declB.getVariable() = b and
-      declA.getInit().(VarAccess).getVariable() = b.getVariable()
+      declA.getInit().(VarAccess).getVariable() = b
     )
   }
 }

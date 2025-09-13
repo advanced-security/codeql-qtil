@@ -1,0 +1,1 @@
+| test.rb:2:5:2:9 | ... = ... | Variable x has initializer $@. | test.rb:2:9:2:9 | test.rb:2:9:2:9 | 0 | file://:0:0:0:0 | (none) | [unused] |

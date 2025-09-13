@@ -1,0 +1,10 @@
+---
+sourceLocationPrefix: /home/runner/work/codeql-qtil/codeql-qtil/ruby/test/qtil/ruby/format
+baselineLinesOfCode: 0
+unicodeNewlines: false
+columnKind: utf8
+primaryLanguage: ruby
+creationMetadata:
+  cliVersion: 2.20.1
+  creationTime: 2025-09-13T05:36:01.057415643Z
+finalised: true

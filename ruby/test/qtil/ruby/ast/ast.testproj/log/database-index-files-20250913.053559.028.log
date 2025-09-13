@@ -1,0 +1,10 @@
+[2025-09-13 05:35:59] This is codeql database index-files --prune=**/*.testproj --include-extension=.rb --include-extension=.erb --include-extension=.gemspec --include=**/Gemfile --size-limit=5m --language=ruby --working-dir=. /home/runner/work/codeql-qtil/codeql-qtil/ruby/test/qtil/ruby/ast/ast.testproj
+[2025-09-13 05:35:59] Log file was started late.
+[2025-09-13 05:35:59] Using index-files script /home/runner/work/codeql-qtil/codeql-qtil/codeql_home/codeql/ruby/tools/index-files.sh.
+[2025-09-13 05:35:59] [PROGRESS] database index-files> Scanning for files in /home/runner/work/codeql-qtil/codeql-qtil/ruby/test/qtil/ruby/ast...
+[2025-09-13 05:35:59] Calling plumbing command: codeql resolve files --include-extension=.rb --include-extension=.erb --include-extension=.gemspec --include=**/Gemfile --prune=**/*.testproj --size-limit=5m /home/runner/work/codeql-qtil/codeql-qtil/ruby/test/qtil/ruby/ast --format=json
+[2025-09-13 05:35:59] [PROGRESS] resolve files> Scanning /home/runner/work/codeql-qtil/codeql-qtil/ruby/test/qtil/ruby/ast...
+[2025-09-13 05:35:59] Plumbing command codeql resolve files completed:
+                      [ ]
+[2025-09-13 05:35:59] [DETAILS] database index-files> Found 0 files.
+[2025-09-13 05:35:59] Terminating normally.

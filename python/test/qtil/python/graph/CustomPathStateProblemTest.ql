@@ -10,7 +10,7 @@ module CallGraphPathStateProblemConfig implements CustomPathStateProblemConfigSi
   predicate start(Node n, int depth) { n.getId() = "start" and depth = 0 }
 
   bindingset[depth]
-  predicate end(Node n, int depth) { n.getId() = "end" }
+  predicate end(Node n, int depth) { n.getId() = "end" and depth >= 0 }
 
   bindingset[depth1]
   bindingset[depth2]
