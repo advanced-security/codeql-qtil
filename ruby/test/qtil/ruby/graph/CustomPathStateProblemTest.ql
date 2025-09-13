@@ -28,4 +28,5 @@ import CustomPathStateProblem<CallGraphPathStateProblemConfig>
 
 from Ast::VariableWriteAccess start, Ast::VariableWriteAccess end
 where problem(start, end)
-select start, end, "Path from $@ to $@.", start.getVariable().getName(), start, end.getVariable().getName(), end
+select start, end, "Path from $@ to $@.", start.getVariable().getName(), start,
+  end.getVariable().getName(), end

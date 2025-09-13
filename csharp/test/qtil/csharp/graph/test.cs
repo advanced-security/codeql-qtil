@@ -1,11 +1,8 @@
 public class Test {
     void f1() {
-        int mid = 0;
-        int start = 0;
-        int end = 0;
+        int end = 42;
+        int mid = end;
+        int start = mid;
         int unrelated = 0;
-        start = mid;
-        start = unrelated;
-        mid = end;
     }
 }
