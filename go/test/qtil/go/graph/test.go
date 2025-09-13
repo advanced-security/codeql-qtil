@@ -1,10 +1,11 @@
 package main
 
 func f1() {
-    end := 42
-    mid := 0  
-    start := 0
-    unrelated := 0
-    mid = end
+    mid := 0
+    start := 1
+    end := 2
+    unrelated := 3
     start = mid
+    start = unrelated
+    mid = end
 }

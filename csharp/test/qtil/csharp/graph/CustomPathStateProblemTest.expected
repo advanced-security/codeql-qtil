@@ -1,9 +1,3 @@
 edges
-| test.cs:4:13:4:15 | mid | test.cs:3:13:3:15 | end |  |  |
-| test.cs:5:13:5:17 | start | test.cs:4:13:4:15 | mid |  |  |
 nodes
-| test.cs:3:13:3:15 | end | semmle.label | end |
-| test.cs:4:13:4:15 | mid | semmle.label | mid |
-| test.cs:5:13:5:17 | start | semmle.label | start |
 #select
-| test.cs:5:13:5:17 | start | test.cs:3:13:3:15 | end | Path from $@ to $@. | start | test.cs:5:13:5:17 | start | end | test.cs:3:13:3:15 | end |

@@ -1,9 +1,9 @@
 def f1
-    v_end = 42
-    v_mid = v_end
-    v_start = v_mid
-    v_unrelated = 0
-    end = 1
-    mid = end  
-    start = mid
+  v_end = nil
+  v_mid = nil
+  v_start = nil
+  v_unrelated = nil
+  v_start = v_mid
+  v_start = v_unrelated  
+  v_mid = v_end
 end
