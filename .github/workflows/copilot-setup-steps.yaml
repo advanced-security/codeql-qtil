@@ -34,5 +34,47 @@ jobs:
       - name: Copilot Setup - Install CodeQL
         uses: ./.github/actions/install-codeql
 
-      - name: Copilot Setup - Install CodeQL packs
+      - name: Copilot Setup - Install CodeQL packs (common)
         uses: ./.github/actions/install-codeql-packs
+        with:
+          language: common
+
+      - name: Copilot Setup - Install CodeQL packs (cpp)
+        uses: ./.github/actions/install-codeql-packs
+        with:
+          language: cpp
+
+      - name: Copilot Setup - Install CodeQL packs (csharp)
+        uses: ./.github/actions/install-codeql-packs
+        with:
+          language: csharp
+
+      - name: Copilot Setup - Install CodeQL packs (go)
+        uses: ./.github/actions/install-codeql-packs
+        with:
+          language: go 
+
+      - name: Copilot Setup - Install CodeQL packs (java)
+        uses: ./.github/actions/install-codeql-packs
+        with:
+          language: java
+
+      - name: Copilot Setup - Install CodeQL packs (javascript)
+        uses: ./.github/actions/install-codeql-packs
+        with:
+          language: javascript
+
+      - name: Copilot Setup - Install CodeQL packs (python)
+        uses: ./.github/actions/install-codeql-packs
+        with:
+          language: python
+
+      - name: Copilot Setup - Install CodeQL packs (ruby)
+        uses: ./.github/actions/install-codeql-packs
+        with:
+          language: ruby
+
+      - name: Copilot Setup - Install CodeQL packs (swift)
+        uses: ./.github/actions/install-codeql-packs
+        with:
+          language: swift
