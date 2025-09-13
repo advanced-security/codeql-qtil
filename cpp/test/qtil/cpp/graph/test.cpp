@@ -1,9 +1,6 @@
 void f1() {
-    int mid;
-    int start;
-    int end;
-    int unrelated;
-    start = mid;
-    start = unrelated;
-    mid = end;
+    int end = 42;
+    int mid = end;
+    int start = mid;
+    int unrelated = 0;
 }
