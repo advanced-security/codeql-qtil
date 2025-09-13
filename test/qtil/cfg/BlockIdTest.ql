@@ -226,18 +226,19 @@ class TestEntryBlockFirstId extends Test, Case {
 }
 
 /**
- * Test convergence: blocks that converge should have higher IDs than their predecessors
+ * Test ordering: blocks that don't loop should have higher IDs than their predecessors
  */
-class TestConvergenceOrdering extends Test, Case {
+class TestBlockIdOrdering extends Test, Case {
   override predicate run(Qnit test) {
     if
       forall(TestBlock pred, TestBlock succ |
-        succ = [pred.getFalseSuccessor(), succ.getTrueSuccessor(), succ.getASuccessor()]
+        succ = [pred.getFalseSuccessor(), pred.getTrueSuccessor(), pred.getASuccessor()] and
+        not succ.getASuccessor+() = pred
       |
         TestBlockId::blockId(pred) < TestBlockId::blockId(succ)
       )
-    then test.pass("Convergence points have higher IDs than predecessors")
-    else test.fail("Some convergence points have lower IDs than predecessors")
+    then test.pass("Non-looping blocks have higher IDs than predecessors")
+    else test.fail("Some non-looping blocks have lower IDs than predecessors")
   }
 }
 
@@ -249,11 +250,9 @@ class TestCyclicControlFlow extends Test, Case {
     if
       exists(TestBlock loop |
         loop.toString() = "Loop" and
-        exists(TestBlockId::blockId(loop))
-      ) and
-      exists(TestBlock merge |
-        merge.toString() = "Merge" and
-        exists(TestBlockId::blockId(merge))
+        loop.getASuccessor+() = loop and
+        exists(TestBlockId::blockId(loop)) and
+        forall(TestBlock succ | succ = loop.getASuccessor() | exists(TestBlockId::blockId(succ)))
       )
     then test.pass("Cyclic control flow is handled without infinite recursion")
     else test.fail("Cyclic control flow causes issues")
