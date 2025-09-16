@@ -1,1 +1,0 @@
-| test.js:1:5:1:9 | x = 0 | Variable x has initializer $@. | test.js:1:9:1:9 | test.js:1:9:1:9 | 0 | file://:0:0:0:0 | (none) | [unused] |
