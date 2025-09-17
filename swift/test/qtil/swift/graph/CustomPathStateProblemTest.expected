@@ -1,0 +1,4 @@
+WARNING: unused variable 'depth' (CustomPathStateProblemTest.ql:13,29-34)
+edges
+nodes
+#select

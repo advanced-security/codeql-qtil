@@ -1,6 +1,0 @@
-WARNING: QnitTestComplexFail extends only abstract classes but does not provide its own characteristic predicate (QnitTest.ql:28,7-26)
-WARNING: QnitTestComplexPass extends only abstract classes but does not provide its own characteristic predicate (QnitTest.ql:19,7-26)
-WARNING: QnitTestFail extends only abstract classes but does not provide its own characteristic predicate (QnitTest.ql:11,7-19)
-WARNING: QnitTestPass extends only abstract classes but does not provide its own characteristic predicate (QnitTest.ql:3,7-19)
-| Some tests failed: FAILURE: This complex test is supposed to fail |
-| Some tests failed: FAILURE: This test is supposed to fail |
