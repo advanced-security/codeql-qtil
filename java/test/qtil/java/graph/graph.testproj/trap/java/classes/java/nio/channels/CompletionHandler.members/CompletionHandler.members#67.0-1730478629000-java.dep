@@ -1,9 +1,0 @@
-TRAP dependencies 1.2
-
-TRAP
-classes/java/nio/channels/CompletionHandler.members/CompletionHandler.members#67.0-1730478629000-java.trap.gz
-
-TRAPS
-classes/java/nio/channels/CompletionHandler.members.trap.gz
-classes/java/lang/Object.members.trap.gz
-classes/java/lang/Throwable.members.trap.gz

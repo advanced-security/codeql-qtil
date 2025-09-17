@@ -1,9 +1,0 @@
-TRAP dependencies 1.2
-
-TRAP
-classes/java/nio/channels/ByteChannel.members/ByteChannel.members#67.0-1730478629000-java.trap.gz
-
-TRAPS
-classes/java/nio/channels/ByteChannel.members.trap.gz
-classes/java/nio/channels/ReadableByteChannel.members.trap.gz
-classes/java/nio/channels/WritableByteChannel.members.trap.gz

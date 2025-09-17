@@ -1,8 +1,0 @@
-TRAP dependencies 1.2
-
-TRAP
-classes/java/nio/channels/ClosedChannelException.members/ClosedChannelException.members#67.0-1730478629000-java.trap.gz
-
-TRAPS
-classes/java/nio/channels/ClosedChannelException.members.trap.gz
-classes/java/io/IOException.members.trap.gz

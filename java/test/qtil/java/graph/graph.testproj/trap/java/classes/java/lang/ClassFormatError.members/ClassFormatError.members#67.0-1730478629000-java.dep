@@ -1,9 +1,0 @@
-TRAP dependencies 1.2
-
-TRAP
-classes/java/lang/ClassFormatError.members/ClassFormatError.members#67.0-1730478629000-java.trap.gz
-
-TRAPS
-classes/java/lang/ClassFormatError.members.trap.gz
-classes/java/lang/LinkageError.members.trap.gz
-classes/java/lang/String.members.trap.gz

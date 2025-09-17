@@ -1,9 +1,0 @@
-TRAP dependencies 1.2
-
-TRAP
-classes/sun/util/locale/InternalLocaleBuilder$CaseInsensitiveChar.members/InternalLocaleBuilder$CaseInsensitiveChar.members#67.0-1730478629000-java.trap.gz
-
-TRAPS
-classes/sun/util/locale/InternalLocaleBuilder$CaseInsensitiveChar.members.trap.gz
-classes/java/lang/Object.members.trap.gz
-classes/sun/util/locale/InternalLocaleBuilder.members.trap.gz

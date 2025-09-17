@@ -1,9 +1,0 @@
-TRAP dependencies 1.2
-
-TRAP
-classes/jdk/internal/vm/ContinuationScope.members/ContinuationScope.members#67.0-1730478629000-java.trap.gz
-
-TRAPS
-classes/jdk/internal/vm/ContinuationScope.members.trap.gz
-classes/java/lang/Object.members.trap.gz
-classes/java/lang/String.members.trap.gz

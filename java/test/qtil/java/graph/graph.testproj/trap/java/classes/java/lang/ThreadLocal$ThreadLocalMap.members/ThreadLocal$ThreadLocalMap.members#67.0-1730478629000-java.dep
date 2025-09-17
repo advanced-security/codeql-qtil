@@ -1,9 +1,0 @@
-TRAP dependencies 1.2
-
-TRAP
-classes/java/lang/ThreadLocal$ThreadLocalMap.members/ThreadLocal$ThreadLocalMap.members#67.0-1730478629000-java.trap.gz
-
-TRAPS
-classes/java/lang/ThreadLocal$ThreadLocalMap.members.trap.gz
-classes/java/lang/Object.members.trap.gz
-classes/java/lang/ThreadLocal.members.trap.gz

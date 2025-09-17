@@ -1,8 +1,0 @@
-TRAP dependencies 1.2
-
-TRAP
-classes/java/nio/file/attribute/FileStoreAttributeView.members/FileStoreAttributeView.members#67.0-1730478629000-java.trap.gz
-
-TRAPS
-classes/java/nio/file/attribute/FileStoreAttributeView.members.trap.gz
-classes/java/nio/file/attribute/AttributeView.members.trap.gz

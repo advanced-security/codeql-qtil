@@ -1,8 +1,0 @@
-TRAP dependencies 1.2
-
-TRAP
-classes/sun/reflect/generics/tree/Tree.members/Tree.members#67.0-1730478629000-java.trap.gz
-
-TRAPS
-classes/sun/reflect/generics/tree/Tree.members.trap.gz
-classes/java/lang/Object.members.trap.gz

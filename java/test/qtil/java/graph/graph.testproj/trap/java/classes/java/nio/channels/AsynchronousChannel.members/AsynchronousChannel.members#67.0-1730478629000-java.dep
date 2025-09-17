@@ -1,9 +1,0 @@
-TRAP dependencies 1.2
-
-TRAP
-classes/java/nio/channels/AsynchronousChannel.members/AsynchronousChannel.members#67.0-1730478629000-java.trap.gz
-
-TRAPS
-classes/java/nio/channels/AsynchronousChannel.members.trap.gz
-classes/java/nio/channels/Channel.members.trap.gz
-classes/java/io/IOException.members.trap.gz
