@@ -1,0 +1,17 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/net/spi/InetAddressResolver.members/InetAddressResolver.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/net/spi/InetAddressResolver.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/lang/Cloneable.members.trap.gz
+classes/java/io/Serializable.members.trap.gz
+classes/java/lang/String.members.trap.gz
+classes/java/net/UnknownHostException.members.trap.gz
+classes/java/net/spi/InetAddressResolver$LookupPolicy.members.trap.gz
+classes/java/util/stream/Stream.members.trap.gz
+classes/java/util/stream/BaseStream.members.trap.gz
+classes/java/lang/AutoCloseable.members.trap.gz
+classes/java/net/InetAddress.members.trap.gz

@@ -1,0 +1,10 @@
+---
+sourceLocationPrefix: /home/runner/work/codeql-qtil/codeql-qtil/javascript/test/qtil/javascript/graph
+baselineLinesOfCode: 0
+unicodeNewlines: true
+columnKind: utf16
+primaryLanguage: javascript
+creationMetadata:
+  cliVersion: 2.20.1
+  creationTime: 2025-09-17T03:12:32.661249795Z
+finalised: true

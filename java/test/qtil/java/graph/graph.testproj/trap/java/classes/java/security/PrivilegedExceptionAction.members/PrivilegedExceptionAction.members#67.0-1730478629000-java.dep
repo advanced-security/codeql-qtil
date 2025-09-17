@@ -1,0 +1,10 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/security/PrivilegedExceptionAction.members/PrivilegedExceptionAction.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/security/PrivilegedExceptionAction.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/lang/FunctionalInterface.members.trap.gz
+classes/java/lang/Exception.members.trap.gz

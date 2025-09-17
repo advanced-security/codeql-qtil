@@ -1,0 +1,15 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/nio/LongBuffer.members/LongBuffer.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/nio/LongBuffer.members.trap.gz
+classes/java/nio/Buffer.members.trap.gz
+classes/java/lang/Comparable.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/nio/ByteOrder.members.trap.gz
+classes/java/lang/String.members.trap.gz
+classes/java/lang/Cloneable.members.trap.gz
+classes/java/io/Serializable.members.trap.gz
+classes/java/lang/foreign/MemorySegment.members.trap.gz

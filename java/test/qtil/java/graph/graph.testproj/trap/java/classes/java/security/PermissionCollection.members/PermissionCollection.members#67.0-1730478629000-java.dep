@@ -1,0 +1,15 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/security/PermissionCollection.members/PermissionCollection.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/security/PermissionCollection.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/io/Serializable.members.trap.gz
+classes/java/lang/String.members.trap.gz
+classes/java/util/stream/Stream.members.trap.gz
+classes/java/util/stream/BaseStream.members.trap.gz
+classes/java/lang/AutoCloseable.members.trap.gz
+classes/java/security/Permission.members.trap.gz
+classes/java/util/Enumeration.members.trap.gz

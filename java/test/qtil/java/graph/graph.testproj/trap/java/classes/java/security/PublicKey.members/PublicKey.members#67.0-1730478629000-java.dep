@@ -1,0 +1,10 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/security/PublicKey.members/PublicKey.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/security/PublicKey.members.trap.gz
+classes/java/security/AsymmetricKey.members.trap.gz
+classes/java/lang/Deprecated.members.trap.gz
+classes/java/lang/String.members.trap.gz

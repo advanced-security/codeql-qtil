@@ -1,0 +1,23 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/jdk/internal/util/ReferencedKeyMap.members/ReferencedKeyMap.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/jdk/internal/util/ReferencedKeyMap.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/util/Map.members.trap.gz
+classes/java/util/Map$Entry.members.trap.gz
+classes/java/lang/Cloneable.members.trap.gz
+classes/java/io/Serializable.members.trap.gz
+classes/java/util/function/BiFunction.members.trap.gz
+classes/java/lang/FunctionalInterface.members.trap.gz
+classes/java/util/function/Function.members.trap.gz
+classes/java/util/function/BiConsumer.members.trap.gz
+classes/java/util/Set.members.trap.gz
+classes/java/util/Collection.members.trap.gz
+classes/java/lang/Iterable.members.trap.gz
+classes/jdk/internal/util/ReferenceKey.members.trap.gz
+classes/java/util/function/UnaryOperator.members.trap.gz
+classes/java/lang/String.members.trap.gz
+classes/java/util/function/Supplier.members.trap.gz

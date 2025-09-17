@@ -1,0 +1,11 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/util/IntSummaryStatistics.members/IntSummaryStatistics.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/util/IntSummaryStatistics.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/util/function/IntConsumer.members.trap.gz
+classes/java/lang/String.members.trap.gz
+classes/java/lang/IllegalArgumentException.members.trap.gz

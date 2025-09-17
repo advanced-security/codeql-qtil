@@ -1,0 +1,15 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/jdk/internal/ref/PhantomCleanable.members/PhantomCleanable.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/jdk/internal/ref/PhantomCleanable.members.trap.gz
+classes/java/lang/ref/PhantomReference.members.trap.gz
+classes/java/lang/ref/Reference.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/lang/ref/ReferenceQueue.members.trap.gz
+classes/java/lang/CloneNotSupportedException.members.trap.gz
+classes/java/lang/ThreadGroup.members.trap.gz
+classes/java/lang/ref/Cleaner$Cleanable.members.trap.gz
+classes/java/lang/ref/Cleaner.members.trap.gz

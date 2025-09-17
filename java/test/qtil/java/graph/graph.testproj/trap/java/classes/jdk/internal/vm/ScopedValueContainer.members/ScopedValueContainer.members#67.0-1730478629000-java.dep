@@ -1,0 +1,25 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/jdk/internal/vm/ScopedValueContainer.members/ScopedValueContainer.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/jdk/internal/vm/ScopedValueContainer.members.trap.gz
+classes/jdk/internal/vm/StackableScope.members.trap.gz
+classes/java/lang/ScopedValue$CallableOp.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/lang/ScopedValue.members.trap.gz
+classes/java/lang/FunctionalInterface.members.trap.gz
+classes/jdk/internal/javac/PreviewFeature.members.trap.gz
+classes/jdk/internal/javac/PreviewFeature$Feature.members.trap.gz
+classes/java/lang/Throwable.members.trap.gz
+classes/java/lang/Runnable.members.trap.gz
+classes/jdk/internal/vm/ScopedValueContainer$BindingsSnapshot.members.trap.gz
+classes/java/lang/Class.members.trap.gz
+classes/java/io/Serializable.members.trap.gz
+classes/java/lang/reflect/GenericDeclaration.members.trap.gz
+classes/java/lang/reflect/Type.members.trap.gz
+classes/java/lang/reflect/AnnotatedElement.members.trap.gz
+classes/java/lang/invoke/TypeDescriptor$OfField.members.trap.gz
+classes/java/lang/invoke/TypeDescriptor.members.trap.gz
+classes/java/lang/constant/Constable.members.trap.gz

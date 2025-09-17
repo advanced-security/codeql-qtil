@@ -1,0 +1,12 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/nio/file/attribute/FileTime.members/FileTime.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/nio/file/attribute/FileTime.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/lang/Comparable.members.trap.gz
+classes/java/lang/String.members.trap.gz
+classes/java/time/Instant.members.trap.gz
+classes/java/util/concurrent/TimeUnit.members.trap.gz

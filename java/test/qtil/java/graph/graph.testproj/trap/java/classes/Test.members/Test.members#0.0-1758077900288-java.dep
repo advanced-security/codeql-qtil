@@ -1,0 +1,8 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/Test.members/Test.members#0.0-1758077900288-java.trap.gz
+
+TRAPS
+classes/Test.members.trap.gz
+classes/java/lang/Object.members.trap.gz

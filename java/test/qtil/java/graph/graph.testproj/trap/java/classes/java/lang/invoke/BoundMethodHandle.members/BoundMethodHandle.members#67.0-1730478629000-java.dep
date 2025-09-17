@@ -1,0 +1,15 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/lang/invoke/BoundMethodHandle.members/BoundMethodHandle.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/lang/invoke/BoundMethodHandle.members.trap.gz
+classes/java/lang/invoke/MethodHandle.members.trap.gz
+classes/java/lang/invoke/BoundMethodHandle$SpeciesData.members.trap.gz
+classes/java/lang/invoke/MethodType.members.trap.gz
+classes/java/lang/invoke/LambdaForm.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/lang/String.members.trap.gz
+classes/java/lang/invoke/LambdaFormEditor.members.trap.gz
+classes/java/lang/invoke/BoundMethodHandle$Specializer.members.trap.gz

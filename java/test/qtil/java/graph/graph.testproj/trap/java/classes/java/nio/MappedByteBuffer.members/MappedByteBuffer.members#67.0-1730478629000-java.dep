@@ -1,0 +1,12 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/nio/MappedByteBuffer.members/MappedByteBuffer.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/nio/MappedByteBuffer.members.trap.gz
+classes/java/nio/ByteBuffer.members.trap.gz
+classes/java/io/FileDescriptor.members.trap.gz
+classes/jdk/internal/access/foreign/UnmapperProxy.members.trap.gz
+classes/java/lang/foreign/MemorySegment.members.trap.gz
+classes/jdk/internal/misc/ScopedMemoryAccess.members.trap.gz

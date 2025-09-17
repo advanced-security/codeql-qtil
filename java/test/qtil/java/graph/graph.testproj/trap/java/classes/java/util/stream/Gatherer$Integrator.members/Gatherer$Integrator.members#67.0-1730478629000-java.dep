@@ -1,0 +1,15 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/util/stream/Gatherer$Integrator.members/Gatherer$Integrator.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/util/stream/Gatherer$Integrator.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/util/stream/Gatherer.members.trap.gz
+classes/java/lang/FunctionalInterface.members.trap.gz
+classes/jdk/internal/javac/PreviewFeature.members.trap.gz
+classes/jdk/internal/javac/PreviewFeature$Feature.members.trap.gz
+classes/java/util/stream/Gatherer$Integrator$Greedy.members.trap.gz
+classes/jdk/internal/vm/annotation/ForceInline.members.trap.gz
+classes/java/util/stream/Gatherer$Downstream.members.trap.gz

@@ -1,0 +1,10 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/lang/foreign/ValueLayout$OfChar.members/ValueLayout$OfChar.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/lang/foreign/ValueLayout$OfChar.members.trap.gz
+classes/java/lang/foreign/ValueLayout.members.trap.gz
+classes/java/nio/ByteOrder.members.trap.gz
+classes/java/lang/String.members.trap.gz

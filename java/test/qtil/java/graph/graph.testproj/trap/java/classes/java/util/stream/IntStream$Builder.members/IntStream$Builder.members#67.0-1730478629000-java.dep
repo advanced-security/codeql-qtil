@@ -1,0 +1,9 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/util/stream/IntStream$Builder.members/IntStream$Builder.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/util/stream/IntStream$Builder.members.trap.gz
+classes/java/util/function/IntConsumer.members.trap.gz
+classes/java/util/stream/IntStream.members.trap.gz

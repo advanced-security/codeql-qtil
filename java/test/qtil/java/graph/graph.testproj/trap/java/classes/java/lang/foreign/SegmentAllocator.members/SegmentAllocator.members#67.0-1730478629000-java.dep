@@ -1,0 +1,25 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/lang/foreign/SegmentAllocator.members/SegmentAllocator.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/lang/foreign/SegmentAllocator.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/lang/FunctionalInterface.members.trap.gz
+classes/java/lang/foreign/MemorySegment.members.trap.gz
+classes/java/lang/foreign/MemoryLayout.members.trap.gz
+classes/java/lang/foreign/ValueLayout$OfDouble.members.trap.gz
+classes/java/lang/Cloneable.members.trap.gz
+classes/java/io/Serializable.members.trap.gz
+classes/jdk/internal/vm/annotation/ForceInline.members.trap.gz
+classes/java/lang/foreign/ValueLayout$OfLong.members.trap.gz
+classes/java/lang/foreign/ValueLayout$OfFloat.members.trap.gz
+classes/java/lang/foreign/ValueLayout$OfInt.members.trap.gz
+classes/java/lang/foreign/ValueLayout$OfChar.members.trap.gz
+classes/java/lang/foreign/ValueLayout$OfShort.members.trap.gz
+classes/java/lang/foreign/ValueLayout$OfByte.members.trap.gz
+classes/java/lang/foreign/ValueLayout.members.trap.gz
+classes/java/lang/foreign/AddressLayout.members.trap.gz
+classes/java/lang/String.members.trap.gz
+classes/java/nio/charset/Charset.members.trap.gz

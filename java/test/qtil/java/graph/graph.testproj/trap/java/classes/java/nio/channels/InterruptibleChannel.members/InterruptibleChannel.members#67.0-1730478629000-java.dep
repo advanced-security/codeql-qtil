@@ -1,0 +1,9 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/nio/channels/InterruptibleChannel.members/InterruptibleChannel.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/nio/channels/InterruptibleChannel.members.trap.gz
+classes/java/nio/channels/Channel.members.trap.gz
+classes/java/io/IOException.members.trap.gz

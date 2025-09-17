@@ -1,0 +1,15 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/sun/util/locale/BaseLocale.members/BaseLocale.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/sun/util/locale/BaseLocale.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/lang/String.members.trap.gz
+classes/java/util/function/UnaryOperator.members.trap.gz
+classes/java/util/function/Function.members.trap.gz
+classes/java/lang/FunctionalInterface.members.trap.gz
+classes/java/lang/Cloneable.members.trap.gz
+classes/java/io/Serializable.members.trap.gz
+classes/jdk/internal/vm/annotation/Stable.members.trap.gz

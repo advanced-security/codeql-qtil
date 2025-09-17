@@ -1,0 +1,9 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/jdk/internal/access/foreign/UnmapperProxy.members/UnmapperProxy.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/jdk/internal/access/foreign/UnmapperProxy.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/io/FileDescriptor.members.trap.gz

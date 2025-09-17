@@ -1,0 +1,9 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/io/SerializablePermission.members/SerializablePermission.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/io/SerializablePermission.members.trap.gz
+classes/java/security/BasicPermission.members.trap.gz
+classes/java/lang/String.members.trap.gz

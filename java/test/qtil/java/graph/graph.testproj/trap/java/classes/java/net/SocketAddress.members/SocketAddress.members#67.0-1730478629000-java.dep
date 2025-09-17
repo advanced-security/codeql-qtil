@@ -1,0 +1,9 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/net/SocketAddress.members/SocketAddress.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/net/SocketAddress.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/io/Serializable.members.trap.gz

@@ -1,0 +1,9 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/lang/ref/Cleaner$Cleanable.members/Cleaner$Cleanable.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/lang/ref/Cleaner$Cleanable.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/lang/ref/Cleaner.members.trap.gz

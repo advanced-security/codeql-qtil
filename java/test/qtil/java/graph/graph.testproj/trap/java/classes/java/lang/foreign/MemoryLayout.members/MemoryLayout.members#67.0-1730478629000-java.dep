@@ -1,0 +1,20 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/lang/foreign/MemoryLayout.members/MemoryLayout.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/lang/foreign/MemoryLayout.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/lang/Cloneable.members.trap.gz
+classes/java/io/Serializable.members.trap.gz
+classes/java/lang/foreign/UnionLayout.members.trap.gz
+classes/java/lang/foreign/StructLayout.members.trap.gz
+classes/java/lang/foreign/SequenceLayout.members.trap.gz
+classes/java/lang/foreign/PaddingLayout.members.trap.gz
+classes/java/lang/String.members.trap.gz
+classes/java/lang/foreign/MemoryLayout$PathElement.members.trap.gz
+classes/java/lang/invoke/MethodHandle.members.trap.gz
+classes/java/lang/invoke/VarHandle.members.trap.gz
+classes/java/util/Optional.members.trap.gz
+classes/jdk/internal/ValueBased.members.trap.gz

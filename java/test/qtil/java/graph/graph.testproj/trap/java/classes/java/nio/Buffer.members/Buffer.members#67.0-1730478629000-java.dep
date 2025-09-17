@@ -1,0 +1,14 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/nio/Buffer.members/Buffer.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/nio/Buffer.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/jdk/internal/foreign/MemorySessionImpl.members.trap.gz
+classes/jdk/internal/vm/annotation/ForceInline.members.trap.gz
+classes/java/lang/IllegalArgumentException.members.trap.gz
+classes/java/lang/foreign/MemorySegment.members.trap.gz
+classes/jdk/internal/misc/ScopedMemoryAccess.members.trap.gz
+classes/jdk/internal/misc/Unsafe.members.trap.gz

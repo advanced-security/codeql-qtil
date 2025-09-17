@@ -1,0 +1,13 @@
+TRAP dependencies 1.2
+
+TRAP
+classes/java/lang/ScopedValue$CallableOp.members/ScopedValue$CallableOp.members#67.0-1730478629000-java.trap.gz
+
+TRAPS
+classes/java/lang/ScopedValue$CallableOp.members.trap.gz
+classes/java/lang/Object.members.trap.gz
+classes/java/lang/ScopedValue.members.trap.gz
+classes/java/lang/Throwable.members.trap.gz
+classes/java/lang/FunctionalInterface.members.trap.gz
+classes/jdk/internal/javac/PreviewFeature.members.trap.gz
+classes/jdk/internal/javac/PreviewFeature$Feature.members.trap.gz
