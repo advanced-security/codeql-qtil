@@ -9,15 +9,11 @@ module TestConfig implements LimitResultsConfigSig<Bug, BugField> {
   string message(Bug bug, BugField field, string remaining) {
     result = bug.getName() + " has field " + field.getFieldName() + remaining
   }
-
-  string orderBy(BugField field) { result = field.getFieldName() }
-
-  int maxResults() { result = 3 }
 }
 
 module Results = LimitResults<Bug, BugField, TestConfig>;
 
-/** BugA has 1 field (X), which is fewer than maxResults=3, so all results are shown. */
+/** BugA has 1 field (X), which is fewer than maxResults=3 (default), so all results are shown. */
 class TestBugAResultCount extends Test, Case {
   override predicate run(Qnit test) {
     if count(BugField f, string msg | Results::hasLimitedResult(any(Bug b | b = TBugA()), f, msg)) =
@@ -41,7 +37,7 @@ class TestBugANoSuffix extends Test, Case {
   }
 }
 
-/** BugB has 3 fields (A, B, C), exactly maxResults=3, so all results are shown. */
+/** BugB has 3 fields (A, B, C), exactly maxResults=3 (default), so all results are shown. */
 class TestBugBResultCount extends Test, Case {
   override predicate run(Qnit test) {
     if count(BugField f, string msg | Results::hasLimitedResult(any(Bug b | b = TBugB()), f, msg)) =
@@ -73,7 +69,7 @@ class TestBugBNoSuffix extends Test, Case {
   }
 }
 
-/** BugC has 5 fields (A, B, C, D, E), which exceeds maxResults=3, so only 3 are shown. */
+/** BugC has 5 fields (A, B, C, D, E), which exceeds maxResults=3 (default), so only 3 are shown. */
 class TestBugCResultCount extends Test, Case {
   override predicate run(Qnit test) {
     if count(BugField f, string msg | Results::hasLimitedResult(any(Bug b | b = TBugC()), f, msg)) =
@@ -83,7 +79,10 @@ class TestBugCResultCount extends Test, Case {
   }
 }
 
-/** BugC shows only the first 3 fields alphabetically (A, B, C), not D or E. */
+/**
+ * BugC shows only the first 3 fields alphabetically (A, B, C), not D or E, using the default
+ * placeholderString ordering (toString() = "BugC.A", "BugC.B", ...).
+ */
 class TestBugCTopRanked extends Test, Case {
   override predicate run(Qnit test) {
     if
@@ -117,3 +116,31 @@ class TestBugCSuffix extends Test, Case {
     else test.fail("BugC: some results have wrong suffix")
   }
 }
+
+/**
+ * The `problems` query predicate returns (finding, msg, entity, entityStr) tuples, where
+ * entityStr is the default placeholderString (toString()).
+ */
+class TestProblemsQueryPredicate extends Test, Case {
+  override predicate run(Qnit test) {
+    if
+      // BugC: 3 problems shown, each entityStr = BugField.toString() = "BugC.<field>"
+      count(Bug b, string msg, BugField f, string fstr |
+        Results::problems(b, msg, f, fstr) and b = TBugC()
+      ) = 3 and
+      forall(Bug b, string msg, BugField f, string fstr |
+        Results::problems(b, msg, f, fstr) and b = TBugC()
+      |
+        fstr = "BugC." + f.getFieldName()
+      ) and
+      // BugA: 1 problem, entityStr = "BugA.X"
+      exists(Bug b, string msg, BugField f, string fstr |
+        Results::problems(b, msg, f, fstr) and
+        b = TBugA() and
+        fstr = "BugA.X"
+      )
+    then test.pass("problems query predicate returns correct results with entityStr = toString()")
+    else test.fail("problems query predicate returned unexpected results")
+  }
+}
+
