@@ -8,6 +8,7 @@ module Qtil {
   import qtil.parameterization.SignaturePredicates
   import qtil.parameterization.SignatureTypes
   import qtil.graph.GraphPathSearch
+  import qtil.results.LimitResults
   import qtil.performance.GraphComparison
   import qtil.inheritance.Instance
   import qtil.inheritance.UnderlyingString
