@@ -1,6 +1,7 @@
 module Qtil {
   import qtil.list.CondensedList
   import qtil.list.Ordered
+  import qtil.list.PlaceholderList
   import qtil.locations.NullLocation
   import qtil.locations.OptionalLocation
   import qtil.locations.StringLocation
