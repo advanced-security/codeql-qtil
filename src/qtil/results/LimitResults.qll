@@ -110,7 +110,10 @@ signature module LimitResultsConfigSig<FiniteStringableType Finding, FiniteStrin
  *
  * See `LimitResultsConfigSig` for configuration details.
  */
-module LimitResults<FiniteStringableType Finding, FiniteStringableType Entity, LimitResultsConfigSig<Finding, Entity> Config> {
+module LimitResults<
+  FiniteStringableType Finding, FiniteStringableType Entity,
+  LimitResultsConfigSig<Finding, Entity> Config>
+{
   /**
    * A query predicate that reports findings alongside one of their top-ranked entities and a
    * formatted message. This is the primary way to use this module in a query.
@@ -140,10 +143,7 @@ module LimitResults<FiniteStringableType Finding, FiniteStringableType Entity, L
   predicate hasLimitedResult(Finding finding, Entity entity, string message) {
     exists(int total, int ranked, string remaining |
       total = count(Entity e | Config::problem(finding, e)) and
-      entity =
-        rank[ranked](Entity e | Config::problem(finding, e) |
-          e order by Config::orderBy(e)
-        ) and
+      entity = rank[ranked](Entity e | Config::problem(finding, e) | e order by Config::orderBy(e)) and
       ranked <= Config::maxResults() and
       (
         total > Config::maxResults() and
