@@ -4,14 +4,15 @@
  *
  * This is useful for queries that find multiple related entities per finding (such as fields,
  * parameters, or call sites) but where listing all of them would be too noisy. Instead, only the
- * top `N` entities are reported (ordered by `placeholderString()`), and the message notes how many
- * were omitted.
+ * top `N` entities are reported (ordered by `orderBy()`), and the message notes how many were
+ * omitted.
  *
  * ## Usage
  *
  * Implement the `LimitResultsConfigSig` signature and instantiate the `LimitResults` module. Only
- * `problem` and `message` are required — `placeholderString` and `maxResults` have sensible
- * defaults:
+ * `problem` and `message` are required — `placeholderString`, `orderBy`, `maxResults`, and
+ * `andMoreText` have sensible defaults. The instantiated module's `problems` query predicate is
+ * automatically part of the query output without any `from`/`where`/`select` boilerplate:
  *
  * ```ql
  * module MyConfig implements LimitResultsConfigSig<MyFinding, MyEntity> {
@@ -21,19 +22,11 @@
  *
  *   bindingset[remaining]
  *   string message(MyFinding finding, MyEntity entity, string remaining) {
- *     result = "Finding $@ has entity $@" + remaining + "."
+ *     result = "Finding " + finding.getName() + " has entity $@" + remaining + "."
  *   }
  * }
  *
  * module Results = LimitResults<MyFinding, MyEntity, MyConfig>;
- * ```
- *
- * The instantiated module exposes a `problems` query predicate that can be used directly as
- * the output of a query without any `from`/`where`/`select` boilerplate:
- *
- * ```ql
- * module Results = LimitResults<MyFinding, MyEntity, MyConfig>;
- * // The query predicate Results::problems(...) is automatically part of the query output.
  * ```
  */
 
@@ -42,16 +35,15 @@ private import qtil.parameterization.SignatureTypes
 /**
  * A signature for configuring the `LimitResults` module.
  *
- * Only `problem` and `message` must be implemented. The predicates `placeholderString` and
- * `maxResults` have defaults and may be overridden.
+ * Only `problem` and `message` must be implemented. The predicates `placeholderString`,
+ * `orderBy`, `maxResults`, and `andMoreText` have defaults and may be overridden.
  */
 signature module LimitResultsConfigSig<FiniteStringableType Finding, FiniteStringableType Entity> {
   /**
    * The relationship between findings and their associated entities.
    *
    * Defines which entities are relevant to a given finding. All entities satisfying this predicate
-   * will be counted, but only the top `maxResults()` (ordered by `placeholderString()`) will be
-   * reported.
+   * will be counted, but only the top `maxResults()` (ordered by `orderBy()`) will be reported.
    */
   predicate problem(Finding finding, Entity entity);
 
@@ -66,25 +58,46 @@ signature module LimitResultsConfigSig<FiniteStringableType Finding, FiniteStrin
   string message(Finding finding, Entity entity, string remaining);
 
   /**
-   * The display string for an entity, also used as the ordering key (ascending).
+   * The display string for an entity.
    *
-   * Entities with smaller placeholder strings are reported first. When the total count exceeds
-   * `maxResults()`, only the first `maxResults()` entities by this ordering are reported.
+   * Used as the `entityStr` column in the `problems` query predicate output. Also used as the
+   * default ordering key — see `orderBy`.
    *
    * Defaults to `entity.toString()`.
    */
   default string placeholderString(Entity entity) { result = entity.toString() }
 
   /**
+   * The key to use when ordering entities within a finding (ascending).
+   *
+   * Entities with smaller order keys are reported first. When the total count exceeds
+   * `maxResults()`, only the first `maxResults()` entities by this ordering are reported.
+   *
+   * Defaults to `placeholderString(entity)`.
+   */
+  default string orderBy(Entity entity) { result = placeholderString(entity) }
+
+  /**
    * The maximum number of entities to report per finding.
    *
    * When the total number of entities for a finding exceeds this value, only the first
-   * `maxResults()` entities (by `placeholderString()`) are reported, and the message includes a
-   * `" (and N more)"` suffix indicating the number of omitted entities.
+   * `maxResults()` entities (by `orderBy()`) are reported, and the message includes the
+   * `andMoreText()` suffix indicating the number of omitted entities.
    *
    * Defaults to `3`.
    */
   default int maxResults() { result = 3 }
+
+  /**
+   * The suffix appended to the message when `n` entities are omitted.
+   *
+   * The parameter `n` is the number of omitted entities (i.e. `total - maxResults()`). Override
+   * this to customise the "and N more" text, for example to use a different locale.
+   *
+   * Defaults to `" (and N more)"`.
+   */
+  bindingset[n]
+  default string andMoreText(int n) { result = " (and " + n + " more)" }
 }
 
 /**
@@ -118,22 +131,23 @@ module LimitResults<FiniteStringableType Finding, FiniteStringableType Entity, L
    *
    * At most `Config::maxResults()` entities are reported per finding. They are selected by ranking
    * all entities satisfying `Config::problem(finding, entity)` in ascending order of
-   * `Config::placeholderString(entity)`, and taking those with rank <= `Config::maxResults()`.
+   * `Config::orderBy(entity)`, and taking those with rank <= `Config::maxResults()`.
    *
    * The `message` is produced by `Config::message(finding, entity, remaining)`, where `remaining`
-   * is `" (and N more)"` if the total exceeds `Config::maxResults()`, or `""` otherwise.
+   * is `Config::andMoreText(n)` (with `n = total - maxResults()`) if the total exceeds
+   * `Config::maxResults()`, or `""` otherwise.
    */
   predicate hasLimitedResult(Finding finding, Entity entity, string message) {
     exists(int total, int ranked, string remaining |
       total = count(Entity e | Config::problem(finding, e)) and
       entity =
         rank[ranked](Entity e | Config::problem(finding, e) |
-          e order by Config::placeholderString(e)
+          e order by Config::orderBy(e)
         ) and
       ranked <= Config::maxResults() and
       (
         total > Config::maxResults() and
-        remaining = " (and " + (total - Config::maxResults()) + " more)"
+        remaining = Config::andMoreText(total - Config::maxResults())
         or
         total <= Config::maxResults() and remaining = ""
       ) and

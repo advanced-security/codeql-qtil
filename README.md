@@ -323,6 +323,35 @@ If you wish to perform a path search such as the above, but without reporting pr
 use the `Qtil::GraphPathSearch` module instead, which provides an efficient search algorithm
 without producing a `@kind path-problem` query.
 
+**LimitResults**: A module for capping the number of related entities reported per finding while
+informing the user how many were omitted. This is useful for queries that find multiple related
+entities per finding (such as fields, parameters, or call sites) where listing all of them would
+produce too many results.
+
+Only `problem` and `message` must be implemented. `placeholderString`, `orderBy`, `maxResults`, and
+`andMoreText` have sensible defaults. The instantiated module's `problems` query predicate is
+automatically part of the query output:
+
+```ql
+module MyConfig implements Qtil::LimitResultsConfigSig<IncompleteInitialization, Field> {
+  predicate problem(IncompleteInitialization init, Field f) { f = init.getField() }
+
+  bindingset[remaining]
+  string message(IncompleteInitialization init, Field f, string remaining) {
+    result = init.getKindStr() + " does not initialize non-static data member $@" + remaining + "."
+  }
+}
+
+module Results = Qtil::LimitResults<IncompleteInitialization, Field, MyConfig>;
+
+// Results::problems is automatically part of the query output — no from/where/select needed.
+```
+
+The `problems` query predicate yields `(finding, message, entity, entityStr)` tuples. At most
+`maxResults()` entities (default: 3) are reported per finding, ranked by `orderBy()` (default:
+`entity.toString()`). When some are omitted, `andMoreText(n)` (default: `" (and N more)"`) is
+appended to the message.
+
 ### Inheritance
 
 **Instance**: A module to make `instanceof` inheritance easier in CodeQL, by writing
