@@ -23,13 +23,13 @@
  * If element `e` is related to three placeholders, the message will be:
  *   "foo is related to $@, $@, and $@."
  * If element `e` is related to more than `maxResults()` placeholders, the message will be:
- *   "foo is related to $@, $@, $@, and N more."
+ *   "foo is related to $@, $@, $@, $@, $@, and N more."
  *
  * To use this module, define a configuration module that implements `PlaceholderListSig`:
  * ```ql
  * module MyConfig implements PlaceholderListSig<MyElement, MyPlaceholder> {
  *   predicate problems(MyElement e, string msg, MyPlaceholder p, string pStr) { ... }
- *   int maxResults() { result = 3 }
+ *   int maxResults() { result = 5 }
  *   string orderBy(MyPlaceholder p) { result = p.toString() }
  * }
  *
@@ -61,7 +61,7 @@ private import qtil.parameterization.SignatureTypes
  *     msg = f.getName() + " has parameter $@." and
  *     vStr = v.getName()
  *   }
- *   int maxResults() { result = 3 }
+ *   int maxResults() { result = 5 }
  *   string orderBy(Variable v) { result = v.getName() }
  * }
  * ```
@@ -80,12 +80,12 @@ signature module PlaceholderListSig<FiniteStringableType Element, FiniteStringab
    * The maximum number of placeholders to show per alert. When there are more placeholders than
    * this limit, the message will include "and N more" as plain text.
    *
-   * The effective maximum is capped at 3, which is the number of placeholder pairs in the output
+   * The effective maximum is capped at 5, which is the number of placeholder pairs in the output
    * query predicate.
    *
-   * Defaults to 3.
+   * Defaults to 5.
    */
-  default int maxResults() { result = 3 }
+  default int maxResults() { result = 5 }
 
   /**
    * An ordering key used to sort placeholders within each alert. Placeholders are shown in
@@ -101,11 +101,11 @@ signature module PlaceholderListSig<FiniteStringableType Element, FiniteStringab
  *
  * This module takes a `problems` predicate that may have multiple `(placeholder, string)` pairs
  * for a single `(element, message)` pair, and combines them into a single output row with an
- * expanded message. Up to three placeholder pairs are shown; additional placeholders are
+ * expanded message. Up to five placeholder pairs are shown; additional placeholders are
  * represented as "and N more" in the message text.
  *
- * The output `query predicate problems` always has exactly 3 placeholder pairs. When there are
- * fewer than 3 actual placeholders, the remaining slots are filled with the first placeholder
+ * The output `query predicate problems` always has exactly 5 placeholder pairs. When there are
+ * fewer than 5 actual placeholders, the remaining slots are filled with the first placeholder
  * and an empty string (so they are not highlighted in the UI).
  *
  * See `PlaceholderListSig` for configuration options.
@@ -127,7 +127,6 @@ module PlaceholderList<
    * ascending by `Config::orderBy`, with the placeholder's `toString()` as a secondary sort key.
    */
   private Placeholder getNthPlaceholder(Element e, string msg, int n) {
-    Config::problems(e, msg, _, _) and
     result =
       rank[n](Placeholder p | Config::problems(e, msg, p, _) |
         p order by Config::orderBy(p), p.toString()
@@ -151,37 +150,59 @@ module PlaceholderList<
   }
 
   /**
-   * Build the expansion string that replaces the single `$@` placeholder in the original message.
+   * Build the placeholder part of the expansion string (without "and N more" suffix).
    *
-   * `showCount` is the number of `$@` placeholders to include (1–3), and `moreCount` is the
+   * Returns the comma-separated (with Oxford comma) list of `$@` placeholders for `n` items.
+   */
+  bindingset[n]
+  private string placeholderExpansion(int n) {
+    n = 1 and result = "$@"
+    or
+    n = 2 and result = "$@ and $@"
+    or
+    n = 3 and result = "$@, $@, and $@"
+    or
+    n = 4 and result = "$@, $@, $@, and $@"
+    or
+    n = 5 and result = "$@, $@, $@, $@, and $@"
+  }
+
+  /**
+   * Build the overflow suffix for the expansion string.
+   *
+   * Returns `""` when `moreCount = 0` (no overflow), or `" and N more"` when there are
+   * additional placeholders beyond the visible maximum.
+   */
+  bindingset[moreCount]
+  private string moreString(int moreCount) {
+    moreCount = 0 and result = ""
+    or
+    moreCount > 0 and result = " and " + moreCount + " more"
+  }
+
+  /**
+   * Build the full expansion string that replaces the single `$@` placeholder in the original
+   * message.
+   *
+   * `showCount` is the number of `$@` placeholders to include (1–5), and `moreCount` is the
    * number of additional placeholders not shown (0 or more).
    */
   bindingset[showCount, moreCount]
   private string expansion(int showCount, int moreCount) {
-    showCount = 1 and moreCount = 0 and result = "$@"
-    or
-    showCount = 2 and moreCount = 0 and result = "$@ and $@"
-    or
-    showCount = 3 and moreCount = 0 and result = "$@, $@, and $@"
-    or
-    showCount = 1 and moreCount > 0 and result = "$@ and " + moreCount + " more"
-    or
-    showCount = 2 and moreCount > 0 and result = "$@, $@, and " + moreCount + " more"
-    or
-    showCount = 3 and moreCount > 0 and result = "$@, $@, $@, and " + moreCount + " more"
+    result = placeholderExpansion(showCount) + moreString(moreCount)
   }
 
   /**
    * Get the effective number of placeholders to show for a given `(element, message)` pair.
    *
-   * This is the minimum of the total placeholder count and `Config::maxResults()`, capped at 3
+   * This is the minimum of the total placeholder count and `Config::maxResults()`, capped at 5
    * (the number of placeholder pairs in the output query predicate).
    */
   private int showCount(Element e, string msg) {
     exists(int total, int maxR, int cappedMax |
       total = countPlaceholders(e, msg) and
       maxR = Config::maxResults() and
-      (maxR <= 3 and cappedMax = maxR or maxR > 3 and cappedMax = 3) and
+      (maxR <= 5 and cappedMax = maxR or maxR > 5 and cappedMax = 5) and
       (total <= cappedMax and result = total or total > cappedMax and result = cappedMax)
     )
   }
@@ -192,12 +213,10 @@ module PlaceholderList<
    * and optional "and N more" suffix.
    */
   private string expandedMsg(Element e, string origMsg) {
-    exists(int total, int maxR, int cappedMax, int sc, int mc |
+    exists(int total, int sc, int mc |
       total = countPlaceholders(e, origMsg) and
-      maxR = Config::maxResults() and
-      (maxR <= 3 and cappedMax = maxR or maxR > 3 and cappedMax = 3) and
-      (total <= cappedMax and sc = total or total > cappedMax and sc = cappedMax) and
-      (total > cappedMax and mc = total - cappedMax or total <= cappedMax and mc = 0) and
+      sc = showCount(e, origMsg) and
+      (total > sc and mc = total - sc or total <= sc and mc = 0) and
       result = origMsg.replaceAll("$@", expansion(sc, mc))
     )
   }
@@ -206,10 +225,10 @@ module PlaceholderList<
    * The combined problems query predicate.
    *
    * For each `(element, message)` pair in the input `Config::problems` predicate, this produces
-   * a single output row with an expanded message and up to 3 placeholder pairs.
+   * a single output row with an expanded message and up to 5 placeholder pairs.
    *
    * The message is expanded from the single `$@` in the input to a comma-separated list of `$@`
-   * placeholders (up to `Config::maxResults()`, capped at 3), with "and N more" appended if there
+   * placeholders (up to `Config::maxResults()`, capped at 5), with "and N more" appended if there
    * are additional placeholders beyond the maximum.
    *
    * Placeholder pairs beyond the number of actual placeholders are filled with the first
@@ -219,7 +238,9 @@ module PlaceholderList<
     Element e, string outMsg,
     Placeholder p1, string str1,
     Placeholder p2, string str2,
-    Placeholder p3, string str3
+    Placeholder p3, string str3,
+    Placeholder p4, string str4,
+    Placeholder p5, string str5
   ) {
     exists(string origMsg, int sc |
       Config::problems(e, origMsg, _, _) and
@@ -240,7 +261,22 @@ module PlaceholderList<
         str3 = getNthPlaceholderStr(e, origMsg, 3)
         or
         sc < 3 and p3 = p1 and str3 = ""
+      ) and
+      (
+        sc >= 4 and
+        p4 = getNthPlaceholder(e, origMsg, 4) and
+        str4 = getNthPlaceholderStr(e, origMsg, 4)
+        or
+        sc < 4 and p4 = p1 and str4 = ""
+      ) and
+      (
+        sc >= 5 and
+        p5 = getNthPlaceholder(e, origMsg, 5) and
+        str5 = getNthPlaceholderStr(e, origMsg, 5)
+        or
+        sc < 5 and p5 = p1 and str5 = ""
       )
     )
   }
 }
+

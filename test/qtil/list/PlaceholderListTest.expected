@@ -1,1 +1,11 @@
-| All 7 tests passed. |
+testDefault
+| 1 | $@ is cool | 1 | 1 | 1 |  | 1 |  | 1 |  | 1 |  |
+| 2 | $@ and $@ is cool | 1 | 1 | 2 | 2 | 1 |  | 1 |  | 1 |  |
+| 3 | $@, $@, and $@ is cool | 1 | 1 | 2 | 2 | 3 | 3 | 1 |  | 1 |  |
+| 4 | $@, $@, $@, and $@ is cool | 1 | 1 | 2 | 2 | 3 | 3 | 4 | 4 | 1 |  |
+| 5 | $@, $@, $@, $@, and $@ is cool | 1 | 1 | 2 | 2 | 3 | 3 | 4 | 4 | 5 | 5 |
+| 6 | $@, $@, $@, $@, and $@ and 1 more is cool | 1 | 1 | 2 | 2 | 3 | 3 | 4 | 4 | 5 | 5 |
+testMaxTwo
+| 1 | $@ is related | 1 | 1 | 1 |  | 1 |  | 1 |  | 1 |  |
+| 2 | $@ and $@ is related | 1 | 1 | 2 | 2 | 1 |  | 1 |  | 1 |  |
+| 3 | $@ and $@ and 1 more is related | 1 | 1 | 2 | 2 | 1 |  | 1 |  | 1 |  |
