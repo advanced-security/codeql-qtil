@@ -65,15 +65,15 @@ are language specific and should typically be accessed by `import qtil.lang`, e.
 
 ## Supported Languages
 
-- C/C++: ✅ available as `import qtil.Cpp` in pack `advanced-security/qtil-cpp`
-- C#: ✅ available as `import qtil.CSharp` in pack `advanced-security/qtil-csharp`
-- Go: ✅ available as `import qtil.Go` in pack `advanced-security/qtil-go`
-- Java: ✅ available as `import qtil.Java` in pack `advanced-security/qtil-java`
-- JavaScript: ✅ available as `import qtil.Javascript` in pack `advanced-security/qtil-javascript`
-- Python: ✅ available as `import qtil.Python` in pack `advanced-security/qtil-python`
-- Ruby: ✅ available as `import qtil.Ruby` in pack `advanced-security/qtil-ruby`
+- C/C++: ✅ available as `import qtil.Cpp` in pack `advanced-security/qtil-cpp` — [docs](https://advanced-security.github.io/codeql-qtil/qtil/Cpp.qll/module.Cpp.html)
+- C#: ✅ available as `import qtil.CSharp` in pack `advanced-security/qtil-csharp` — [docs](https://advanced-security.github.io/codeql-qtil/qtil/Csharp.qll/module.Csharp.html)
+- Go: ✅ available as `import qtil.Go` in pack `advanced-security/qtil-go` — [docs](https://advanced-security.github.io/codeql-qtil/qtil/Go.qll/module.Go.html)
+- Java: ✅ available as `import qtil.Java` in pack `advanced-security/qtil-java` — [docs](https://advanced-security.github.io/codeql-qtil/qtil/Java.qll/module.Java.html)
+- JavaScript: ✅ available as `import qtil.Javascript` in pack `advanced-security/qtil-javascript` — [docs](https://advanced-security.github.io/codeql-qtil/qtil/Javascript.qll/module.Javascript.html)
+- Python: ✅ available as `import qtil.Python` in pack `advanced-security/qtil-python` — [docs](https://advanced-security.github.io/codeql-qtil/qtil/Python.qll/module.Python.html)
+- Ruby: ✅ available as `import qtil.Ruby` in pack `advanced-security/qtil-ruby` — [docs](https://advanced-security.github.io/codeql-qtil/qtil/Ruby.qll/module.Ruby.html)
 - Rust: ❌ not yet available
-- Swift: ✅ available as `import qtil.Swift` in pack `advanced-security/qtil-swift`
+- Swift: ✅ available as `import qtil.Swift` in pack `advanced-security/qtil-swift` — [docs](https://advanced-security.github.io/codeql-qtil/qtil/Swift.qll/module.Swift.html)
 - QL: ❌ not yet available
 - other languages: ❌ not supported by CodeQL.
 
@@ -81,7 +81,7 @@ are language specific and should typically be accessed by `import qtil.lang`, e.
 
 ### Pairs, Tuples, and Products, oh my!
 
-**Pair**: A class to hold some set of paired values of two distinct types.
+[**Pair**](https://advanced-security.github.io/codeql-qtil/qtil/tuple/Pair.qll/module.Pair.html): A class to hold some set of paired values of two distinct types.
 
 ```ql
 predicate nameAge(string name, int age) {
@@ -93,7 +93,7 @@ from Qtil::Pair<string, int, nameAge/2>::Pair pair
 select pair.getFirst(), pair.getSecond()
 ```
 
-**Tuple**: Like a pair, but supports more than two columns.
+[**Tuple**](https://advanced-security.github.io/codeql-qtil/qtil/tuple/Tuple.qll/module.Tuple.html): Like a pair, but supports more than two columns.
 
 ```ql
 predicate nameAgeCity(string name, int age, City city) {
@@ -105,7 +105,7 @@ from Qtil::Tuple3<string, int, City, nameAgeCity/3>::Tuple tuple
 select tuple.getFirst(), tuple.getSecond(), tuple.getThird()
 ```
 
-**Product**: A class to hold all combinations of values of two distinct types.
+[**Product**](https://advanced-security.github.io/codeql-qtil/qtil/tuple/Product.qll/module.Product.html): A class to hold all combinations of values of two distinct types.
 
 ```ql
 // Selects all combinations of people and cities
@@ -115,7 +115,7 @@ select product.getFirst(), product.getSecond()
 
 ### Lists
 
-**Ordered**: Takes orderable data, and automatically adds `getPrevious()`, `getNext()` predicate members for ease of traversal.
+[**Ordered**](https://advanced-security.github.io/codeql-qtil/qtil/list/Ordered.qll/module.Ordered.html): Takes orderable data, and automatically adds `getPrevious()`, `getNext()` predicate members for ease of traversal.
 
 _Note: the `getOrder()` predicate should not have duplicates._
 
@@ -144,7 +144,7 @@ from AgeOrderedCityPerson p
 select p.getName(), p.getCity(), p.getPrevious().getName(), p.getNext().getName()
 ```
 
-**CondensedList**: Like the `Ordered` class, but creates a separate `ListEntry` type rather than
+[**CondensedList**](https://advanced-security.github.io/codeql-qtil/qtil/list/CondensedList.qll/module.CondensedList.html): Like the `Ordered` class, but creates a separate `ListEntry` type rather than
 requiring you to extend the underlying type.
 
 ```ql
@@ -167,7 +167,7 @@ listEntry.getNext().getItem().getName()
 
 ### Strings
 
-**join(sep, ...)**: The first argument is used as a separator to join the remaining two to eight arguments.
+[**join(sep, ...)**](https://advanced-security.github.io/codeql-qtil/qtil/strings/Join.qll/module.Join.html): The first argument is used as a separator to join the remaining two to eight arguments.
 
 This is not intended to replace the CodeQL `concat` aggregation, but rather, to be used in cases where aggregation is not desired.
 
@@ -176,7 +176,7 @@ This is not intended to replace the CodeQL `concat` aggregation, but rather, to 
 select Qtil::join(",", "a", "b", "c")
 ```
 
-**Escape**: Provides a set of modules for escaping and unescaping strings.
+[**Escape**](https://advanced-security.github.io/codeql-qtil/qtil/strings/Escape.qll/module.Escape.html): Provides a set of modules for escaping and unescaping strings.
 
 _CAUTION: Be careful in applying this escaping, which has not yet been thoroughly tested or validated, to a sensitive security context._
 
@@ -196,7 +196,7 @@ select Qtil::SeparatedEscape<Qtil::Chars::comma/0>::EscapeBackslash::of2("foo,ba
 Escaping characters will carefully escape and unescape themselves. See documentation on escape maps
 to handle cases like turning newlines into `\n`, etc.
 
-**Char**: A subtype of `int` that holds a character code, with members such as `toUppercase()`,
+[**Char**](https://advanced-security.github.io/codeql-qtil/qtil/strings/Char.qll/module.Char.html): A subtype of `int` that holds a character code, with members such as `toUppercase()`,
 `isLowercase()`, `isDigit()`, and `repeat(n)`.
 
 ```ql
@@ -206,7 +206,7 @@ where c.isStr("a") or c = charOf("b") or c = "0".codePointAt(0)
 select b.toUppercase().toString()
 ```
 
-See also the module `Chars` which defines standard nullary predicates that common characters, for
+See also the module [`Chars`](https://advanced-security.github.io/codeql-qtil/qtil/strings/Chars.qll/module.Chars.html) which defines standard nullary predicates that common characters, for
 instance, `Qtil::Chars::dollar()` holds for the result `"$"`,`Qtil::Chars::a()` holds for `"a"`, and `Qtil::Chars::upperA()` holds for `"A"`.
 
 ### ASTs:
@@ -214,7 +214,7 @@ instance, `Qtil::Chars::dollar()` holds for the result `"$"`,`Qtil::Chars::a()` 
 The following modules are usable by importing `qtil.lang`, for instance, `qtil.cpp`. However, the
 implementations are shared across languages and are available in a do-it-yourself way as well.
 
-**TwoOperands**: A module to simplify checks that an operator uses two distinct operands in a
+[**TwoOperands**](https://advanced-security.github.io/codeql-qtil/qtil/ast/TwoOperands.qll/module.TwoOperands.html): A module to simplify checks that an operator uses two distinct operands in a
 certain manner.
 
 ```ql
@@ -242,7 +242,7 @@ predicate intPlusConstantOld(BinaryExpr e) {
 
 ### Query Formatting
 
-**QlFormat** offers a way of formatting CodeQL query messages in a consistent way, with varying
+[**QlFormat**](https://advanced-security.github.io/codeql-qtil/qtil/format/QLFormat.qll/module.QLFormat.html) offers a way of formatting CodeQL query messages in a consistent way, with varying
 numbers of placeholders, via a template-like syntax. This module is useful for writing more
 user-friendly messages for certain types of queries, with a cleaner query implementation.
 
@@ -290,7 +290,7 @@ This mixture of query results with different numbers of placeholders can be done
 `QlFormat` features of qtil, but this approach can allow for much better readability and
 maintainability of the query code.
 
-**CustomPathProblem**: Allows users to create a query that has a custom trace through the source
+[**CustomPathProblem**](https://advanced-security.github.io/codeql-qtil/qtil/locations/CustomPathProblem.qll/module.CustomPathProblem.html): Allows users to create a query that has a custom trace through the source
 code. For example, CodeQL data flow `PathGraph` shows dataflow through a program. However, by using
 this module, query authors can trace any path -- a call graph, inheritance chain, transitive
 file imports, etc.
@@ -322,12 +322,12 @@ select end, start, end, "Transitive inclusion of banned_header.h from main.cpp"
 ```
 
 If you wish to perform a path search such as the above, but without reporting problems, you can
-use the `Qtil::GraphPathSearch` module instead, which provides an efficient search algorithm
+use the [`Qtil::GraphPathSearch`](https://advanced-security.github.io/codeql-qtil/qtil/graph/GraphPathSearch.qll/module.GraphPathSearch.html) module instead, which provides an efficient search algorithm
 without producing a `@kind path-problem` query.
 
 ### Inheritance
 
-**Instance**: A module to make `instanceof` inheritance easier in CodeQL, by writing
+[**Instance**](https://advanced-security.github.io/codeql-qtil/qtil/inheritance/Instance.qll/module.Instance.html): A module to make `instanceof` inheritance easier in CodeQL, by writing
 `class Foo extends Qtil::Instanceof<Bar>::Type`, which automatically adds `toString()` and a
 member `Bar inst()` to access the member predicates on the `Bar` parent class.
 
@@ -352,7 +352,7 @@ requires a finite type (standard CodeQL class type). However, infinite types (su
 primitives) require special care, which `InfInstance` handles correctly, allowing
 `bindingset[this] class OpaqueIntType extends Qtil::InfInstance<int>::Type {}`. See also `UnderlyingString`.
 
-**Final**: A module to avoid creating final type alias declarations, which are required in
+[**Final**](https://advanced-security.github.io/codeql-qtil/qtil/parameterization/Finalize.qll/module.Finalize.html): A module to avoid creating final type alias declarations, which are required in
 some contexts, such as parameterized modules. Simply extend `Qtil::Final<T>::Type` instead of
 declaring a final alias type.
 
@@ -365,7 +365,7 @@ final class FinalFoo = Foo;
 class MyFoo2 extends FinalFoo { ... }
 ```
 
-**UnderlyingString**: A class to support inheriting from string in order to create custom
+[**UnderlyingString**](https://advanced-security.github.io/codeql-qtil/qtil/inheritance/UnderlyingString.qll/module.UnderlyingString.html): A class to support inheriting from string in order to create custom
 infinite types with a hidden string representation.
 
 ```ql
@@ -377,7 +377,7 @@ class Person extends Qtil::UnderlyingString {
 
 _Note: this class is effectively the same as `Qtil::InfInstance<string>::Type`, but uses the member `str()` to get the underlying string instead of the member `inst()`._
 
-**Finitize**: A module to produce a finite type from an infinite type (such as `string`, `int`, or
+[**Finitize**](https://advanced-security.github.io/codeql-qtil/qtil/inheritance/Finitize.qll/module.Finitize.html): A module to produce a finite type from an infinite type (such as `string`, `int`, or
 `Qtil::InfInstance<string>::Type`, etc.) by providing predicate that constrains that infinite type.
 
 ```ql
@@ -397,18 +397,18 @@ infinite types in a query.
 Location types in CodeQL are different types across languages. To use these classes, import
 `qtil.lang` (for instance, `qtil.cpp`).
 
-**StringLocation**: A class that supports the codification of any location as a string, which the
+[**StringLocation**](https://advanced-security.github.io/codeql-qtil/qtil/locations/StringLocation.qll/module.StringLocation.html): A class that supports the codification of any location as a string, which the
 CodeQL engine will use as a location when selected by a query. Also includes support to turn
 existing locations into strings with `StringToLocation`, and support to finitize them at the point
 where a query no longer must deal with an infinite set using the `Finitize` module.
 
-**OptionalLocation**: A class that works much like `Option<Location>`, but that also implements the
+[**OptionalLocation**](https://advanced-security.github.io/codeql-qtil/qtil/locations/OptionalLocation.qll/module.OptionalLocation.html): A class that works much like `Option<Location>`, but that also implements the
 `hasLocation()` predicate which the CodeQL engine expects of a location. Allows queries to select
 placeholder locations that may or may not exist.
 
-**NullLocation**: An empty location.
+[**NullLocation**](https://advanced-security.github.io/codeql-qtil/qtil/locations/NullLocation.qll/module.NullLocation.html): An empty location.
 
-**Locatable**: A signature module that allows cross language support for locatable elements in a
+[**Locatable**](https://advanced-security.github.io/codeql-qtil/qtil/locations/Locatable.qll/module.Locatable.html): A signature module that allows cross language support for locatable elements in a
 query language, for instance C++ or Java.
 
 This module, and `qtil` modules that depend on it, should already have preexisting
@@ -418,7 +418,7 @@ module allows you to add qtil support for new languages.
 
 ### Graphs
 
-**GraphPathSearch**: A module for efficiently finding paths in custom directed graphs from a set of
+[**GraphPathSearch**](https://advanced-security.github.io/codeql-qtil/qtil/graph/GraphPathSearch.qll/module.GraphPathSearch.html): A module for efficiently finding paths in custom directed graphs from a set of
 starting nodes to a set of ending nodes. For performance, this module uses a pattern called "forward
 reverse pruning," a pattern widely used in the CodeQL dataflow libraries.
 
@@ -444,7 +444,7 @@ For displaying the discovered paths to users, see the `CustomPathProblem` module
 While codeql's `test run` subcommand is a great way to test queries, it can be better in some cases
 to write a more traditional unit test for CodeQL libraries. Rather than selecting a set of outputs
 in a query and then inspecting that the query result (in the `.expectations` file) makes sense, qtil
-provides a library called "Qnit" for writing direct test cases with expectations, so that there's
+provides a library called ["Qnit"](https://advanced-security.github.io/codeql-qtil/qtil/testing/Qnit.qll/module.Qnit.html) for writing direct test cases with expectations, so that there's
 better cohesion between a test case and its expected output.
 
 To use Qnit, import the `qtil.testing.Qnit` module, and create a test class that extends
@@ -486,7 +486,7 @@ See the README in the `qtil.testing` directory for more information on how to us
 
 ### Parameterization
 
-**SignaturePredicates.qll** defines modules for creating signature predicates without separate
+[**SignaturePredicates.qll**](https://advanced-security.github.io/codeql-qtil/qtil/parameterization/SignaturePredicates.qll/module.SignaturePredicates.html) defines modules for creating signature predicates without separate
 signature predicate declarations.
 
 Rather than writing:
@@ -528,7 +528,7 @@ The declared predicate signatures look as follows:
       string, and an int result.
  - etc., for `Ternary`, `Quaternary`, and up to `Senary` (six parameter) predicates.
 
-**SignatureTypes.qll** contains various baseline signature types to aid in writing correct
+[**SignatureTypes.qll**](https://advanced-security.github.io/codeql-qtil/qtil/parameterization/SignatureTypes.qll/module.SignatureTypes.html) contains various baseline signature types to aid in writing correct
 parameterized modules, as well as a utility to create a signature type from any existing type.
 
 ```ql

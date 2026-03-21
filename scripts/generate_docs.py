@@ -185,7 +185,13 @@ def main():
     # Step 3: Ensure custom CSS is applied (fallback for crash)
     ensure_custom_css(args.output)
 
-    # Step 4: Create index.html with links to all packs
+    # Step 4: Copy logo into output directory
+    logo_src = Path("assets/logo.jpg")
+    if not logo_src.exists():
+        raise FileNotFoundError(f"Logo not found at {logo_src}")
+    shutil.copy2(logo_src, out / "logo.jpg")
+
+    # Step 5: Create index.html with links to all packs
     create_index_html(args.output, generated_langs)
 
 if __name__ == "__main__":
