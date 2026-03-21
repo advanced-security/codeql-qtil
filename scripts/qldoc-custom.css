@@ -1,0 +1,228 @@
+/* 
+ * Where possible, we use GitHub style selectors from primer.css
+ * (https://unpkg.com/@primer/css/dist/primer.css)
+ * If further style customizations are required, make them 
+ * in qldoc.css below.
+ */
+
+body {
+  background-color: white;
+  color: #333;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+table {
+  border-collapse: separate;
+}
+
+td {
+  padding-right: 1em;
+  vertical-align: top;
+}
+
+code {
+  background-color: #F5F5F5
+}
+
+.Header-item code {
+  /* Header has white text on black, so don't use a light text background. */
+  background-color: transparent;
+}
+
+.section-heading {
+  border-bottom-style: dashed;
+}
+
+.subsection-heading {
+  border-bottom-style: solid;
+}
+
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  /* default is some padding, is weird here */
+  padding-left: 0px;
+  margin: 0px;
+}
+
+.inline-list > li {
+  margin-left: 2px;
+  padding-left: 2px;
+}
+
+.comma-list > li:not(:last-child):after {
+  content: ",";
+}
+
+h1, h2, h3, h4 {
+  font-family: Moderat, sans-serif;
+  font-weight: 500;
+  padding-bottom: 6px;
+  border-bottom-width: 1px;
+}
+
+code, pre {
+  font-family: monospace;
+}
+
+/* 
+ * Palette taken from the 7-color palette at http://mkweb.bcgsc.ca/colorblind/, ignoring
+ * those with poor contrast on a white background. 
+ */
+.ref-type {
+  color: #005788;
+}
+
+.ref-predicate {
+  color: #009E73;
+}
+
+.ref-module {
+  color: #D55E00;
+}
+
+.ref-var {
+  color: #CD7AA7;
+}
+
+a {
+  text-decoration: none;
+  color: #2F1695;
+}
+
+/* Give links in navigation of Index page a wider clickable area */
+
+#sidebar-content > div > div > ol > li > a {
+    padding-right: 20px;
+    margin-top: 5px;
+    margin-bottom: 5px; 
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.deprecated a {
+  text-decoration: line-through;
+}
+
+.doc-block {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+#main {
+  display: flex;
+  /* can expand or shrink */
+  flex-grow: 1;
+  flex-shrink: 1;
+
+  /* needed for some reason, otherwise get scrollbars here */
+  overflow: auto;
+}
+
+#content {
+  max-width: 62em;
+  padding-left: 2.5em;
+}
+
+#sidebar {
+  /* user em - size should be bigger for bigger fonts */
+  width: 17em;
+
+  /* own scrollbars */
+  overflow: auto;
+
+  border-right: 1px solid;
+  border-left: 1px solid;
+
+  /* should not change size - not completely necessary given fixed width, but still */
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+#sidebar-content > div:not(:last-child) {
+  border-bottom: 2px solid;
+}
+
+#sidebar-content {
+  margin: 10px;
+}
+
+#sidebar h1, #sidebar h2, #sidebar h3, #sidebar h4 {
+  justify-content: left;
+}
+
+.section-links {
+  list-style: none;
+  /* default is some padding, is weird here */
+  padding-left: 0px;
+  margin: 0px;
+}
+
+#content-footer {
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  padding-top: 0.5em;
+  margin-bottom: 1em;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  color: #555555;
+  font-size: small;
+  border-top-style: solid;
+  border-top-width: thin;
+}
+
+#content-footer a {
+  color: #555555;
+  text-decoration: underline;
+  padding-left: 1em;
+}
+
+.qldoc-summary p {
+  /* 
+   * The markdown will have rendered a p tag, which usually gets a margin from the
+   * browser styling, which we don't want since it's in a table.
+   */
+  margin: 0px;
+}
+
+.qldoc dt {
+  font-weight: bold;
+}
+
+/* Style the optional banner, originally added for early Go support. */
+
+banner {
+  font-weight: 800;
+  font-size: 100%;
+  border-bottom: solid black 2px;
+  text-align: center;
+}
+
+/* ensure links in header are the correct colour */
+
+.Header-item a {
+  color: white;
+}
+
+/* text in nav-section */
+
+.nav-section p, .nav-section a {
+  display: inline;
+}
+
+/*
+ * Hide the "Search" link in the header that points to
+ * https://codeql.github.com/codeql-standard-libraries/search.html
+ * since that site does not host these docs.
+ */
+.Header-item:has(a[href*="search.html"]) {
+  display: none;
+}

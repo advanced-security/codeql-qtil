@@ -93,3 +93,8 @@ jobs:
           echo "Publishing pack 'qtil-${{ matrix.language }}'."
           codeql pack install "${{ matrix.language }}/src"
           codeql pack publish "${{ matrix.language }}/src"
+
+  deploy_docs:
+    needs: [publish_core, publish_langs]
+    if: always() && !cancelled()
+    uses: ./.github/workflows/deploy-docs.yml

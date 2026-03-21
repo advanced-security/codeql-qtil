@@ -1,0 +1,35 @@
+name: Generate Documentation
+description: |
+  Generate library documentation for all qtil packs using codeql generate library-doc.
+
+inputs:
+  output:
+    description: "Output directory for the generated docs"
+    required: false
+    default: "docs"
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+
+    - name: Install Python dependencies
+      shell: bash
+      run: pip install -r scripts/requirements.txt
+
+    - name: Install CodeQL packs
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        for lang in cpp csharp go java javascript python ruby swift; do
+          echo "Installing packs for $lang..."
+          codeql pack install "$lang/src"
+        done
+
+    - name: Generate documentation
+      shell: bash
+      run: python3 scripts/generate_docs.py --output=${{ inputs.output }} --search-path=.

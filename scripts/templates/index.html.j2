@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>qtil — CodeQL Utility Library</title>
+  <link rel="stylesheet" type="text/css" href="qldoc.css">
+  <style>
+    .index-container { max-width: 50em; margin: 2em auto; padding: 0 2em; }
+    .index-container h1 { border-bottom: 2px dashed #ccc; padding-bottom: 0.3em; }
+    .index-container h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.3em; margin-top: 1.5em; }
+    .index-container ul { list-style: none; padding-left: 0; }
+    .index-container li { margin: 0.5em 0; }
+    .index-container li a { font-size: 1.1em; }
+  </style>
+</head>
+<body>
+  <div class="index-container">
+    <h1>qtil — CodeQL Utility Library</h1>
+    <section>
+      <h2>Core</h2>
+      {% if core_link %}
+      <p><a href="{{ core_link }}">qtil (core)</a> — Language-agnostic utilities</p>
+      {% endif %}
+    </section>
+    <section>
+      <h2>Language Packs</h2>
+      <ul>
+        {% for lang in lang_packs %}
+        <li>
+          {% if lang.module_path %}<a href="{{ lang.module_path }}">{{ lang.display }}</a>{% else %}{{ lang.display }}{% endif %}
+          {% if lang.appendix_path %}<a href="{{ lang.appendix_path }}">(full index)</a>{% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+  </div>
+</body>
+</html>
