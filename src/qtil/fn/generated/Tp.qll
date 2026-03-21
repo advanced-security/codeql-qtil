@@ -34,13 +34,14 @@ module Tp1<InfiniteStringableType A, TpType1<A>::tp/1 base> {
    */
   A first() { base(result) }
 
-  /**
-   * Get the set of first values in the set of tuples that satisfy the given predicate.
-   */
-  module First {
-    import Tp1<A, first/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of first values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module First {
+  //  private predicate newbase(A v) { v = first() }
+  //  import Tp1<A, newbase/1>
+  //}
   /**
    * Map a function over the tuples in this tuple set, and get a new tuple predicate back
    * representing the set of tuples after being transformed by that function.
@@ -934,25 +935,27 @@ module Tp2<InfiniteStringableType A, InfiniteStringableType B, TpType2<A, B>::tp
    */
   A first() { base(result, _) }
 
-  /**
-   * Get the set of first values in the set of tuples that satisfy the given predicate.
-   */
-  module First {
-    import Tp2<A, B, first/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of first values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module First {
+  //  private predicate newbase(A v) { v = first() }
+  //  import Tp1<A, newbase/1>
+  //}
   /**
    * Get the set of second values in the set of tuples that satisfy the given predicate.
    */
   B second() { base(_, result) }
 
-  /**
-   * Get the set of second values in the set of tuples that satisfy the given predicate.
-   */
-  module Second {
-    import Tp2<A, B, second/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of second values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Second {
+  //  private predicate newbase(B v) { v = second() }
+  //  import Tp1<B, newbase/1>
+  //}
   /**
    * Map a function over the tuples in this tuple set, and get a new tuple predicate back
    * representing the set of tuples after being transformed by that function.
@@ -1944,37 +1947,40 @@ module Tp3<
    */
   A first() { base(result, _, _) }
 
-  /**
-   * Get the set of first values in the set of tuples that satisfy the given predicate.
-   */
-  module First {
-    import Tp3<A, B, C, first/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of first values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module First {
+  //  private predicate newbase(A v) { v = first() }
+  //  import Tp1<A, newbase/1>
+  //}
   /**
    * Get the set of second values in the set of tuples that satisfy the given predicate.
    */
   B second() { base(_, result, _) }
 
-  /**
-   * Get the set of second values in the set of tuples that satisfy the given predicate.
-   */
-  module Second {
-    import Tp3<A, B, C, second/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of second values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Second {
+  //  private predicate newbase(B v) { v = second() }
+  //  import Tp1<B, newbase/1>
+  //}
   /**
    * Get the set of third values in the set of tuples that satisfy the given predicate.
    */
   C third() { base(_, _, result) }
 
-  /**
-   * Get the set of third values in the set of tuples that satisfy the given predicate.
-   */
-  module Third {
-    import Tp3<A, B, C, third/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of third values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Third {
+  //  private predicate newbase(C v) { v = third() }
+  //  import Tp1<C, newbase/1>
+  //}
   /**
    * Map a function over the tuples in this tuple set, and get a new tuple predicate back
    * representing the set of tuples after being transformed by that function.
@@ -3060,49 +3066,53 @@ module Tp4<
    */
   A first() { base(result, _, _, _) }
 
-  /**
-   * Get the set of first values in the set of tuples that satisfy the given predicate.
-   */
-  module First {
-    import Tp4<A, B, C, D, first/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of first values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module First {
+  //  private predicate newbase(A v) { v = first() }
+  //  import Tp1<A, newbase/1>
+  //}
   /**
    * Get the set of second values in the set of tuples that satisfy the given predicate.
    */
   B second() { base(_, result, _, _) }
 
-  /**
-   * Get the set of second values in the set of tuples that satisfy the given predicate.
-   */
-  module Second {
-    import Tp4<A, B, C, D, second/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of second values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Second {
+  //  private predicate newbase(B v) { v = second() }
+  //  import Tp1<B, newbase/1>
+  //}
   /**
    * Get the set of third values in the set of tuples that satisfy the given predicate.
    */
   C third() { base(_, _, result, _) }
 
-  /**
-   * Get the set of third values in the set of tuples that satisfy the given predicate.
-   */
-  module Third {
-    import Tp4<A, B, C, D, third/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of third values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Third {
+  //  private predicate newbase(C v) { v = third() }
+  //  import Tp1<C, newbase/1>
+  //}
   /**
    * Get the set of fourth values in the set of tuples that satisfy the given predicate.
    */
   D fourth() { base(_, _, _, result) }
 
-  /**
-   * Get the set of fourth values in the set of tuples that satisfy the given predicate.
-   */
-  module Fourth {
-    import Tp4<A, B, C, D, fourth/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of fourth values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Fourth {
+  //  private predicate newbase(D v) { v = fourth() }
+  //  import Tp1<D, newbase/1>
+  //}
   /**
    * Map a function over the tuples in this tuple set, and get a new tuple predicate back
    * representing the set of tuples after being transformed by that function.
@@ -4280,61 +4290,66 @@ module Tp5<
    */
   A first() { base(result, _, _, _, _) }
 
-  /**
-   * Get the set of first values in the set of tuples that satisfy the given predicate.
-   */
-  module First {
-    import Tp5<A, B, C, D, E, first/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of first values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module First {
+  //  private predicate newbase(A v) { v = first() }
+  //  import Tp1<A, newbase/1>
+  //}
   /**
    * Get the set of second values in the set of tuples that satisfy the given predicate.
    */
   B second() { base(_, result, _, _, _) }
 
-  /**
-   * Get the set of second values in the set of tuples that satisfy the given predicate.
-   */
-  module Second {
-    import Tp5<A, B, C, D, E, second/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of second values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Second {
+  //  private predicate newbase(B v) { v = second() }
+  //  import Tp1<B, newbase/1>
+  //}
   /**
    * Get the set of third values in the set of tuples that satisfy the given predicate.
    */
   C third() { base(_, _, result, _, _) }
 
-  /**
-   * Get the set of third values in the set of tuples that satisfy the given predicate.
-   */
-  module Third {
-    import Tp5<A, B, C, D, E, third/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of third values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Third {
+  //  private predicate newbase(C v) { v = third() }
+  //  import Tp1<C, newbase/1>
+  //}
   /**
    * Get the set of fourth values in the set of tuples that satisfy the given predicate.
    */
   D fourth() { base(_, _, _, result, _) }
 
-  /**
-   * Get the set of fourth values in the set of tuples that satisfy the given predicate.
-   */
-  module Fourth {
-    import Tp5<A, B, C, D, E, fourth/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of fourth values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Fourth {
+  //  private predicate newbase(D v) { v = fourth() }
+  //  import Tp1<D, newbase/1>
+  //}
   /**
    * Get the set of fifth values in the set of tuples that satisfy the given predicate.
    */
   E fifth() { base(_, _, _, _, result) }
 
-  /**
-   * Get the set of fifth values in the set of tuples that satisfy the given predicate.
-   */
-  module Fifth {
-    import Tp5<A, B, C, D, E, fifth/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of fifth values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Fifth {
+  //  private predicate newbase(E v) { v = fifth() }
+  //  import Tp1<E, newbase/1>
+  //}
   /**
    * Map a function over the tuples in this tuple set, and get a new tuple predicate back
    * representing the set of tuples after being transformed by that function.
@@ -5567,73 +5582,79 @@ module Tp6<
    */
   A first() { base(result, _, _, _, _, _) }
 
-  /**
-   * Get the set of first values in the set of tuples that satisfy the given predicate.
-   */
-  module First {
-    import Tp6<A, B, C, D, E, F, first/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of first values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module First {
+  //  private predicate newbase(A v) { v = first() }
+  //  import Tp1<A, newbase/1>
+  //}
   /**
    * Get the set of second values in the set of tuples that satisfy the given predicate.
    */
   B second() { base(_, result, _, _, _, _) }
 
-  /**
-   * Get the set of second values in the set of tuples that satisfy the given predicate.
-   */
-  module Second {
-    import Tp6<A, B, C, D, E, F, second/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of second values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Second {
+  //  private predicate newbase(B v) { v = second() }
+  //  import Tp1<B, newbase/1>
+  //}
   /**
    * Get the set of third values in the set of tuples that satisfy the given predicate.
    */
   C third() { base(_, _, result, _, _, _) }
 
-  /**
-   * Get the set of third values in the set of tuples that satisfy the given predicate.
-   */
-  module Third {
-    import Tp6<A, B, C, D, E, F, third/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of third values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Third {
+  //  private predicate newbase(C v) { v = third() }
+  //  import Tp1<C, newbase/1>
+  //}
   /**
    * Get the set of fourth values in the set of tuples that satisfy the given predicate.
    */
   D fourth() { base(_, _, _, result, _, _) }
 
-  /**
-   * Get the set of fourth values in the set of tuples that satisfy the given predicate.
-   */
-  module Fourth {
-    import Tp6<A, B, C, D, E, F, fourth/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of fourth values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Fourth {
+  //  private predicate newbase(D v) { v = fourth() }
+  //  import Tp1<D, newbase/1>
+  //}
   /**
    * Get the set of fifth values in the set of tuples that satisfy the given predicate.
    */
   E fifth() { base(_, _, _, _, result, _) }
 
-  /**
-   * Get the set of fifth values in the set of tuples that satisfy the given predicate.
-   */
-  module Fifth {
-    import Tp6<A, B, C, D, E, F, fifth/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of fifth values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Fifth {
+  //  private predicate newbase(E v) { v = fifth() }
+  //  import Tp1<E, newbase/1>
+  //}
   /**
    * Get the set of sixth values in the set of tuples that satisfy the given predicate.
    */
   F sixth() { base(_, _, _, _, _, result) }
 
-  /**
-   * Get the set of sixth values in the set of tuples that satisfy the given predicate.
-   */
-  module Sixth {
-    import Tp6<A, B, C, D, E, F, sixth/0>
-  }
-
+  // disabled, causes conflicting import.
+  ///**
+  // * Get the set of sixth values in the set of tuples that satisfy the given predicate.
+  // */
+  //  //module Sixth {
+  //  private predicate newbase(F v) { v = sixth() }
+  //  import Tp1<F, newbase/1>
+  //}
   /**
    * Map a function over the tuples in this tuple set, and get a new tuple predicate back
    * representing the set of tuples after being transformed by that function.

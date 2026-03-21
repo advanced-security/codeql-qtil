@@ -46,13 +46,16 @@ module Tp{{ arity }}<{{ types | map(attribute='typedecl') | join(', ') }}, TpTyp
     base({{ nth.lodash_get_as('result') }})
   }
 
-  /**
-   * Get the set of {{ nth.name }} values in the set of tuples that satisfy the given predicate.
-   */
-  {# Generates: "module First { import Tp<A, B, C, getFirst/0> }" #}
-  module {{ nth.name | title }} {
-    import Tp{{ arity }}<{{ types | map(attribute='name') | join(', ') }}, {{ nth.name }}/0>
-  }
+  // Module is disabled, as it introduces a conflicting import:
+  // - "module Tpx::First::first conflicts with Tpx::first"
+  ///**
+  // * Get the set of {{ nth.name }} values in the set of tuples that satisfy the given predicate.
+  // */
+  //{# Generates: "module First { import Tp<A, getFirst/0> }" #}
+  //module {{ nth.name | title }} {
+  //  private predicate newbase({{ nth.type }} v) { v = {{ nth.name }}() }
+  //  import Tp1<{{ nth.type }}, newbase/1>
+  //}
 
   {% endfor %}
 
