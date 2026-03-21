@@ -4,6 +4,8 @@
 
 # qtil, a util library for CodeQL!
 
+> **[Read the full API documentation](https://advanced-security.github.io/codeql-qtil/)**
+
 `qtil` is a utility library providing a wide array of features and conveniences for CodeQL. `qtil` is developed under the following two guiding principles:
 
 - What would the `underscore.js` of CodeQL look like?
