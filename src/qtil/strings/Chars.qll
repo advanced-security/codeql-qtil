@@ -1,3 +1,5 @@
+/** A module that declares nullary predicates for common characters, such as `Chars::comma()`, `Chars::a()`, `Chars::upperA()`, and `Chars::dollar()`. */
+
 import qtil.strings.Char
 
 /**

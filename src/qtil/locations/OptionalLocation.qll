@@ -1,3 +1,5 @@
+/** A module providing an `OptionalLocation` class that behaves like `Option<Location>` and implements the `hasLocation()` predicate expected by the CodeQL engine. */
+
 private import codeql.util.Option
 private import codeql.util.Location
 private import qtil.parameterization.Finalize

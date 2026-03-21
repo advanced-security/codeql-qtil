@@ -1,3 +1,5 @@
+/** A module that provides tuples of various arities (2 through 6) for holding typed values. */
+
 private import qtil.parameterization.SignatureTypes
 private import qtil.parameterization.SignaturePredicates
 

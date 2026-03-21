@@ -1,3 +1,5 @@
+/** A module similar to `Ordered`, which takes orderable data and optional groupings to make it easy to traverse as a list. */
+
 private import qtil.parameterization.SignatureTypes
 private import qtil.parameterization.SignaturePredicates
 private import qtil.inheritance.Instance

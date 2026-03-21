@@ -1,3 +1,4 @@
+/** Simple pluralization utilities — appends "s" to a string, with optional count-based singular/plural selection. */
 bindingset[str]
 string plural(string str) { result = str + "s" }
 

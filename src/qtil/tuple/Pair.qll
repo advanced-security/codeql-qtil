@@ -1,3 +1,5 @@
+/** A module that provides a `Pair` class to hold paired values of two distinct types. */
+
 private import qtil.parameterization.SignatureTypes
 private import qtil.parameterization.SignaturePredicates
 

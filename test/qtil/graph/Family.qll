@@ -10,6 +10,8 @@ newtype TPerson =
     or
     name = "Marge" and mother = "Jacquelin" and father = "Clancy"
     or
+    name = "Marge2" and mother = "Jacquelin" and father = "Clancy"
+    or
     name = "Patty" and mother = "Jacquelin" and father = "Clancy"
     or
     name = "Selma" and mother = "Jacquelin" and father = "Clancy"

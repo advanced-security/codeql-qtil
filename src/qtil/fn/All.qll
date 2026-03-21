@@ -1,3 +1,5 @@
+/** A module that defines the set of all values of a given type. */
+
 private import qtil.parameterization.SignatureTypes
 private import qtil.fn.FnTypes
 private import qtil.fn.Tp

@@ -1,3 +1,5 @@
+/** A module for adding `getNext()` and `getPrevious()` traversal predicates to orderable data, with optional grouping support. */
+
 private import qtil.list.CondensedList
 private import qtil.parameterization.Finalize
 private import qtil.parameterization.SignatureTypes

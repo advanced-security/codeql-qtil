@@ -1,3 +1,5 @@
+/** A module that provides the cartesian product of values of two distinct types. */
+
 private import qtil.parameterization.SignatureTypes
 
 /**

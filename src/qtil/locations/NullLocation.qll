@@ -1,3 +1,5 @@
+/** This module provides a `NullLocation` class that can be convenient for implementing optional placeholder in an alert message. */
+
 private import codeql.util.Unit
 private import codeql.util.Option
 private import codeql.util.Location

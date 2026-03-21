@@ -1,3 +1,5 @@
+/** Miscellaneous string utility modules, including `ConcatDelimOrderFixed` for ordered concatenation. */
+
 import qtil.parameterization.SignaturePredicates
 import qtil.parameterization.SignatureTypes
 import qtil.strings.Char

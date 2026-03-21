@@ -1,3 +1,5 @@
+/** A module to convert an infinite type into a finite type by constraining it with a predicate. */
+
 private import qtil.parameterization.SignatureTypes
 private import qtil.parameterization.SignaturePredicates
 private import qtil.parameterization.Finalize

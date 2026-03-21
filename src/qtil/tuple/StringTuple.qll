@@ -1,3 +1,5 @@
+/** A module that approximates infinite tuple types in CodeQL using string backings. */
+
 private import qtil.strings.Char
 private import qtil.strings.Escape
 private import qtil.parameterization.Finalize

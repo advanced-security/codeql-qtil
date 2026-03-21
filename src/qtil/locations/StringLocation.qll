@@ -1,3 +1,5 @@
+/** A module that codifies any location as a string representation, allowing the CodeQL engine to use it as a location when selected by a query. */
+
 private import qtil.tuple.StringTuple
 private import qtil.inheritance.Instance
 private import qtil.list.ListBuilder

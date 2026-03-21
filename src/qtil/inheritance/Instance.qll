@@ -1,3 +1,5 @@
+/** A module that simplifies `instanceof` inheritance in CodeQL by automatically providing `toString()` and a convenience cast member `inst()`. */
+
 private import qtil.parameterization.SignatureTypes
 
 /**

@@ -1,3 +1,4 @@
+/** A module for performing efficient structural comparisons of graph-shaped data. */
 signature module GraphComparisonSig {
   class Node;
 

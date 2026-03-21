@@ -1,3 +1,5 @@
+/** A module that defines the set of result values produced by a predicate. */
+
 private import qtil.parameterization.SignatureTypes
 private import qtil.fn.FnTypes
 private import qtil.fn.Tp

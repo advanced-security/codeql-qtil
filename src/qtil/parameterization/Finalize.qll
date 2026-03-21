@@ -1,3 +1,5 @@
+/** A convenience module to create a `final` version of any type, avoiding the need to declare separate `final class` aliases. */
+
 private import qtil.parameterization.SignatureTypes
 
 /**

@@ -1,3 +1,5 @@
+/** A module that provides utilities for escaping and unescaping strings, including backslash escaping, double-quote wrapping, and separator-aware escaping for CSV-like formats. */
+
 private import qtil.parameterization.SignaturePredicates
 private import qtil.tuple.StringTuple
 private import qtil.inheritance.Instance

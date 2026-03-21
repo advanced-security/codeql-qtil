@@ -1,3 +1,5 @@
+/** A module that provides a `Char` class — a subtype of `int` representing a single character code, with utilities such as `toUppercase()`, `isDigit()`, and `repeat(n)`. */
+
 private import qtil.inheritance.Instance
 
 // Import predicates `join(...)` from the `qtil.strings` module without namespace collision.
