@@ -165,6 +165,27 @@ select listEntry.getItem().getName(), listEntry.getDivision().getName(),
 listEntry.getNext().getItem().getName()
 ```
 
+**PlaceholderList**: Collapses multiple `(element, placeholder)` input rows into a single alert row with a formatted list message. Useful when a single alert element is related to a variable number of placeholder elements.
+
+_Note: the input message must contain exactly one `$@` placeholder, which will be expanded._
+
+```ql
+module MyConfig implements Qtil::PlaceholderListSig<Function, Variable> {
+  predicate problems(Function f, string msg, Variable v, string vStr) {
+    v = f.getAParameter() and
+    msg = f.getName() + " has parameters $@." and
+    vStr = v.getName()
+  }
+}
+
+// Import to get a `query predicate problems(...)` with up to 5 placeholder pairs:
+import Qtil::PlaceholderList<Function, Variable, MyConfig>
+// Result for a function with 3 params: "foo has parameters $@, $@, and $@.", p1, p2, p3
+// Result for a function with 7 params: "foo has parameters $@, $@, $@, $@, and $@ and 2 more.", p1-p5
+```
+
+Custom `maxResults` (default 5) and `orderBy` are configurable via the signature module.
+
 ### Strings
 
 [**join(sep, ...)**](https://advanced-security.github.io/codeql-qtil/qtil/strings/Join.qll/module.Join.html): The first argument is used as a separator to join the remaining two to eight arguments.
