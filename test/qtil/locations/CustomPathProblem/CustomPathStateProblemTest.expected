@@ -1,0 +1,35 @@
+WARNING: unused variable 'depth' (CustomPathStateProblemTest.ql:49,29-34)
+edges
+| test.cpp:17:8:17:9 | call to C1 | test.cpp:2:13:2:14 | C1 |  |  |
+| test.cpp:22:12:22:13 | call to f1 | test.cpp:17:8:17:9 | call to C1 |  |  |
+| test.cpp:33:5:33:6 | g1 | test.cpp:33:10:33:11 | call to f1 |  |  |
+| test.cpp:33:10:33:11 | call to f1 | test.cpp:17:8:17:9 | call to C1 |  |  |
+| test.cpp:34:5:34:6 | g2 | test.cpp:34:10:34:11 | call to f2 |  |  |
+| test.cpp:34:10:34:11 | call to f2 | test.cpp:22:12:22:13 | call to f1 |  |  |
+| test.cpp:37:4:37:5 | c1 | test.cpp:37:4:37:5 | call to C1 |  |  |
+| test.cpp:37:4:37:5 | call to C1 | test.cpp:2:13:2:14 | C1 |  |  |
+| test.cpp:38:5:38:6 | g5 | test.cpp:38:10:38:13 | call to C3 |  |  |
+| test.cpp:38:10:38:13 | call to C3 | test.cpp:10:13:10:14 | C3 |  |  |
+| test.cpp:39:5:39:6 | g6 | test.cpp:39:17:39:18 | call to f2 |  |  |
+| test.cpp:39:17:39:18 | call to f2 | test.cpp:22:12:22:13 | call to f1 |  |  |
+nodes
+| test.cpp:2:13:2:14 | C1 | semmle.label | C1 |
+| test.cpp:10:13:10:14 | C3 | semmle.label | C3 |
+| test.cpp:17:8:17:9 | call to C1 | semmle.label | call to C1 |
+| test.cpp:22:12:22:13 | call to f1 | semmle.label | call to f1 |
+| test.cpp:33:5:33:6 | g1 | semmle.label | g1 |
+| test.cpp:33:10:33:11 | call to f1 | semmle.label | call to f1 |
+| test.cpp:34:5:34:6 | g2 | semmle.label | g2 |
+| test.cpp:34:10:34:11 | call to f2 | semmle.label | call to f2 |
+| test.cpp:37:4:37:5 | c1 | semmle.label | c1 |
+| test.cpp:37:4:37:5 | call to C1 | semmle.label | call to C1 |
+| test.cpp:38:5:38:6 | g5 | semmle.label | g5 |
+| test.cpp:38:10:38:13 | call to C3 | semmle.label | call to C3 |
+| test.cpp:39:5:39:6 | g6 | semmle.label | g6 |
+| test.cpp:39:17:39:18 | call to f2 | semmle.label | call to f2 |
+#select
+| test.cpp:33:5:33:6 | g1 | test.cpp:33:5:33:6 | g1 | test.cpp:2:13:2:14 | C1 | Initialization of variable $@ calls constructor $@ at depth 3 | test.cpp:33:5:33:6 | g1 | g1 | test.cpp:2:13:2:14 | C1 | C1 |
+| test.cpp:34:5:34:6 | g2 | test.cpp:34:5:34:6 | g2 | test.cpp:2:13:2:14 | C1 | Initialization of variable $@ calls constructor $@ at depth 4 | test.cpp:34:5:34:6 | g2 | g2 | test.cpp:2:13:2:14 | C1 | C1 |
+| test.cpp:37:4:37:5 | c1 | test.cpp:37:4:37:5 | c1 | test.cpp:2:13:2:14 | C1 | Initialization of variable $@ calls constructor $@ at depth 2 | test.cpp:37:4:37:5 | c1 | c1 | test.cpp:2:13:2:14 | C1 | C1 |
+| test.cpp:38:5:38:6 | g5 | test.cpp:38:5:38:6 | g5 | test.cpp:10:13:10:14 | C3 | Initialization of variable $@ calls constructor $@ at depth 2 | test.cpp:38:5:38:6 | g5 | g5 | test.cpp:10:13:10:14 | C3 | C3 |
+| test.cpp:39:5:39:6 | g6 | test.cpp:39:5:39:6 | g6 | test.cpp:2:13:2:14 | C1 | Initialization of variable $@ calls constructor $@ at depth 4 | test.cpp:39:5:39:6 | g6 | g6 | test.cpp:2:13:2:14 | C1 | C1 |
