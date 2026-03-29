@@ -1,0 +1,7 @@
+| BugA | BugA has field X | BugA.X | BugA.X |
+| BugB | BugB has field A | BugB.A | BugB.A |
+| BugB | BugB has field B | BugB.B | BugB.B |
+| BugB | BugB has field C | BugB.C | BugB.C |
+| BugC | BugC has field A (and 2 more) | BugC.A | BugC.A |
+| BugC | BugC has field B (and 2 more) | BugC.B | BugC.B |
+| BugC | BugC has field C (and 2 more) | BugC.C | BugC.C |
