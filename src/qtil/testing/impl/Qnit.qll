@@ -1,4 +1,6 @@
-private import qtil.inheritance.UnderlyingString
+private import qtil.inheritance.Instance
+private import qtil.strings.TaggedString
+private import qtil.testing.impl.TestResult
 
 /**
  * A string that is re-typedef'd to Qnit for the sake of a pretty API.
@@ -10,7 +12,7 @@ private import qtil.inheritance.UnderlyingString
  *  - `isFailing()`/`isPassing()`: Primarily for internal use.
  */
 bindingset[this]
-class Qnit extends UnderlyingString {
+class Qnit extends InfInstance<Tagged<TestResult>::String>::Type {
   /**
    * Call this method inside of `Test.run(Qnit test)` to report a failing test case.
    *
@@ -18,7 +20,7 @@ class Qnit extends UnderlyingString {
    * uniquely identify which tests failed, due to the way QL works.
    */
   bindingset[description]
-  predicate fail(string description) { this = "FAILURE: " + description }
+  predicate fail(string description) { inst().make(description).getTag().isFail() }
 
   /**
    * Call this method inside of `Test.run(Qnit test)` to report a passing test case.
@@ -27,20 +29,20 @@ class Qnit extends UnderlyingString {
    * properly count the number of tests that passed, due to the way QL works.
    */
   bindingset[name]
-  predicate pass(string name) { this = "PASS: " + name }
+  predicate pass(string name) { inst().make(name).getTag().isPass() }
 
   /**
    * Mostly intended for internal purposes, holds if the test fails.
    */
   bindingset[this]
-  predicate isFailing() { str().matches("FAILURE: %") }
+  predicate isFailing() { inst().getTag().isFail() }
 
   /**
    * Mostly intended for internal purposes, holds if the test passes.
    */
   bindingset[this]
-  predicate isPassing() { str().matches("PASS: %") }
+  predicate isPassing() { inst().getTag().isPass() }
 
   bindingset[this]
-  string getDescription() { result = str().regexpReplaceAll("^(FAILURE|PASS): ", "") }
+  string getDescription() { result = inst().getStr() }
 }
