@@ -26,6 +26,7 @@ module Qtil {
   import qtil.strings.Join
   import qtil.strings.Other
   import qtil.strings.Plural
+  import qtil.strings.Unicode
   import qtil.tuple.Pair
   import qtil.tuple.Product
   import qtil.tuple.StringTuple
